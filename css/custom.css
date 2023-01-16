@@ -1,0 +1,15 @@
+@charset "utf-8";
+/* CSS Document */
+.nav-link {
+  color: white !important;
+}
+.nav-link:hover, .nav-link:active {
+  color: orange !important;
+}
+.dropdown-item:active, .dropdown-item:hover {
+  color: brown !important;
+}
+.carousel-inner img {
+  width: 100vw !important;
+  height: 100vh !important;
+}
