@@ -17,6 +17,7 @@ body {
   background-image: url("../images/bg.png");
   background-repeat: no-repeat;
   background-position: right;
+	background-size: 100%;
 }
 .banner img {
   float: right;
