@@ -412,15 +412,38 @@ ul
 #myBtn:hover {
   background-color: #555;
 }
-    
+     #myHome {
+  display: none;
+  position: fixed;
+  bottom: 15px;
+  right: 0px;
+  z-index: 99;
+  font-size: 18px;
+  border: none;
+  outline: none;
+  background-color: red;
+  color: white;
+  cursor: pointer;
+  padding: 15px;
+  border-radius: 4px;
+		text-decoration-line: none;
+}
+
+#myHome:hover {
+  background-color: #555;
+}	
+	#myHome a{
+		text-decoration: none;
+		color: white;
+	}	
 </style>
 
 </head>
 
 <body lang=EN-US link=blue vlink=purple style='word-wrap:break-word'>
     
-    <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
-    
+    <button onclick="topFunction()" id="myBtn" title="Về đầu trang">Top</button>
+    <button onclick="topFunction()" id="myHome"   title="Về trang chủ"><a href="https://nguyenminhtri1986.github.io/">Home</a></button>
 <div id="mySidenav" class="sidenav">
   <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
 <p class=MsoTocHeading><a href="#_mucluc"> MỤC LỤC</a></p>
@@ -5949,15 +5972,17 @@ function closeNav() {
 }
     // Get the button
 let mybutton = document.getElementById("myBtn");
-
+let mybutton1 = document.getElementById("myHome");
 // When the user scrolls down 20px from the top of the document, show the button
 window.onscroll = function() {scrollFunction()};
 
 function scrollFunction() {
   if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
     mybutton.style.display = "block";
+	  mybutton1.style.display = "block";
   } else {
     mybutton.style.display = "none";
+	  mybutton1.style.display = "none";
   }
 }
 
