@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en"><!-- InstanceBegin template="/Templates/template.dwt" codeOutsideHTMLIsLocked="false" -->
+<head>
+<!-- InstanceBeginEditable name="doctitle" -->
+<title>.:Giảng dạy:.</title>
+<!-- InstanceEndEditable -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="css/w3.css" rel="stylesheet" type="text/css">
+<link href="font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+<link href="css/custom.css" rel="stylesheet" type="text/css">
+<link href="css/bootstrap-4.4.1.css" rel="stylesheet" type="text/css">
+<!-- InstanceBeginEditable name="head" -->
+<!-- InstanceEndEditable -->
+</head>
+<body>
+<!-- Navbar -->
+<div class="w3-top fixed-top">
+  <div class="w3-bar w3-black w3-card" style="background-color: #150828 !important;"> <a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right" href="javascript:void(0)" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a> <a href="index.html" class="w3-bar-item w3-button w3-padding-16"><i class="fa fa-home" aria-hidden="true"></i> Trang chủ</a> <a href="gioi-thieu.html" class="w3-bar-item w3-button w3-padding-16 w3-hide-small"><i class="fa fa-info" aria-hidden="true"></i> Giới thiệu</a>
+    <div class="w3-dropdown-hover w3-hide-small">
+      <button class="w3-button" title="More">
+      <a href="giang-day.html" class="w3-button"><i class="fa fa-graduation-cap" aria-hidden="true"></i> Giảng dạy<i class="fa fa-caret-down"></i></a>
+      </button>
+      <div class="w3-dropdown-content w3-bar-block w3-card-4"> 
+          <a href="giang-day.html#tin-hoc-10" class="w3-bar-item w3-button">Môn Tin học 10</a>
+          <a href="giang-day.html#chuyen-de-tin-hoc-10" class="w3-bar-item w3-button">Chuyên đề Tin học 10</a>
+          <hr>
+          <a href="giang-day.html#tin-hoc-co-ban" class="w3-bar-item w3-button">Môn Tin học cơ bản</a>
+          <a href="giang-day.html#chuan-doan-su-va-xu-ly-co-phan-mem" class="w3-bar-item w3-button">Môn học Chuẩn đoán và xử lý sự cố phần mềm</a> 
+          <a href="giang-day.html#he-dieu-hanh-windows-server" class="w3-bar-item w3-button">Môn học Hệ điều hành windows Server</a> 
+          <a href="giang-day.html#thiet-ke-va-quan-tri-website" class="w3-bar-item w3-button">Môn học Thiết kế và quản trị website</a> 
+          <a href="giang-day.html#thiet-ke-ung-dung-voi-asp-net" class="w3-bar-item w3-button">Môn học Thiết kế ứng dụng với ASP.NET</a> 
+          <a href="giang-day.html#quan-tri-he-thong-webserver-va-mailserver" class="w3-bar-item w3-button">Môn học quản trị hệ thống webserver và mailserver</a> 
+        </div>
+    </div>
+    <div class="w3-dropdown-hover w3-hide-small">
+      <button class="w3-button" title="More">
+      <a href="tai-lieu-tham-khao.html" class="w3-button"><i class="fa fa-file-o" aria-hidden="true"></i> Tài liệu tham khảo <i class="fa fa-caret-down"></i></a>
+      </button>
+      <div class="w3-dropdown-content w3-bar-block w3-card-4"> <a href="#" class="w3-bar-item w3-button">Merchandise</a> <a href="#" class="w3-bar-item w3-button">Extras</a> <a href="#" class="w3-bar-item w3-button">Media</a> </div>
+    </div>
+    <div class="w3-dropdown-hover w3-hide-small">
+      <button class="w3-button" title="More">
+      <a href="phan-mem.html" class="w3-button"><i class="fa fa-folder-open" aria-hidden="true"></i> Phần mềm <i class="fa fa-caret-down"></i></a>
+      </button>
+      <div class="w3-dropdown-content w3-bar-block w3-card-4"> <a href="phan-mem.html#phan-mem-he-thong" class="w3-bar-item w3-button"><i class="fa fa-windows" aria-hidden="true"></i> Phần mềm hệ thống</a> <a href="phan-mem.html#phan-mem-ung-dung" class="w3-bar-item w3-button"><i class="fa fa-cubes" aria-hidden="true"></i> Phần mềm ứng dụng</a> <a href="phan-mem.html#phan-mem-tien-ich" class="w3-bar-item w3-button"><i class="fa fa-desktop" aria-hidden="true"></i> Phần mềm tiện ích</a> <a href="phan-mem.html#phan-mem-ho-tro-hoc-tap" class="w3-bar-item w3-button"><i class="fa fa-graduation-cap" aria-hidden="true"></i> Phần mềm hỗ trợ học tập</a> </div>
+    </div>
+    <a href="lien-he.html" class="w3-bar-item w3-button w3-padding-16 w3-hide-small"><i class="fa fa-address-card-o" aria-hidden="true"></i> Liên hệ</a> </div>
+</div>
+
+<!-- Navbar on small screens (remove the onclick attribute if you want the navbar to always show on top of the content when clicking on the links) -->
+<div id="navDemo" class="w3-bar-block w3-black w3-hide w3-hide-large w3-hide-medium w3-top" style="margin-top:46px"> <a href="#gioi-thieu" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()"><i class="fa fa-info" aria-hidden="true"></i> Giới thiệu</a> <a href="#tour" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()">TOUR</a> <a href="#lien-he" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()"><i class="fa fa-address-card-o" aria-hidden="true"></i> Liên hệ</a> <a href="#" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()">MERCH</a> </div>
+
+<!-- Page content -->
+
+<div class="w3-content" style="max-width:2000px;margin-top:54px; z-index: 1000 !important"><!-- InstanceBeginEditable name="noidung" --> 
+<!-- MÔN TIN HỌC 10-->
+  <div class="container text-center" style="padding: 32px;" id="tin-hoc-10">
+    <hr>
+    <h2 class="text-center" >MÔN TIN HỌC 10</h2>
+    <hr>
+      <div class="row">
+      <div class="col-xl-12">
+        <table class="w3-table-all w3-light-gray">
+          <thead>
+            <tr class="w3-black w3-padding-large">
+              <th colspan="2"><i class="fa fa-folder-open" aria-hidden="true"></i> MÔN TIN HỌC 10 - ĐỀ CƯƠNG ÔN TẬP</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="w3-hover-pale-green">
+              <td>MÔN TIN HỌC 10 - ĐỀ CƯƠNG ÔN TẬP KIỂM TRA GIỮA KỲ 1</td>
+              <td><a href="https://forms.gle/TdX3SmA4PSCY1zr57" target="_blank" class="w3-button w3-green ">Ôn tập</a> <a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vRWyRURMsVrPYgYga44eDi0ocomLjgssTiC0hflpjmMtfCydI6Ry43DdPnRzQi04tFX10dlbalSyjO8/pubhtml" target="_blank" class="w3-button w3-blue">Xem kết quả</a></td>
+            </tr>
+              <tr class="w3-hover-pale-green">
+              <td>MÔN TIN HỌC 10 - ĐỀ CƯƠNG ÔN TẬP KIỂM TRA CUỐI KỲ 1</td>
+              <td><a href="https://forms.gle/c9QQfkmsSnKsg1HF6" target="_blank" class="w3-button w3-green ">Ôn tập</a> <a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vRwBNV9_QpFjUGtM0mQ9sVg-X283liUz2I-1umK3CWo93Ma9J7fwMBhlvQHMhZTXW-tjTvSIWSEdDXg/pubhtml" target="_blank" class="w3-button w3-blue">Xem kết quả</a></td>
+            </tr>
+             <tr class="w3-hover-pale-green">
+              <td>MÔN TIN HỌC 10 - ĐỀ CƯƠNG ÔN TẬP KIỂM TRA GIỮA KỲ 2</td>
+              <td><a href="https://forms.gle/wbarVCFcqtmW2VTM9" target="_blank" class="w3-button w3-green ">Ôn tập</a> <a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vRZNphjD2uq0enO2iUsIcmUKiKiXb0VGWdgbuwLsftUhSRe39uU9UHmKDnDlWGb_4fi6_3Nu_emyf1I/pubhtml" target="_blank" class="w3-button w3-blue">Xem kết quả</a></td>
+            </tr>
+              <tr class="w3-hover-pale-green">
+              <td>MÔN TIN HỌC 10 - ĐỀ CƯƠNG ÔN TẬP KIỂM TRA CUỐI KỲ 2</td>
+              <td><a href="https://forms.gle/kU6ia2Tvj2r7tjT59" target="_blank" class="w3-button w3-green ">Ôn tập</a> <a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vSdSvbuMX6Z1vRTQjyCWZmZETDweNzmI7WIu5q4BdwXVYHRInsgpuN5jy0nhmlwq4IRjYkoSpyd7k-u/pubhtml" target="_blank" class="w3-button w3-blue">Xem kết quả</a></td>
+            </tr> 
+          </tbody>
+        </table>
+      </div>
+    </div>
+      <br>
+    <div class="row">
+      <div class="col-xl-12">
+        <table class="w3-table-all w3-light-gray">
+          <thead>
+            <tr class="w3-black w3-padding-large">
+              <th colspan="2"><i class="fa fa-folder-open" aria-hidden="true"></i> MÔN TIN HỌC 10 - SẢN PHẨM HỌC TẬP</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="w3-hover-pale-green">
+              <td>MÔN TIN HỌC 10 - SẢN PHẨM HỌC TẬP</td>
+              <td><a href="https://forms.gle/k7UeZmJKoH7CY237A" target="_blank" class="w3-button w3-green ">Nộp sản phẩm học tập</a> <a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vSdSvbuMX6Z1vRTQjyCWZmZETDweNzmI7WIu5q4BdwXVYHRInsgpuN5jy0nhmlwq4IRjYkoSpyd7k-u/pubhtml" target="_blank" class="w3-button w3-blue">Xem kết quả</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    </div>
+    <!--KẾT THÚC MÔN TIN HỌC 10-->
+    <!--CHUYÊN ĐỀ TIN HỌC 10-->
+  <div class="container text-center" style="padding: 32px;" id="chuyen-de-tin-hoc-10">
+    <hr>
+    <h2 class="text-center" >CHUYÊN ĐỀ TIN HỌC 10</h2>
+    <hr>
+    <div class="row">
+      <div class="col-xl-12">
+        <table class="w3-table-all w3-light-gray">
+          <thead>
+            <tr class="w3-black w3-padding-large">
+              <th colspan="2"><i class="fa fa-folder-open" aria-hidden="true"></i> CHUYÊN ĐỀ TIN HỌC 10 - SẢN PHẨM HỌC TẬP</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="w3-hover-pale-green">
+              <td>CHUYÊN ĐỀ TIN HỌC 10 - SẢN PHẨM HỌC TẬP</td>
+              <td><a href="https://forms.gle/qJnTQ2mujUNFtopm9" target="_blank" class="w3-button w3-green ">Nộp sản phẩm học tập</a> <a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vQi4G0vI0kD7vy_tWrXdTVDaxy4AV14UlbzrfnGCI0tS4bLYmA3drkjZc2wiPnRiXlLtAtUUYCaWZYJ/pubhtml?gid=211556630&single=true" target="_blank" class="w3-button w3-blue">Xem kết quả</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    </div>
+    <!--KẾT THÚC CHUYÊN ĐỀ TIN HỌC 10-->
+    <!-- MÔN TIN HỌC CƠ BẢN-->
+  <div class="container text-center" style="padding: 32px;" id="tin-hoc-co-ban">
+    <hr>
+    <h2 class="text-center" >MÔN TIN HỌC CƠ BẢN</h2>
+    <hr>
+    <div class="row">
+      <div class="col-xl-12">
+        <table class="w3-table-all w3-light-gray">
+          <thead>
+            <tr class="w3-black w3-padding-large">
+              <th><i class="fa fa-folder-open" aria-hidden="true"></i> MÔN TIN HỌC CƠ BẢN - LÝ THUYẾT</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="w3-hover-pale-green"><iframe frameborder="0" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQtSAyX8NmBOsaPS4DB__6D-f2h7sVNn6jdKEAaOBVK25u1tqgFmLu_sc1n0T2WUAJ3kC9I0gpH35S6/pubhtml?gid=0&single=true" width="100%" height="300"></iframe></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+       <br>
+       <div class="row">
+      <div class="col-xl-12">
+        <table class="w3-table-all w3-light-gray">
+          <thead>
+            <tr class="w3-black w3-padding-large">
+              <th><i class="fa fa-folder-open" aria-hidden="true"></i> MÔN TIN HỌC CƠ BẢN - BÀI TẬP</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="w3-hover-pale-green"><iframe frameborder="0" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vRhdOrFoj7OgloYooJPdQmaWXsgwQRbxpmwgnPGlinAVTdLRH_s5OsFl-GXD6Rzw83aUn3TDuqFg01P/pubhtml?gid=0&single=true" width="100%" height="300"></iframe></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+       <br>
+    <div class="row">
+      <div class="col-xl-12">
+        <table class="w3-table-all w3-light-gray">
+          <thead>
+            <tr class="w3-black w3-padding-large">
+              <th colspan="2"><i class="fa fa-folder-open" aria-hidden="true"></i> MÔN TIN HỌC CƠ BẢN - SẢN PHẨM HỌC TẬP</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="w3-hover-pale-green">
+              <td>MÔN TIN HỌC CƠ BẢN - SẢN PHẨM HỌC TẬP</td>
+              <td><a href="https://forms.gle/WRh6NqfsqiQpdNat7" target="_blank" class="w3-button w3-green ">Nộp sản phẩm học tập</a> <a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vS5Bh8DzqHANC9NUDGJbUSOLudJlb4X4KX-OG0TCF_rIi2hRVYDa-z3O3RTATWrSrz_regPsXJnvZHB/pubhtml?gid=728822324&single=true" target="_blank" class="w3-button w3-blue">Xem kết quả</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    </div>
+<!--KẾT THÚC MÔN TIN HỌC CƠ BẢN-->
+    <!-- MÔN HỌC CHUẨN ĐOÁN VÀ XỬ LÝ SỰ CỐ PHẦN MỀM-->
+  <div class="container text-center" style="padding: 32px;" id="chuan-doan-su-va-xu-ly-co-phan-mem">
+    <hr>
+    <h2 class="text-center" >MÔN HỌC CHUẨN ĐOÁN VÀ XỬ LÝ SỰ CỐ PHẦN MỀM</h2>
+    <hr>
+    <div class="row">
+      <div class="col-xl-12">
+        <table class="w3-table-all w3-light-gray">
+          <thead>
+            <tr class="w3-black w3-padding-large">
+              <th><i class="fa fa-folder-open" aria-hidden="true"></i> MÔN HỌC CHUẨN ĐOÁN VÀ XỬ LÝ SỰ CỐ PHẦN MỀM - BÀI TẬP</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="w3-hover-pale-green"><iframe frameborder="0" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vRw2sBau7l4xMNfcm107-hZRix68iGgK2XVx18JrOCz-NSfXy8q2PCuZALrpZ093u4qZMPj8QRRgUN7/pubhtml?gid=0&single=true" width="100%" height="420"></iframe></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+       <br>
+    <div class="row">
+      <div class="col-xl-12">
+        <table class="w3-table-all w3-light-gray">
+          <thead>
+            <tr class="w3-black w3-padding-large">
+              <th colspan="2"><i class="fa fa-folder-open" aria-hidden="true"></i> MÔN HỌC CHUẨN ĐOÁN VÀ XỬ LÝ SỰ CỐ PHẦN MỀM - SẢN PHẨM HỌC TẬP</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="w3-hover-pale-green">
+              <td>MÔN HỌC CHUẨN ĐOÁN VÀ XỬ LÝ SỰ CỐ PHẦN MỀM - SẢN PHẨM HỌC TẬP</td>
+              <td><a href="https://forms.gle/gw9qJnTVckYn3Mg8A" target="_blank" class="w3-button w3-green ">Nộp sản phẩm học tập</a> <a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vTAKa1NQYJ8AA6mlhw2GDKKcsval-FkVcMWKGEvJ3FvIh5eaWii_AcL6akSx3hogy9rm9Osnc3JbT_t/pubhtml?gid=688175862&single=true" target="_blank" class="w3-button w3-blue">Xem kết quả</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <!--KẾT THÚC MÔN HỌC CHUẨN ĐOÁN VÀ XỬ LÝ SỰ CỐ PHẦN MỀM --> 
+  <!--MÔN HỌC HỆ ĐIỀU HÀNH WINDOWS SERVER-->
+  <div class="container text-center" style="padding: 32px;" id="he-dieu-hanh-windows-server">
+    <hr>
+    <h2 class="text-center" >MÔN HỌC HỆ ĐIỀU HÀNH WINDOWS SERVER</h2>
+    <hr>
+      <div class="row">
+      <div class="col-xl-12">
+        <table class="w3-table-all w3-light-gray">
+          <thead>
+            <tr class="w3-black w3-padding-large">
+              <th><i class="fa fa-folder-open" aria-hidden="true"></i> MÔN HỌC HỆ ĐIỀU HÀNH WINDOWS SERVER - LÝ THUYẾT</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="w3-hover-pale-green"><iframe frameborder="0" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQ18ClbWM_-m-NJk5vfQeLhITfA0SzOsW61rDRNN4lRKusWfuo7k871lkTbjs6PSKyZybYNCta5F0a6/pubhtml?gid=0&single=true" width="100%" height="300"></iframe></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+       <br>
+    <div class="row">
+      <div class="col-xl-12">
+        <table class="w3-table-all w3-light-gray">
+          <thead>
+            <tr class="w3-black w3-padding-large">
+              <th><i class="fa fa-folder-open" aria-hidden="true"></i> MÔN HỌC HỆ ĐIỀU HÀNH WINDOWS SERVER - BÀI TẬP</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="w3-hover-pale-green"><iframe frameborder="0" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTXUjydWninG7HO55b84l6VCRI97gBkJH5KcDdvZ80WIFgZvTTe9-dGNhSS0DcJswwiS7L6OBBZRFyf/pubhtml?gid=0&single=true" width="100%" height="530"></iframe></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+       <br>
+    <div class="row">
+      <div class="col-xl-12">
+        <table class="w3-table-all w3-light-gray">
+          <thead>
+            <tr class="w3-black w3-padding-large">
+              <th colspan="2"><i class="fa fa-folder-open" aria-hidden="true"></i> MÔN HỌC HỆ ĐIỀU HÀNH WINDOWS SERVER - SẢN PHẨM HỌC TẬP</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="w3-hover-pale-green">
+              <td>MÔN HỌC HỆ ĐIỀU HÀNH WINDOWS SERVER - SẢN PHẨM HỌC TẬP</td>
+              <td><a href="https://forms.gle/eWX4FeFwEvi4coZy6" target="_blank" class="w3-button w3-green ">Nộp sản phẩm học tập</a> <a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vTuUt9Y9fWLdn2xXeZAx8L5uua2EFsLoS1dqg-uZmq_Epz-7LKrThx7xeSvrPN1onBSbIesa_uLYXXp/pubhtml?gid=1426697369&single=true" target="_blank" class="w3-button w3-blue">Xem kết quả</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    </div>
+  <!--KẾT THÚC MÔN HỌC HỆ ĐIỀU HÀNH WINDOWS SERVER-->    
+   <!-- THIẾT KẾ VÀ QUẢN TRỊ WEBSITE-->
+  <div class="container text-center" style="padding: 32px;" id="thiet-ke-va-quan-tri-website">
+    <hr>
+    <h2 class="text-center" >MÔN HỌC THIẾT KẾ VÀ QUẢN TRỊ WEBSITE</h2>
+    <hr>
+     
+    <div class="row">
+      <div class="col-xl-12">
+        <table class="w3-table-all w3-light-gray">
+          <thead>
+            <tr class="w3-black w3-padding-large">
+              <th><i class="fa fa-folder-open" aria-hidden="true"></i> MÔN HỌC THIẾT KẾ VÀ QUẢN TRỊ WEBSITE - BÀI TẬP</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="w3-hover-pale-green"><iframe frameborder="0" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTjfGyYzif6fhfRFLvilGb7sUTAmfgUgoeKyRkfbyljUK-euUxDsoXj1I2F4W_2Nv2Yl99diEpKGN2U/pubhtml?gid=0&single=true" width="100%" height="450"></iframe></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+       <br>
+    <div class="row">
+      <div class="col-xl-12">
+        <table class="w3-table-all w3-light-gray">
+          <thead>
+            <tr class="w3-black w3-padding-large">
+              <th colspan="2"><i class="fa fa-folder-open" aria-hidden="true"></i> MÔN HỌC THIẾT KẾ VÀ QUẢN TRỊ WEBSITE - SẢN PHẨM HỌC TẬP</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="w3-hover-pale-green">
+              <td>MÔN HỌC THIẾT KẾ VÀ QUẢN TRỊ WEBSITE - SẢN PHẨM HỌC TẬP</td>
+              <td><a href="https://forms.gle/p4PAh6wFCNCb7FmbA" target="_blank" class="w3-button w3-green ">Nộp sản phẩm học tập</a> <a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vSKeizKKooU7BYSFNHNxew5j11t9aoCizuci2U7HqILAIRDSNDERkE6Zh_0z4wCt0LEYxoT0w2IaObf/pubhtml?gid=1187355901&single=true" target="_blank" class="w3-button w3-blue">Xem kết quả</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    </div>
+   <!--KẾT THÚC THIẾT KẾ VÀ QUẢN TRỊ WEBSITE-->
+<!--    MÔN HỌC THIẾT KẾ ỨNG DỤNG VỚI ASP.NET-->
+  <div class="container text-center" style="padding: 32px;" id="thiet-ke-ung-dung-voi-asp-net">
+    <hr>
+    <h2 class="text-center" >MÔN HỌC THIẾT KẾ ỨNG DỤNG VỚI ASP.NET</h2>
+    <hr>
+    <div class="row">
+      <div class="col-xl-12">
+        <table class="w3-table-all w3-light-gray">
+          <thead>
+            <tr class="w3-black w3-padding-large">
+              <th><i class="fa fa-folder-open" aria-hidden="true"></i> MÔN HỌC THIẾT KẾ ỨNG DỤNG VỚI ASP.NET - BÀI TẬP</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="w3-hover-pale-green"><iframe frameborder="0" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vT9anOzc0bse4oHpvOTFEZCcCWZSUAUrQq1vYBePXE0D0bC101jgs-ZJIQsYGtbi1H0V2ciObQKyyzs/pubhtml?gid=0&single=true" width="100%" height="620"></iframe></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+       <br>
+       <div class="row">
+      <div class="col-xl-12">
+        <table class="w3-table-all w3-light-gray">
+          <thead>
+            <tr class="w3-black w3-padding-large">
+              <th><i class="fa fa-folder-open" aria-hidden="true"></i> MÔN HỌC THIẾT KẾ ỨNG DỤNG VỚI ASP.NET - HƯỚNG DẪN THỰC HIỆN</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="w3-hover-pale-green">
+                  <iframe width="100%" height="450" src="https://www.youtube.com/embed/videoseries?list=PLUsiyv6Vqy9MFlg2byrUpnoqhMxNHcLSQ" title="ASP.NET - Hướng dẫn thực hiện" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                  </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+      <br>
+    <div class="row">
+      <div class="col-xl-12">
+        <table class="w3-table-all w3-light-gray">
+          <thead>
+            <tr class="w3-black w3-padding-large">
+              <th colspan="2"><i class="fa fa-folder-open" aria-hidden="true"></i> MÔN HỌC THIẾT KẾ ỨNG DỤNG VỚI ASP.NET - SẢN PHẨM HỌC TẬP</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="w3-hover-pale-green">
+              <td>MÔN HỌC THIẾT KẾ ỨNG DỤNG VỚI ASP.NET - SẢN PHẨM HỌC TẬP</td>
+              <td><a href="https://forms.gle/gBpZeWtKdB1TgbVQA" target="_blank" class="w3-button w3-green ">Nộp sản phẩm học tập</a> <a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vTv2Xdl1Q1SnwrP1YKvwxoDF6-IgD3PQFSGN0PCMu9oZi-oV6vvW90C-7Hl7G1yZeIAx_HJ6EHJyaov/pubhtml?gid=508995573&single=true" target="_blank" class="w3-button w3-blue">Xem kết quả</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    </div>
+ <!--   KẾT THÚC MÔN HỌC THIẾT KẾ ỨNG DỤNG VỚI ASP.NET-->   
+  <!--  MÔN HỌC QUẢN TRỊ HỆ THỐNG WEBSERVER VÀ MAILSERVER-->
+  <div class="container text-center" style="padding: 32px;" id="quan-tri-he-thong-webserver-va-mailserver">
+    <hr>
+    <h2 class="text-center" >MÔN HỌC QUẢN TRỊ HỆ THỐNG WEBSERVER VÀ MAILSERVER</h2>
+    <hr>
+    <div class="row">
+      <div class="col-xl-12">
+        <table class="w3-table-all w3-light-gray">
+          <thead>
+            <tr class="w3-black w3-padding-large">
+              <th><i class="fa fa-folder-open" aria-hidden="true"></i> MÔN HỌC QUẢN TRỊ HỆ THỐNG WEBSERVER VÀ MAILSERVER - BÀI TẬP</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="w3-hover-pale-green"><iframe frameborder="0" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vRENc6hvntkC8QMsJSjFLqVOjh2KZQOCA7BWgabkJMeLDArGF1AhAP4h5HabDku8cmAqA8h2WaSjIpm/pubhtml?gid=0&single=true" width="100%" height="560"></iframe></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+       <br>
+    <div class="row">
+      <div class="col-xl-12">
+        <table class="w3-table-all w3-light-gray">
+          <thead>
+            <tr class="w3-black w3-padding-large">
+              <th colspan="2"><i class="fa fa-folder-open" aria-hidden="true"></i> MÔN HỌC QUẢN TRỊ HỆ THỐNG WEBSERVER VÀ MAILSERVER - SẢN PHẨM HỌC TẬP</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="w3-hover-pale-green">
+              <td>MÔN HỌC QUẢN TRỊ HỆ THỐNG WEBSERVER VÀ MAILSERVER - SẢN PHẨM HỌC TẬP</td>
+              <td><a href="https://forms.gle/jr43Ap8cyCGi2roA7" target="_blank" class="w3-button w3-green ">Nộp sản phẩm học tập</a> <a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vRfsJnBElDx1Ut7JQssqZrOcMXwNQPuf7N2h_Jh9AoNdKyB3JLdPautHi4ZGz10Xb2ImaDSio1yAUDt/pubhtml?gid=1021497766&single=true" target="_blank" class="w3-button w3-blue">Xem kết quả</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    </div>
+   <!-- KẾT THÚC MÔN HỌC QUẢN TRỊ HỆ THỐNG WEBSERVER VÀ MAILSERVER-->
+      <div class="container text-center" style="padding: 100px;">
+    </div>
+  
+  <!-- InstanceEndEditable --> </div>
+
+<!-- End Page Content --> 
+
+<!-- Footer -->
+
+<footer class="w3-container w3-padding-64 w3-center w3-opacity w3-light-grey w3-xlarge" style="clear: both;">
+  <p class="w3-medium">Thiết kế bởi Nguyễn Minh Trí</p>
+</footer>
+
+<script>
+// Automatic Slideshow - change image every 4 seconds
+var myIndex = 0;
+carousel();
+
+function carousel() {
+  var i;
+  var x = document.getElementsByClassName("mySlides");
+  for (i = 0; i < x.length; i++) {
+    x[i].style.display = "none";  
+  }
+  myIndex++;
+  if (myIndex > x.length) {myIndex = 1}    
+  x[myIndex-1].style.display = "block";  
+  setTimeout(carousel, 4000);    
+}
+
+// Used to toggle the menu on small screens when clicking on the menu button
+function myFunction() {
+  var x = document.getElementById("navDemo");
+  if (x.className.indexOf("w3-show") == -1) {
+    x.className += " w3-show";
+  } else { 
+    x.className = x.className.replace(" w3-show", "");
+  }
+}
+
+// When the user clicks anywhere outside of the modal, close it
+var modal = document.getElementById('ticketModal');
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}
+</script> 
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) --> 
+<script src="js/jquery-3.4.1.min.js"></script> 
+<!-- Include all compiled plugins (below), or include individual files as needed --> 
+<script src="js/popper.min.js"></script> 
+<script src="js/bootstrap-4.4.1.js"></script>
+</body>
+<!-- InstanceEnd --></html>
