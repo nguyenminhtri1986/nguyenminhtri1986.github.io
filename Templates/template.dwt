@@ -56,7 +56,12 @@
 <!-- Navbar on small screens (remove the onclick attribute if you want the navbar to always show on top of the content when clicking on the links) -->
 <div id="navDemo" class="w3-bar-block w3-black w3-hide w3-hide-large w3-hide-medium w3-top" style="margin-top:46px"> 
     <a href="gioi-thieu.html" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()"><i class="fa fa-info" aria-hidden="true"></i> Giới thiệu</a> 
+
+    <a href="giang-day.html#chuan-doan-va-xu-ly-su-co-phan-mem"  class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()"><i class="fa fa-windows" aria-hidden="true"></i>
+Môn học Chuẩn đoán và xử lý sự cố phần mềm</a>
+
     <a href="phan-mem.html#phan-mem-he-thong" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()"><i class="fa fa-windows" aria-hidden="true"></i> Phần mềm hệ thống</a> 
+
     <a href="phan-mem.html#phan-mem-ung-dung" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()"><i class="fa fa-cubes" aria-hidden="true"></i> Phần mềm ứng dụng</a>
     <a href="phan-mem.html#phan-mem-tien-ich" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()"><i class="fa fa-desktop" aria-hidden="true"></i> Phần mềm tiện ích</a>
     <a href="phan-mem.html#phan-mem-ho-tro-hoc-tap" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()"><i class="fa fa-graduation-cap" aria-hidden="true"></i> Phần mềm hỗ trợ học tập</a>
