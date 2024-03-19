@@ -11,8 +11,45 @@
 <link href="../css/custom.css" rel="stylesheet" type="text/css">
 <link href="../css/bootstrap-4.4.1.css" rel="stylesheet" type="text/css">
 <link rel="stylesheet" href="../css/giaitri/style.css">
+ <!--   css giải tri.html-->
+ <style>
+#playlist {
+    padding: 0 30px;
+}
+#playlist li a {
+/*  color: black;
+    text-decoration: none;*/
+}
+/* unvisited link */
+#playlist li a:link {
+    color: black;
+    text-decoration: none;
+}
+/* visited link */
+#playlist li a:visited {
+    color: black;
+    text-decoration: none;
+}
+/* mouse over link */
+#playlist li a:hover {
+    color: hotpink;
+}
+/* selected link */
+#playlist li a:active {
+    color: blue;
+}
+#playlist .current-song a {
+    color: blue;
+}
+</style>   
+    
+    <!--css giaitri.html-->
+    
+    
 <!-- TemplateBeginEditable name="head" -->
 <!-- TemplateEndEditable -->
+    
+    
 </head>
 <body>
 <!-- Navbar -->

@@ -11,8 +11,45 @@
 <link href="css/custom.css" rel="stylesheet" type="text/css">
 <link href="css/bootstrap-4.4.1.css" rel="stylesheet" type="text/css">
 <link rel="stylesheet" href="css/giaitri/style.css">
+ <!--   css giải tri.html-->
+ <style>
+#playlist {
+    padding: 0 30px;
+}
+#playlist li a {
+/*  color: black;
+    text-decoration: none;*/
+}
+/* unvisited link */
+#playlist li a:link {
+    color: black;
+    text-decoration: none;
+}
+/* visited link */
+#playlist li a:visited {
+    color: black;
+    text-decoration: none;
+}
+/* mouse over link */
+#playlist li a:hover {
+    color: hotpink;
+}
+/* selected link */
+#playlist li a:active {
+    color: blue;
+}
+#playlist .current-song a {
+    color: blue;
+}
+</style>   
+    
+    <!--css giaitri.html-->
+    
+    
 <!-- InstanceBeginEditable name="head" -->
 <!-- InstanceEndEditable -->
+    
+    
 </head>
 <body>
 <!-- Navbar -->
@@ -81,137 +118,57 @@
 <!-- Page content -->
 
 <div class="w3-content" style="max-width:2000px;margin-top:54px; z-index: 1000 !important"><!-- InstanceBeginEditable name="noidung" -->
-    <section>
- <!-- <h2 class="title"></h2>-->
-  <div class="container">
-    <div id="video_player">
-      <video controls id="main-Video" autoplay src=""></video>
-    </div>
-    <div class="playlistBx">
-      <div class="header">
-        <div class="row"> <span class="AllLessons"></span> </div>
-        <input type="text" name="" id="searchInput" placeholder="Type Something ....">
-      </div>
-      <ul class="playlist" id="playlist">
-      </ul>
-    </div>
-  </div>
-</section>
-    <script src="js/giaitri/video-list.js"></script> 
-<!--<script src="./script.js"></script>--> 
-<script>
-        const searchInput = document.getElementById("searchInput");  
-        searchInput.addEventListener("input", function() {
-          const searchValue = searchInput.value.toLowerCase();
-          for (const li of playlist.children) {
-            const span = li.querySelector("span");
-            const spanText = span.textContent;
-            const spanTextLower = spanText.toLowerCase();
-            const startIndex = spanTextLower.indexOf(searchValue);
-            if (startIndex === -1) {
-              li.style.display = "none";
-            } else {
-              li.style.display = "";
-              span.innerHTML =
-                spanText.slice(0, startIndex) +
-                "<mark>" +
-                spanText.slice(startIndex, startIndex + searchValue.length) +
-                "</mark>" +
-                spanText.slice(startIndex + searchValue.length);
-            }
-          }
-        });
-        document.getElementById('main-Video').play();
     
-    </script>
-    <script>
-var nextsrc = allVideos;
-var elm = 0; var Player = document.getElementById('Player');
-Player.onended = function(){
-    if(++elm < nextsrc.length + 1){         
-         Player.src = nextsrc[elm-1]; Player.play();
-    } 
-}
-</script>
+    <table border="0" cellspacing="0" cellpadding="0">
+  <tbody>
+      <tr>
+      <td></td>
+          <td></td>
+      </tr>
+    <tr>
+      <td width="70%" valign="top"><video src="" controls id="audioPlayer" autoplay width="100%" > </video></td>
+      <td valign="top" align="left" ><ol id="playlist" type="1">
+          <li class="current-song"><a href="media/BHV01 - Nhớ Mùa Thu Hà Nội - Bài Hát Vàng.mp4">BHV01 - Nhớ Mùa Thu Hà Nội - Bài Hát Vàng.mp4</a></li>
+          <li><a href="media/BHV02 - Yêu Thương Mong Manh - Bài Hát Vàng.mp4">BHV02 - Yêu Thương Mong Manh - Bài Hát Vàng.mp4</a></li>
+          <li><a href="media/BHV03 - Để Gió Cuốn Đi - Bài Hát Vàng.mp4">BHV03 - Để Gió Cuốn Đi - Bài Hát Vàng.mp4</a></li>
+          <li><a href="media/BHV04 - Hãy Vì Cuộc Sống Ngày Mai - Bài Hát Vàng.mp4">BHV04 - Hãy Vì Cuộc Sống Ngày Mai - Bài Hát Vàng.mp4</a></li>
+          <li><a href="media/BHV05 - Sang Mùa - Bài Hát Vàng.mp4">BHV05 - Sang Mùa - Bài Hát Vàng.mp4</a></li>
+          <li><a href="media/BHV06 - Vọng Cổ Buồn - Bài Hát Vàng.mp4">BHV06 - Vọng Cổ Buồn - Bài Hát Vàng.mp4</a></li>
+          <li><a href="media/BHV07 - Chị Tôi - Bài Hát Vàng.mp4">BHV07 - Chị Tôi - Bài Hát Vàng.mp4</a></li>
+          <li><a href="media/BHV08 - Ánh Sáng Của Đời Tôi - Bài Hát Vàng.mp4">BHV08 - Ánh Sáng Của Đời Tôi - Bài Hát Vàng.mp4</a></li>
+          <li><a href="media/BHV09 - Ước Mơ Trong Đời - Bài Hát Vàng.mp4">BHV09 - Ước Mơ Trong Đời - Bài Hát Vàng.mp4</a></li>
+          <li><a href="media/BHV10 - Con Cò - Bài Hát Vàng.mp4">BHV10 - Con Cò - Bài Hát Vàng.mp4</a></li>
+          <li><a href="media/BHV11 - Bài Hát Xưa - Bài Hát Vàng.mp4">BHV11 - Bài Hát Xưa - Bài Hát Vàng.mp4</a></li>
+          <li><a href="media/BHV12 - Xin Lỗi Tình Yêu - Bài Hát Vàng.mp4">BHV12 - Xin Lỗi Tình Yêu - Bài Hát Vàng.mp4</a></li>
+          <li><a href="media/BHV13 - Niệm Khúc Cuối - Bài Hát Vàng.mp4">BHV13 - Niệm Khúc Cuối - Bài Hát Vàng.mp4</a></li>
+          <li><a href="media/BHV14 - Hoang Mang - Bài Hát Vàng.mp4">BHV14 - Hoang Mang - Bài Hát Vàng.mp4</a></li>
+          <li><a href="media/BHV15 - Người Thầy - Bài Hát Vàng.mp4">BHV15 - Người Thầy - Bài Hát Vàng.mp4</a></li>
+          <li><a href="media/BHV16 - Bức Họa Đồng Quê - Bài Hát Vàng.mp4">BHV16 - Bức Họa Đồng Quê - Bài Hát Vàng.mp4</a></li>
+          <li><a href="media/BHV17 - Bức Thư Tình Đầu Tiên - Bài Hát Vàng.mp4">BHV17 - Bức Thư Tình Đầu Tiên - Bài Hát Vàng.mp4</a></li>
+          <li><a href="media/BHV18 - Phôi Pha - Bài Hát Vàng.mp4">BHV18 - Phôi Pha - Bài Hát Vàng.mp4</a></li>
+          <li><a href="media/BHV19 - Khóc thêm lần nữa - Bài Hát Vàng.mp4">BHV19 - Khóc thêm lần nữa - Bài Hát Vàng.mp4</a></li>
+          <li><a href="media/BHV20 - Khát Khao Hơn - Bài Hát Vàng.mp4">BHV20 - Khát Khao Hơn - Bài Hát Vàng.mp4</a></li>
+          <li><a href="media/BHV21 - Tình Yêu Chưa Nói - Bài Hát Vàng.mp4">BHV21 - Tình Yêu Chưa Nói - Bài Hát Vàng.mp4</a></li>
+          <li><a href="media/.mp4">.mp4</a></li>
+        </ol></td>
+    </tr>
+      <tr>
+      <td></td>
+          <td></td>
+      </tr>
+  </tbody>
+</table>
+<script src="https://code.jquery.com/jquery-2.2.0.js"></script> 
+<script src="js/audioPlayer.js"></script> 
 <script>
-// let's select all required tags or elements
-const mainVideo = document.querySelector('#main-Video');
-const musicList = document.querySelector('.music-list');
-const playlist = document.getElementById('playlist');
-const AllLessons = document.querySelector('.AllLessons');
-const videoTitle = document.querySelector('.title');
-
-
-const ulTag = document.querySelector("ul");
-AllLessons.innerHTML = `${allVideos.length} Lessons`
-
-
-let musicIndex = 1;
-window.addEventListener('load',()=>{
-   loadMusic(musicIndex);
-   playingNow();
-})
-function playMusic(){
-   mainVideo.play();
-   playlist.classList.add('active')
-}
-function loadMusic(indexNumb){
-   mainVideo.src = `media/${allVideos[indexNumb - 1].src}.mp4`;
-   videoTitle.innerHTML = `${indexNumb}. ${allVideos[indexNumb - 1].name}`
-   
-}
-
-for(let i = 0; i < allVideos.length; i++){
-   let liTag = `<li li-index="${i + 1}">
-      <div class="row">
-         <span>${i + 1}. ${allVideos[i].name}</span>
-      </div>
-      <video class="${allVideos[i].id}" src="media/${allVideos[i].src}.mp4" style="display: none;" title="${allVideos[i].name}"></video>
-      <span id="${allVideos[i].id}" class="duration" autoplay></span>
-   </li>`;
-   playlist.insertAdjacentHTML('beforeend',liTag); 
-
-   let liVideoDuration = ulTag.querySelector(`#${allVideos[i].id}`)
-   let liVideoTag = ulTag.querySelector(`.${allVideos[i].id}`);
-   
-
-   liVideoTag.addEventListener("loadeddata", ()=>{
-      let videoDuration = liVideoTag.duration;
-      let totalMin = Math.floor(videoDuration / 60);
-      let totalSec = Math.floor(videoDuration % 60);
-      // if totalSec is less then 10 then add 0 at the beginging
-      totalSec < 10 ? totalSec = "0"+ totalSec : totalSec
-      liVideoDuration.innerText = `${totalMin}:${totalSec}`;
-      // adding t duration attribe which we'll use below
-      liVideoDuration.setAttribute("t-duration", `${totalMin}:${totalSec}`);
-   })  
-}
-// let's work on play particular song on click
-const allLiTags = playlist.querySelectorAll('li');
-function playingNow(){
-   for(let j = 0; j<allVideos.length; j++){
-      if(allLiTags[j].classList.contains('playing')){
-         allLiTags[j].classList.remove("playing")
-      }
-      if(allLiTags[j].getAttribute('li-index')==musicIndex){
-         allLiTags[j].classList.add('playing')
-      }
-      // adding onclick attribute in all li tags
-      allLiTags[j].setAttribute("onclick", "clicked(this)")
-   }
-}
-
-function clicked(element){
-   // getting li index of particular clicked li tag
-   let getIndex = element.getAttribute("li-index");
-   musicIndex = getIndex;
-   loadMusic(musicIndex);
-   playMusic();
-   playingNow();
-}
-
-</script>
-<!-- InstanceEndEditable --> </div>
+        // loads the audio player
+        audioPlayer();
+    </script>
+    
+    
+    
+    
+    <!-- InstanceEndEditable --> </div>
 
 <!-- End Page Content --> 
 
