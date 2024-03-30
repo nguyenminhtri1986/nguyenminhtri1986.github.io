@@ -10,7 +10,7 @@
 <link href="../font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 <link href="../css/custom.css" rel="stylesheet" type="text/css">
 <link href="../css/bootstrap-4.4.1.css" rel="stylesheet" type="text/css">
-<link rel="stylesheet" href="../css/giaitri/style.css">
+
  <!--   css giải tri.html-->
  <style>
 #playlist {
@@ -41,7 +41,8 @@
 #playlist .current-song a {
     color: blue;
 }
-</style>   
+</style>
+
     
     <!--css giaitri.html-->
     
