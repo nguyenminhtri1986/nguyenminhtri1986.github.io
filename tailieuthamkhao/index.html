@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+<title>W3.CSS</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<body>
+<div class="w3-sidebar w3-bar-block w3-card w3-animate-left" style="display:none" id="mySidebar">
+  <button class="w3-bar-item w3-button w3-large"
+  onclick="w3_close()">Close &times;</button>
+  <a href="#_Toc167516328" class="w3-bar-item w3-button"><b><span
+style='font-family:Roboto'>H&#432;&#7899;ng d&#7851;n cài &#273;&#7863;t DNS
+trên Windows Server 2012</span><span style='color:windowtext;display:none;
+text-decoration:none'>. </span><span
+style='color:windowtext;display:none;text-decoration:none'>1</span></a> 
+	<a href="#_Toc167516329" class="w3-bar-item w3-button"><b><span
+style='font-family:"Verdana",sans-serif'>I. Yêu c&#7847;u chu&#7849;n b&#7883;</span></b><span
+style='color:windowtext;display:none;text-decoration:none'>. </span><span
+style='color:windowtext;display:none;text-decoration:none'>1</span></a> 
+	<a href="#_Toc167516330" class="w3-bar-item w3-button"><b><span
+style='font-family:"Verdana",sans-serif'>II. H&#432;&#7899;ng d&#7851;n cài
+&#273;&#7863;t.</span></b><span style='color:windowtext;display:none;
+text-decoration:none'>. </span><span
+style='color:windowtext;display:none;text-decoration:none'>1</span></a> </div>
+<div id="main">
+  <div class="w3-teal">
+    <button id="openNav" class="w3-button w3-teal w3-xlarge" onclick="w3_open()">&#9776;</button>
+    <div class="w3-container">
+      <h1>Hướng dẫn cài đặt DNS trên Windows Server 2012</h1>
+    </div>
+  </div>
+  
+<p style='margin-top:0cm;margin-right:0cm;margin-bottom:19.5pt;margin-left:
+0cm;background:white'><span style='font-size:11.5pt;font-family:"Verdana",sans-serif;
+color:#222222'>DNS (Domain Name System) là m&#7897;t h&#7879; c&#417; s&#7903;
+d&#7919; li&#7879;u phân tán dùng &#273;&#7875; ánh x&#7841; gi&#7919;a các tên
+mi&#7873;n và các &#273;&#7883;a ch&#7881; IP. DNS &#273;&#432;a ra m&#7897;t
+ph&#432;&#417;ng pháp &#273;&#7863;c bi&#7879;t &#273;&#7875; duy trì và liên
+k&#7871;t các ánh x&#7841; này trong m&#7897;t th&#7875; th&#7889;ng nh&#7845;t.</span></p>
+
+<p class=MsoNormal align=center style='text-align:center'><img width=640
+height=354 id="Picture 3"
+src="huong_dan_cai_dat_dns_tren_windows_server_2012_files/image001.png"></p>
+
+<h2><a name="_Toc167516329"><b><span style='font-size:11.5pt;line-height:107%;
+font-family:"Verdana",sans-serif;color:#222222'>I. Yêu c&#7847;u chu&#7849;n
+b&#7883;</span></b></a></h2>
+
+<p class=MsoNormal style='margin-bottom:7.5pt;margin-left:51.75pt;text-indent:
+-18.0pt;line-height:normal;background:white'><span style='font-size:10.0pt;
+font-family:Symbol;color:#222222'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span style='font-size:11.5pt;font-family:"Verdana",sans-serif;
+color:#222222'>1 máy Server ch&#7841;y h&#7879; &#273;i&#7873;u hành Windows
+Server 2012.</span></p>
+
+<p class=MsoNormal style='margin-bottom:0cm;margin-left:51.75pt;text-indent:
+-18.0pt;line-height:normal;background:white'><span style='font-size:10.0pt;
+font-family:Symbol;color:#222222'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span style='font-size:11.5pt;font-family:"Verdana",sans-serif;
+color:#222222'>1 máy Client ch&#7841;y h&#7879; &#273;i&#7873;u hành Windows 8.</span></p>
+
+<p style='margin-top:0cm;margin-right:0cm;margin-bottom:19.5pt;margin-left:
+0cm;background:white'><a name="_Toc167516330"><strong><span style='font-size:
+11.5pt;font-family:"Verdana",sans-serif;color:#222222'>II. H&#432;&#7899;ng d&#7851;n
+cài &#273;&#7863;t.</span></strong></a></p>
+
+<p style='margin-top:0cm;margin-right:0cm;margin-bottom:19.5pt;margin-left:
+0cm;background:white'><strong><span style='font-size:11.5pt;font-family:"Verdana",sans-serif;
+color:#222222'>B&#432;&#7899;c 1</span></strong><span style='font-size:11.5pt;
+font-family:"Verdana",sans-serif;color:#222222'>: Truy c&#7853;p vào windows
+server 2012 ch&#7885;n&nbsp;</span><strong><span style='font-size:11.5pt;
+font-family:"Verdana",sans-serif;color:#222222'>Server Manager -&gt; Add Roles
+and Feature&nbsp;</span></strong><span style='font-size:11.5pt;font-family:
+"Verdana",sans-serif;color:#222222'>&#273;&#7875; cài &#273;&#7863;t&nbsp;</span><strong><span
+style='font-size:11.5pt;font-family:"Verdana",sans-serif;color:#222222'>DNS
+Server.</span></strong></p>
+
+<p class=MsoNormal align=center style='text-align:center'><img width=603
+height=420 id="Picture 4"
+src="huong_dan_cai_dat_dns_tren_windows_server_2012_files/image002.png"></p>
+
+<p class=MsoNormal><strong><span style='font-size:11.5pt;line-height:107%;
+font-family:"Verdana",sans-serif;color:#222222;background:white'>B&#432;&#7899;c
+2:</span></strong><span style='font-size:11.5pt;line-height:107%;font-family:
+"Verdana",sans-serif;color:#222222;background:white'>&nbsp;Nh&#7845;n Next ti&#7871;p
+t&#7909;c&nbsp; &#273;&#7875;&nbsp; cài &#273;&#7863;t.</span></p>
+
+<p class=MsoNormal align=center style='text-align:center'><img width=594
+height=420 id="Picture 5"
+src="huong_dan_cai_dat_dns_tren_windows_server_2012_files/image003.png"></p>
+
+<p class=MsoNormal><strong><span style='font-size:11.5pt;line-height:107%;
+font-family:"Verdana",sans-serif;color:#222222;background:white'>B&#432;&#7899;c
+3:</span></strong><span style='font-size:11.5pt;line-height:107%;font-family:
+"Verdana",sans-serif;color:#222222;background:white'>&nbsp;Sau khi cài &#273;&#7863;t
+thì chúng ta b&#7845;m nút Close.</span></p>
+
+<p class=MsoNormal align=center style='text-align:center'><img width=593
+height=420 id="Picture 7"
+src="huong_dan_cai_dat_dns_tren_windows_server_2012_files/image004.png"></p>
+
+<p class=MsoNormal><strong><span style='font-size:11.5pt;line-height:107%;
+font-family:"Verdana",sans-serif;color:#222222;background:white'>B&#432;&#7899;c
+4:</span></strong><span style='font-size:11.5pt;line-height:107%;font-family:
+"Verdana",sans-serif;color:#222222;background:white'>&nbsp;Cài &#273;&#7863;t c&#7845;u
+hình cho DNS Server. Ta truy c&#7853;p vào Server Manager và ch&#7885;n&nbsp;<strong><span
+style='font-family:"Verdana",sans-serif'>Tool -&gt; DNS.</span></strong></span></p>
+
+<p class=MsoNormal align=center style='text-align:center'><img width=376
+height=384 id="Picture 8"
+src="huong_dan_cai_dat_dns_tren_windows_server_2012_files/image005.png"></p>
+
+<p class=MsoNormal><strong><span style='font-size:11.5pt;line-height:107%;
+font-family:"Verdana",sans-serif;color:#222222;background:white'>B&#432;&#7899;c
+5:</span></strong><span style='font-size:11.5pt;line-height:107%;font-family:
+"Verdana",sans-serif;color:#222222;background:white'>Tr&#432;&#7899;c khi ta t&#7841;o
+các b&#7843;n ghi trên DNS, chúng ta nên t&#7841;o 1 Zone<strong><span
+style='font-family:"Verdana",sans-serif'>&nbsp;Reverse Lookup Zone</span></strong>&nbsp;&#273;&#7875;
+h&#7879; th&#7889;ng t&#7921; t&#7841;o b&#7843;n ghi phân gi&#7843;i ng&#432;&#7907;c
+cho chúng ta.Các b&#7841;n vào l&#7841;i&nbsp;<strong><span style='font-family:
+"Verdana",sans-serif'>Server Manager -&gt;DNS Manager.</span></strong></span></p>
+
+<p class=MsoNormal align=center style='text-align:center'><img width=696
+height=285 id="Picture 9"
+src="huong_dan_cai_dat_dns_tren_windows_server_2012_files/image006.png"></p>
+
+<p class=MsoNormal><span style='font-size:11.5pt;line-height:107%;font-family:
+"Verdana",sans-serif;color:#222222;background:white'>Giao di&#7879;n nó s&#7869;
+hi&#7879;n ra nh&#432; sau. B&#7841;n nh&#7845;n ch&#7885;n&nbsp;<strong><span
+style='font-family:"Verdana",sans-serif'>Rerverse Lookup Zones.</span></strong></span></p>
+
+<p class=MsoNormal><strong><span style='font-size:11.5pt;line-height:107%;
+font-family:"Verdana",sans-serif;color:#222222;background:white'>B&#432;&#7899;c
+6:&nbsp;</span></strong><span style='font-size:11.5pt;line-height:107%;
+font-family:"Verdana",sans-serif;color:#222222;background:white'>B&#7841;n nh&#7845;n
+nút ph&#7843;i chu&#7897;t ch&#7885;n New Zones.</span></p>
+
+<p class=MsoNormal align=center style='text-align:center'><img width=643
+height=420 id="Picture 10"
+src="huong_dan_cai_dat_dns_tren_windows_server_2012_files/image007.png"></p>
+
+<p class=MsoNormal><strong><span style='font-size:11.5pt;line-height:107%;
+font-family:"Verdana",sans-serif;color:#222222;background:white'>B&#432;&#7899;c
+7:</span></strong><span style='font-size:11.5pt;line-height:107%;font-family:
+"Verdana",sans-serif;color:#222222;background:white'>&nbsp;Gi&#7889;ng nh&#432;
+&#7903; trên, chúng ta &#273;&#7875; m&#7863;c &#273;&#7883;nh gi&#7889;ng hình
+bên d&#432;&#7899;i và &#7845;n&nbsp;<strong><span style='font-family:"Verdana",sans-serif'>Next.</span></strong></span></p>
+
+<p class=MsoNormal align=center style='text-align:center'><img width=433
+height=340 id="Picture 11"
+src="huong_dan_cai_dat_dns_tren_windows_server_2012_files/image008.png"></p>
+
+<p class=MsoNormal><strong><span style='font-size:11.5pt;line-height:107%;
+font-family:"Verdana",sans-serif;color:#222222;background:white'>B&#432;&#7899;c
+8:</span></strong><span style='font-size:11.5pt;line-height:107%;font-family:
+"Verdana",sans-serif;color:#222222;background:white'>&nbsp;Vì &#7903; Vi&#7879;t
+Nam ch&#432;a s&#7917; d&#7909;ng IPv6, nên chúng ta ch&#7885;n vào&nbsp;<strong><span
+style='font-family:"Verdana",sans-serif'>IPv4 Reverse Lookup Zone</span></strong>&nbsp;và
+&#7845;n&nbsp;<strong><span style='font-family:"Verdana",sans-serif'>Next</span></strong>&nbsp;&#273;&#7875;
+ti&#7871;p t&#7909;c.</span></p>
+
+<p class=MsoNormal align=center style='text-align:center'><img width=433
+height=340 id="Picture 12"
+src="huong_dan_cai_dat_dns_tren_windows_server_2012_files/image009.png"></p>
+
+<p class=MsoNormal><strong><span style='font-size:11.5pt;line-height:107%;
+font-family:"Verdana",sans-serif;color:#222222;background:white'>B&#432;&#7899;c
+9:</span></strong><span style='font-size:11.5pt;line-height:107%;font-family:
+"Verdana",sans-serif;color:#222222;background:white'>&nbsp;Ti&#7871;p theo,
+chúng ta ch&#7885;n&nbsp;<strong><span style='font-family:"Verdana",sans-serif'>Network
+ID</span></strong>&nbsp;và ghi d&#7843;i &#273;&#7883;a ch&#7881;&nbsp;<strong><span
+style='font-family:"Verdana",sans-serif'>IP</span></strong>&nbsp;c&#7911;a máy
+b&#7841;n &#273;ang cài&nbsp;<strong><span style='font-family:"Verdana",sans-serif'>DNS.</span></strong></span></p>
+
+<p class=MsoNormal align=center style='text-align:center'><img width=434
+height=339 id="Picture 13"
+src="huong_dan_cai_dat_dns_tren_windows_server_2012_files/image010.png"></p>
+
+<p class=MsoNormal><strong><span style='font-size:11.5pt;line-height:107%;
+font-family:"Verdana",sans-serif;color:#222222;background:white'>B&#432;&#7899;c
+10:</span></strong><span style='font-size:11.5pt;line-height:107%;font-family:
+"Verdana",sans-serif;color:#222222;background:white'>&nbsp;&#272;&#7875; m&#7863;c
+&#273;&#7883;nh &#7845;n&nbsp;<strong><span style='font-family:"Verdana",sans-serif'>Next</span></strong>&nbsp;và&nbsp;<strong><span
+style='font-family:"Verdana",sans-serif'>Finish</span></strong>&nbsp;&#273;&#7875;
+hoàn t&#7845;t.</span></p>
+
+<p class=MsoNormal align=center style='text-align:center'><img width=433
+height=336 id="Picture 15"
+src="huong_dan_cai_dat_dns_tren_windows_server_2012_files/image011.png"></p>
+
+<p class=MsoNormal align=center style='text-align:center'><img width=433
+height=341 id="Picture 16"
+src="huong_dan_cai_dat_dns_tren_windows_server_2012_files/image012.png"></p>
+</div>
+<script>
+function w3_open() {
+  document.getElementById("main").style.marginLeft = "25%";
+  document.getElementById("mySidebar").style.width = "25%";
+  document.getElementById("mySidebar").style.display = "block";
+  document.getElementById("openNav").style.display = 'none';
+}
+function w3_close() {
+  document.getElementById("main").style.marginLeft = "0%";
+  document.getElementById("mySidebar").style.display = "none";
+  document.getElementById("openNav").style.display = "inline-block";
+}
+</script>
+</body>
+</html>
