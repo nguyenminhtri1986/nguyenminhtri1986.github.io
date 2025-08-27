@@ -14,7 +14,7 @@
 <!--   css giải tri.html-->
 <style>
 #playlist {
-    padding: 0 30px;
+	padding: 0 30px;
 }
 #playlist li a {
 /*  color: black;
@@ -22,24 +22,24 @@
 }
 /* unvisited link */
 #playlist li a:link {
-    color: black;
-    text-decoration: none;
+	color: black;
+	text-decoration: none;
 }
 /* visited link */
 #playlist li a:visited {
-    color: black;
-    text-decoration: none;
+	color: black;
+	text-decoration: none;
 }
 /* mouse over link */
 #playlist li a:hover {
-    color: hotpink;
+	color: hotpink;
 }
 /* selected link */
 #playlist li a:active {
-    color: blue;
+	color: blue;
 }
 #playlist .current-song a {
-    color: blue;
+	color: blue;
 }
 </style>
 
@@ -51,68 +51,37 @@
 <body>
 <!-- Navbar -->
 <div class="w3-top fixed-top">
-  <div class="w3-bar w3-black w3-card" style="background-color: #150828 !important;"> <a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right" href="javascript:void(0)" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a> <a href="index.html" class="w3-bar-item w3-button w3-padding-16"><i class="fa fa-home" aria-hidden="true"></i> Trang chủ</a> <a href="gioi-thieu.html" class="w3-bar-item w3-button w3-padding-16 w3-hide-small"><i class="fa fa-info" aria-hidden="true"></i> Giới thiệu</a> <a href="giai-tri.html" class="w3-bar-item w3-button w3-padding-16 w3-hide-small"><i class="fa fa-music" aria-hidden="true"></i> Giải trí</a>
-    <div class="w3-dropdown-hover w3-hide-small">
-      <button class="w3-button" title="More">
-      <a href="giang-day.html" class="w3-button"><i class="fa fa-graduation-cap" aria-hidden="true"></i> Giảng dạy<i class="fa fa-caret-down"></i></a>
-      </button>
-      <div class="w3-dropdown-content w3-bar-block w3-card-4"> 
-			<a href="giang-day.html#tin-hoc-10" class="w3-bar-item w3-button">Môn Tin học 10</a> 
-			<a href="giang-day.html#chuyen-de-tin-hoc-10" class="w3-bar-item w3-button">Chuyên đề Tin học 10</a>
-        <hr>
-            <a href="giang-day.html#tin-hoc-co-ban" class="w3-bar-item w3-button">Môn Tin học cơ bản</a> 
-            <a href="giang-day.html#xay-dung-phan-mem-ban-hang" class="w3-bar-item w3-button">Môn Xây dựng phần mềm bán hàng</a> 
-            <a href="giang-day.html#chuan-doan-su-va-xu-ly-co-phan-mem" class="w3-bar-item w3-button">Môn học Chuẩn đoán và xử lý sự cố phần mềm</a> 
-            <a href="giang-day.html#he-dieu-hanh-windows-server" class="w3-bar-item w3-button">Môn học Hệ điều hành windows Server</a> 
-			<a href="giang-day.html#thiet-ke-va-quan-tri-website" class="w3-bar-item w3-button">Môn học Thiết kế và quản trị website</a> 
-			<a href="giang-day.html#thiet-ke-ung-dung-voi-asp-net" class="w3-bar-item w3-button">Môn học Thiết kế ứng dụng với ASP.NET</a>
-			<a href="giang-day.html#quan-tri-he-thong-webserver-va-mailserver" class="w3-bar-item w3-button">Môn học quản trị hệ thống webserver và mailserver</a> 
-          	<a href="giang-day.html#he-dieu-hanh-linux-co-ban" class="w3-bar-item w3-button">Môn học Hệ điều hành linux Cơ bản</a>
-        </div>
-    </div>
-      <a href="tai-lieu-tham-khao.html" class="w3-bar-item w3-button w3-padding-16 w3-hide-small"><i class="fa fa-book" aria-hidden="true"></i> Tài liệu tham khảo</a>
-       <div class="w3-dropdown-hover w3-hide-small">
-      <button class="w3-button" title="More">
-      <a href="phan-mem.html" class="w3-button"><i class="fa fa-folder-open" aria-hidden="true"></i> Phần mềm <i class="fa fa-caret-down"></i></a>
-      </button>
-      <div class="w3-dropdown-content w3-bar-block w3-card-4"> <a href="phan-mem.html#phan-mem-he-thong" class="w3-bar-item w3-button"><i class="fa fa-windows" aria-hidden="true"></i> Phần mềm hệ thống</a> <a href="phan-mem.html#phan-mem-ung-dung" class="w3-bar-item w3-button"><i class="fa fa-cubes" aria-hidden="true"></i> Phần mềm ứng dụng</a> <a href="phan-mem.html#phan-mem-tien-ich" class="w3-bar-item w3-button"><i class="fa fa-desktop" aria-hidden="true"></i> Phần mềm tiện ích</a> <a href="phan-mem.html#phan-mem-ho-tro-hoc-tap" class="w3-bar-item w3-button"><i class="fa fa-graduation-cap" aria-hidden="true"></i> Phần mềm hỗ trợ học tập</a> </div>
-    </div>
-    <a href="lien-he.html" class="w3-bar-item w3-button w3-padding-16 w3-hide-small"><i class="fa fa-address-card-o" aria-hidden="true"></i> Liên hệ</a> </div>
+	<div class="w3-bar w3-black w3-card" style="background-color: #150828 !important;"> <a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right" href="javascript:void(0)" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a> <a href="index.html" class="w3-bar-item w3-button w3-padding-16"><i class="fa fa-home" aria-hidden="true"></i> Trang chủ</a> <a href="gioi-thieu.html" class="w3-bar-item w3-button w3-padding-16 w3-hide-small"><i class="fa fa-info" aria-hidden="true"></i> Giới thiệu</a> <a href="giai-tri.html" class="w3-bar-item w3-button w3-padding-16 w3-hide-small"><i class="fa fa-music" aria-hidden="true"></i> Giải trí</a>
+		<div class="w3-dropdown-hover w3-hide-small">
+			<button class="w3-button" title="More">
+			<a href="giang-day.html" class="w3-button"><i class="fa fa-graduation-cap" aria-hidden="true"></i> Giảng dạy<i class="fa fa-caret-down"></i></a>
+			</button>
+			<div class="w3-dropdown-content w3-bar-block w3-card-4"> <a href="giang-day.html#tin-hoc-10" class="w3-bar-item w3-button">Môn Tin học 10</a> <a href="giang-day.html#chuyen-de-tin-hoc-10" class="w3-bar-item w3-button">Chuyên đề Tin học 10</a>
+				<hr>
+				<a href="giang-day.html#tin-hoc-co-ban" class="w3-bar-item w3-button">Môn Tin học cơ bản</a> <a href="giang-day.html#xay-dung-phan-mem-ban-hang" class="w3-bar-item w3-button">Môn Xây dựng phần mềm bán hàng</a> <a href="giang-day.html#chuan-doan-su-va-xu-ly-co-phan-mem" class="w3-bar-item w3-button">Môn học Chuẩn đoán và xử lý sự cố phần mềm</a> <a href="giang-day.html#he-dieu-hanh-windows-server" class="w3-bar-item w3-button">Môn học Hệ điều hành windows Server</a> <a href="giang-day.html#thiet-ke-va-quan-tri-website" class="w3-bar-item w3-button">Môn học Thiết kế và quản trị website</a> <a href="giang-day.html#thiet-ke-ung-dung-voi-asp-net" class="w3-bar-item w3-button">Môn học Thiết kế ứng dụng với ASP.NET</a> <a href="giang-day.html#quan-tri-he-thong-webserver-va-mailserver" class="w3-bar-item w3-button">Môn học quản trị hệ thống webserver và mailserver</a> <a href="giang-day.html#he-dieu-hanh-linux-co-ban" class="w3-bar-item w3-button">Môn học Hệ điều hành linux Cơ bản</a> </div>
+		</div>
+		<a href="tai-lieu-tham-khao.html" class="w3-bar-item w3-button w3-padding-16 w3-hide-small"><i class="fa fa-book" aria-hidden="true"></i> Tài liệu tham khảo</a>
+		<div class="w3-dropdown-hover w3-hide-small">
+			<button class="w3-button" title="More">
+			<a href="phan-mem.html" class="w3-button"><i class="fa fa-folder-open" aria-hidden="true"></i> Phần mềm <i class="fa fa-caret-down"></i></a>
+			</button>
+			<div class="w3-dropdown-content w3-bar-block w3-card-4"> <a href="phan-mem.html#phan-mem-he-thong" class="w3-bar-item w3-button"><i class="fa fa-windows" aria-hidden="true"></i> Phần mềm hệ thống</a> <a href="phan-mem.html#phan-mem-ung-dung" class="w3-bar-item w3-button"><i class="fa fa-cubes" aria-hidden="true"></i> Phần mềm ứng dụng</a> <a href="phan-mem.html#phan-mem-tien-ich" class="w3-bar-item w3-button"><i class="fa fa-desktop" aria-hidden="true"></i> Phần mềm tiện ích</a> <a href="phan-mem.html#phan-mem-ho-tro-hoc-tap" class="w3-bar-item w3-button"><i class="fa fa-graduation-cap" aria-hidden="true"></i> Phần mềm hỗ trợ học tập</a> </div>
+		</div>
+		<a href="lien-he.html" class="w3-bar-item w3-button w3-padding-16 w3-hide-small"><i class="fa fa-address-card-o" aria-hidden="true"></i> Liên hệ</a> </div>
 </div>
 
 <!-- Navbar on small screens (remove the onclick attribute if you want the navbar to always show on top of the content when clicking on the links) -->
 <div id="navDemo" class="w3-bar-block w3-black w3-hide w3-hide-large w3-hide-medium w3-top" style="margin-top:46px"> <a href="gioi-thieu.html" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()"><i class="fa fa-info" aria-hidden="true"></i> Giới thiệu</a> <a href="giai-tri.html" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()"><i class="fa fa-music" aria-hidden="true"></i> Giải trí</a> 
-  <!--  <a href="giang-day.html" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()"><i class="fa fa-book" aria-hidden="true"></i> Giảng dạy</a> --> 
- 
-
-  <a href="giang-day.html#tin-hoc-10" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()"><i class="fa fa-book" aria-hidden="true"></i> Môn Tin học 10</a> 
-  <a href="giang-day.html#chuyen-de-tin-hoc-10" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()"><i class="fa fa-book" aria-hidden="true"></i> Chuyên đề Tin học 10</a> 
-  <a href="giang-day.html#tin-hoc-co-ban" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()"><i class="fa fa-book" aria-hidden="true"></i> Môn Tin học cơ bản</a> 
-  <a href="giang-day.html#chuan-doan-su-va-xu-ly-co-phan-mem" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()"><i class="fa fa-book" aria-hidden="true"></i> Môn học Chuẩn đoán và xử lý sự cố phần mềm</a> 
-  
-<a href="giang-day.html#xay-dung-phan-mem-ban-hang" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()"><i class="fa fa-book" aria-hidden="true"></i> Xây dựng phần mềm bán hàng</a> 
-
-
-
-  <a href="giang-day.html#he-dieu-hanh-windows-server" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()"><i class="fa fa-book" aria-hidden="true"></i> Môn học Hệ điều hành windows Server</a> 
-  <a href="giang-day.html#thiet-ke-va-quan-tri-website" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()"><i class="fa fa-book" aria-hidden="true"></i> Môn học Thiết kế và quản trị website</a> 
-  <a href="giang-day.html#thiet-ke-ung-dung-voi-asp-net" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()"><i class="fa fa-book" aria-hidden="true"></i> Môn học Thiết kế ứng dụng với ASP.NET</a> 
-  <a href="giang-day.html#quan-tri-he-thong-webserver-va-mailserver" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()"><i class="fa fa-book" aria-hidden="true"></i> Môn học quản trị hệ thống webserver và mailserver</a> 
-  <a href="giang-day.html#quan-tri-he-thong-webserver-va-mailserver" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()"><i class="fa fa-book" aria-hidden="true"></i> Môn học quản trị hệ thống webserver và mailserver</a> 
-  <a href="giang-day.html#he-dieu-hanh-linux-co-ban" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()"><i class="fa fa-book" aria-hidden="true"></i> Hệ điều hành Linux Cơ bản</a> 
-   
-
-<a href="https://nguyenminhtri1986.github.io/phan-mem.html" onclick="myFunction()"><i class="fa fa-windows" aria-hidden="true"></i> Phần mềm</a> 
-  
-
-
-
-<!--<a href="phan-mem.html#phan-mem-he-thong" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()"><i class="fa fa-windows" aria-hidden="true"></i> Phần mềm hệ thống</a> 
+	<!--  <a href="giang-day.html" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()"><i class="fa fa-book" aria-hidden="true"></i> Giảng dạy</a> --> 
+	
+	<a href="giang-day.html#tin-hoc-10" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()"><i class="fa fa-book" aria-hidden="true"></i> Môn Tin học 10</a> <a href="giang-day.html#chuyen-de-tin-hoc-10" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()"><i class="fa fa-book" aria-hidden="true"></i> Chuyên đề Tin học 10</a> <a href="giang-day.html#tin-hoc-co-ban" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()"><i class="fa fa-book" aria-hidden="true"></i> Môn Tin học cơ bản</a> <a href="giang-day.html#chuan-doan-su-va-xu-ly-co-phan-mem" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()"><i class="fa fa-book" aria-hidden="true"></i> Môn học Chuẩn đoán và xử lý sự cố phần mềm</a> <a href="giang-day.html#xay-dung-phan-mem-ban-hang" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()"><i class="fa fa-book" aria-hidden="true"></i> Xây dựng phần mềm bán hàng</a> <a href="giang-day.html#he-dieu-hanh-windows-server" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()"><i class="fa fa-book" aria-hidden="true"></i> Môn học Hệ điều hành windows Server</a> <a href="giang-day.html#thiet-ke-va-quan-tri-website" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()"><i class="fa fa-book" aria-hidden="true"></i> Môn học Thiết kế và quản trị website</a> <a href="giang-day.html#thiet-ke-ung-dung-voi-asp-net" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()"><i class="fa fa-book" aria-hidden="true"></i> Môn học Thiết kế ứng dụng với ASP.NET</a> <a href="giang-day.html#quan-tri-he-thong-webserver-va-mailserver" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()"><i class="fa fa-book" aria-hidden="true"></i> Môn học quản trị hệ thống webserver và mailserver</a> <a href="giang-day.html#quan-tri-he-thong-webserver-va-mailserver" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()"><i class="fa fa-book" aria-hidden="true"></i> Môn học quản trị hệ thống webserver và mailserver</a> <a href="giang-day.html#he-dieu-hanh-linux-co-ban" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()"><i class="fa fa-book" aria-hidden="true"></i> Hệ điều hành Linux Cơ bản</a> <a href="https://nguyenminhtri1986.github.io/phan-mem.html" onclick="myFunction()"><i class="fa fa-windows" aria-hidden="true"></i> Phần mềm</a> 
+	
+	<!--<a href="phan-mem.html#phan-mem-he-thong" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()"><i class="fa fa-windows" aria-hidden="true"></i> Phần mềm hệ thống</a> 
     <a href="phan-mem.html#phan-mem-ung-dung" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()"><i class="fa fa-cubes" aria-hidden="true"></i> Phần mềm ứng dụng</a>
     <a href="phan-mem.html#phan-mem-tien-ich" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()"><i class="fa fa-desktop" aria-hidden="true"></i> Phần mềm tiện ích</a>
     <a href="phan-mem.html#phan-mem-ho-tro-hoc-tap" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()"><i class="fa fa-graduation-cap" aria-hidden="true"></i> Phần mềm hỗ trợ học tập</a>--> 
-  
-  <a href="lien-he.html" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()"><i class="fa fa-address-card-o" aria-hidden="true"></i> Liên hệ</a> </div>
+	
+	<a href="lien-he.html" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()"><i class="fa fa-address-card-o" aria-hidden="true"></i> Liên hệ</a> </div>
 
 <!-- Page content -->
 
@@ -123,7 +92,7 @@
 <!-- Footer -->
 
 <footer class="w3-container w3-padding-64 w3-center w3-opacity w3-light-grey w3-xlarge" style="clear: both;">
-  <p class="w3-medium">Thiết kế bởi Nguyễn Minh Trí</p>
+	<p class="w3-medium">Thiết kế bởi Nguyễn Minh Trí</p>
 </footer>
 <script>
 // Automatic Slideshow - change image every 4 seconds
