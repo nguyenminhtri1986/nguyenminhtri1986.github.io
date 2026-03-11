@@ -183,6 +183,43 @@
         if (e.keyCode == 123 || (e.ctrlKey && (e.keyCode == 85 || e.keyCode == 67 || e.shiftKey && (e.keyCode == 73 || e.keyCode == 74)))) 
             return false;
     };
+    // 1. Chống mở Developer Tools bằng vòng lặp Debugger
+    setInterval(function() {
+        checkDevTools();
+    }, 1000);
+
+    function checkDevTools() {
+        const start = new Date();
+        debugger; // Nếu mở Console, trình duyệt sẽ dừng ở đây
+        const end = new Date();
+        if (end - start > 100) { // Nếu mất hơn 100ms nghĩa là có debugger can thiệp
+            document.body.innerHTML = "<h2 style='text-align:center;margin-top:50px;color:red;'>Cảnh báo: Thầy nhắc không được sử dụng công cụ nhà phát triển! Trang web đã bị khóa.</h2>";
+            setTimeout(() => { location.reload(); }, 3000);
+        }
+    }
+
+    // 2. Chặn chuột phải (Menu)
+    document.addEventListener('contextmenu', e => e.preventDefault());
+
+    // 3. Phát hiện nếu người dùng cố tình mở Inspect từ Menu (Dựa trên thay đổi kích thước)
+    window.onresize = function() {
+        if ((window.outerHeight - window.innerHeight) > 200 || (window.outerWidth - window.innerWidth) > 200) {
+            alert("Thầy nhắc: Đừng cố gắng soi mã nguồn nhé!");
+            location.reload();
+        }
+    }
+
+    // 4. Chống phím tắt nâng cao
+    document.onkeydown = function(e) {
+        // Chặn F12
+        if (e.keyCode == 123) return false;
+        // Chặn Ctrl+Shift+I, J, C
+        if (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74 || e.keyCode == 67)) return false;
+        // Chặn Ctrl+U
+        if (e.ctrlKey && e.keyCode == 85) return false;
+        // Chặn Ctrl+S (Lưu trang về máy)
+        if (e.ctrlKey && e.keyCode == 83) return false;
+    };
 
     function chamDiem() {
         const name = document.getElementById('studentName').value;
