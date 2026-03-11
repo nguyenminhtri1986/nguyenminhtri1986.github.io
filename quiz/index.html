@@ -51,42 +51,58 @@
 
 <script>
     function chamDiem() {
-        const name = document.getElementById('studentName').value;
-        const lop = document.getElementById('studentClass').value;
+        const nameInput = document.getElementById('studentName');
+        const classInput = document.getElementById('studentClass');
         const scriptURL = 'https://script.google.com/macros/s/AKfycbxsKAYFMG4WG8Q06KNxooCIuQfbqVSGHJwQ_1K7rAunap7V2ratV2Y3RoKG3DgHJoFk/exec';
 
-        if (!name || !lop) {
+        if (!nameInput.value || !classInput.value) {
             alert("Thầy nhắc em nhập đủ Họ tên và Lớp nhé!");
             return;
         }
 
         let score = 0;
-        // Kiểm tra đáp án (Câu 1: q1, Câu 2: q2...)
-        const answers = document.querySelectorAll('input[type="radio"]:checked');
-        answers.forEach(ans => {
-            if (ans.value === "1") score += 5; // Mỗi câu đúng 5 điểm
+        const selectedOptions = document.querySelectorAll('input[type="radio"]:checked');
+        
+        // Tính điểm
+        selectedOptions.forEach(ans => {
+            if (ans.value === "1") score += 5;
         });
 
         document.getElementById('status').innerText = "Đang gửi kết quả về cho thầy Trí...";
 
-        // Gửi dữ liệu sang Google Sheets
+        // Gửi dữ liệu
         fetch(scriptURL, {
             method: 'POST',
             mode: 'no-cors',
             cache: 'no-cache',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ 
-                name: name, 
-                class: lop, 
+                name: nameInput.value, 
+                class: classInput.value, 
                 score: score 
             })
         })
         .then(() => {
-            document.getElementById('status').innerText = "Thành công! Em đã được: " + score + " điểm.";
-            alert("Kết quả của em đã được lưu lại!");
+            // HIỂN THỊ THÔNG BÁO
+            alert("Chúc mừng em " + nameInput.value + " đã hoàn thành bài tập với " + score + " điểm!");
+            document.getElementById('status').innerText = "Đã lưu kết quả thành công!";
+
+            // --- ĐOẠN MÃ RESET Ở ĐÂY ---
+            // 1. Xóa tên và lớp
+            nameInput.value = "";
+            classInput.value = "";
+            
+            // 2. Bỏ chọn tất cả các nút radio (câu hỏi)
+            const allRadios = document.querySelectorAll('input[type="radio"]');
+            allRadios.forEach(radio => radio.checked = false);
+            
+            // 3. Sau 3 giây thì xóa dòng thông báo trạng thái
+            setTimeout(() => {
+                document.getElementById('status').innerText = "";
+            }, 3000);
         })
         .catch(error => {
-            document.getElementById('status').innerText = "Lỗi kết nối, hãy báo lại với thầy!";
+            alert("Có lỗi xảy ra, em hãy báo lại với thầy Trí nhé!");
             console.error('Error!', error);
         });
     }
