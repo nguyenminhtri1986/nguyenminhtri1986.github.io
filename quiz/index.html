@@ -3,135 +3,228 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trắc Nghiệm Tin Học 10 - Thầy Minh Trí</title>
+    <title>Hệ Thống Trắc Nghiệm - Thầy Minh Trí</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; color: #333; line-height: 1.6; padding: 20px; }
-        .container { max-width: 700px; margin: auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        h1 { color: #2c3e50; text-align: center; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
-        .info-section { margin-bottom: 25px; display: flex; gap: 10px; }
-        input[type="text"] { padding: 10px; border: 1px solid #ddd; border-radius: 5px; flex: 1; }
-        .question { background: #f9f9f9; padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 5px solid #3498db; }
-        .options label { display: block; cursor: pointer; padding: 5px 0; }
-        button { display: block; width: 100%; padding: 15px; background: #27ae60; color: white; border: none; border-radius: 5px; font-size: 18px; cursor: pointer; transition: 0.3s; }
-        button:hover { background: #2ecc71; }
-        #status { text-align: center; font-weight: bold; margin-top: 20px; color: #e67e22; }
-   /* Màu cho câu đúng và sai */
-.correct { background-color: #d4edda !important; border-left: 5px solid #28a745 !important; color: #155724; }
-.wrong { background-color: #f8d7da !important; border-left: 5px solid #dc3545 !important; color: #721c24; }
+        :root {
+            --primary-color: #2563eb;
+            --success-color: #16a34a;
+            --error-color: #dc2626;
+            --bg-color: #f1f5f9;
+        }
 
-/* Ẩn nút làm lại lúc đầu, chỉ hiện sau khi nộp bài */
-#resetBtn { display: none; background: #3498db; margin-top: 10px; }
-#submitBtn:disabled { background: #95a5a6; cursor: not-allowed; }
+        /* Chống bôi đen toàn trang */
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            -webkit-user-select: none;
+        }
 
-.feedback { font-size: 0.9em; font-weight: bold; margin-top: 5px; display: block; }
+        body {
+            font-family: 'Inter', -apple-system, system-ui, sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .quiz-card {
+            width: 100%;
+            max-width: 600px;
+            background: white;
+            padding: 25px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            color: #1e293b;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        /* Giao diện nhập thông tin: Mobile xếp dọc, Web xếp ngang */
+        .info-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+
+        @media (min-width: 480px) {
+            .info-group { flex-direction: row; }
+        }
+
+        input[type="text"] {
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            outline: none;
+            transition: border-color 0.2s;
+            width: 100%;
+            user-select: text; /* Cho phép nhập liệu */
+            -webkit-user-select: text;
+        }
+
+        input[type="text"]:focus { border-color: var(--primary-color); }
+
+        /* Câu hỏi */
+        .question-box {
+            background: #ffffff;
+            border: 2px solid #f8fafc;
+            padding: 18px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+        }
+
+        .question-text {
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-bottom: 5px;
+            transition: background 0.2s;
+        }
+
+        .option:hover { background: #f8fafc; }
+
+        input[type="radio"] {
+            margin-right: 12px;
+            width: 18px;
+            height: 18px;
+        }
+
+        /* Màu sắc đúng sai */
+        .correct { background-color: #dcfce7 !important; border-color: #b91c1c; border: 2px solid #22c55e !important; }
+        .wrong { background-color: #fee2e2 !important; border-color: #b91c1c; border: 2px solid #ef4444 !important; }
+
+        /* Nút bấm */
+        .btn-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform 0.1s, opacity 0.2s;
+        }
+
+        #submitBtn { background-color: var(--primary-color); color: white; }
+        #resetBtn { background-color: #64748b; color: white; display: none; }
+        
+        button:active { transform: scale(0.98); }
+        button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        #status {
+            text-align: center;
+            font-size: 0.9rem;
+            margin-top: 15px;
+            color: var(--primary-color);
+        }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h1>BÀI KIỂM TRA TRẮC NGHIỆM</h1>
+<div class="quiz-card">
+    <h1>📝 Kiểm Tra Tin Học 10</h1>
     
-    <div class="info-section">
-        <input type="text" id="studentName" placeholder="Họ và tên học sinh" required>
-        <input type="text" id="studentClass" placeholder="Lớp (Vd: 10A1)" required>
+    <div class="info-group">
+        <input type="text" id="studentName" placeholder="Họ và tên..." required>
+        <input type="text" id="studentClass" placeholder="Lớp..." required>
     </div>
 
-    <div class="question">
-        <p><strong>Câu 1:</strong> Trong Python, để in dữ liệu ra màn hình ta dùng hàm nào?</p>
-        <div class="options">
-            <label><input type="radio" name="q1" value="0"> input()</label>
-            <label><input type="radio" name="q1" value="1"> print()</label>
-            <label><input type="radio" name="q1" value="0"> output()</label>
+    <div id="quiz-container">
+        <div class="question-box">
+            <span class="question-text">Câu 1: Thiết bị nào dùng để xuất dữ liệu?</span>
+            <label class="option"><input type="radio" name="q1" value="0"> Bàn phím</label>
+            <label class="option"><input type="radio" name="q1" value="1"> Màn hình</label>
+            <label class="option"><input type="radio" name="q1" value="0"> Chuột</label>
+        </div>
+
+        <div class="question-box">
+            <span class="question-text">Câu 2: Phím tắt để sao chép (Copy) là gì?</span>
+            <label class="option"><input type="radio" name="q2" value="0"> Ctrl + V</label>
+            <label class="option"><input type="radio" name="q2" value="1"> Ctrl + C</label>
+            <label class="option"><input type="radio" name="q2" value="0"> Ctrl + X</label>
         </div>
     </div>
 
-    <div class="question">
-        <p><strong>Câu 2:</strong> Thiết bị nào sau đây là thiết bị vào của máy tính?</p>
-        <div class="options">
-            <label><input type="radio" name="q2" value="1"> Bàn phím</label>
-            <label><input type="radio" name="q2" value="0"> Màn hình</label>
-            <label><input type="radio" name="q2" value="0"> Máy in</label>
-        </div>
+    <div class="btn-stack">
+        <button id="submitBtn" onclick="chamDiem()">Nộp Bài</button>
+        <button id="resetBtn" onclick="lamLai()">Làm Bài Mới</button>
     </div>
-<button id="submitBtn" onclick="chamDiem()">Nộp Bài & Lưu Kết Quả</button>
-<button id="resetBtn" onclick="lamLai()">Làm bài mới (Reset)</button>
-<p id="status"></p>    
+    
+    <p id="status"></p>
 </div>
+
+
+
 <script>
-function chamDiem() {
-    const nameInput = document.getElementById('studentName');
-    const classInput = document.getElementById('studentClass');
-    const submitBtn = document.getElementById('submitBtn');
-    const resetBtn = document.getElementById('resetBtn');
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbxsKAYFMG4WG8Q06KNxooCIuQfbqVSGHJwQ_1K7rAunap7V2ratV2Y3RoKG3DgHJoFk/exec';
+    // CHỐNG COPY & PHÍM TẮT
+    document.addEventListener('contextmenu', e => e.preventDefault());
+    document.onkeydown = e => {
+        if (e.keyCode == 123 || (e.ctrlKey && (e.keyCode == 85 || e.keyCode == 67 || e.shiftKey && (e.keyCode == 73 || e.keyCode == 74)))) 
+            return false;
+    };
 
-    if (!nameInput.value || !classInput.value) {
-        alert("Thầy nhắc em nhập đủ Họ tên và Lớp nhé!");
-        return;
-    }
+    function chamDiem() {
+        const name = document.getElementById('studentName').value;
+        const lop = document.getElementById('studentClass').value;
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbxsKAYFMG4WG8Q06KNxooCIuQfbqVSGHJwQ_1K7rAunap7V2ratV2Y3RoKG3DgHJoFk/exec';
 
-    let score = 0;
-    const questions = document.querySelectorAll('.question');
-    
-    questions.forEach((q) => {
-        const selected = q.querySelector('input[type="radio"]:checked');
-        const allRadios = q.querySelectorAll('input[type="radio"]');
+        if (!name || !lop) return alert("Vui lòng điền thông tin!");
+
+        let score = 0;
+        const questions = document.querySelectorAll('.question-box');
         
-        // Khóa không cho sửa đáp án sau khi nộp
-        allRadios.forEach(r => r.disabled = true);
+        questions.forEach(q => {
+            const selected = q.querySelector('input[type="radio"]:checked');
+            const radios = q.querySelectorAll('input[type="radio"]');
+            
+            radios.forEach(r => r.disabled = true); // Khóa đáp án
 
-        if (selected && selected.value === "1") {
-            score += 5;
-            q.classList.add('correct');
-        } else {
-            q.classList.add('wrong');
-        }
-    });
+            if (selected && selected.value === "1") {
+                score += 5;
+                q.classList.add('correct');
+            } else {
+                q.classList.add('wrong');
+            }
+        });
 
-    document.getElementById('status').innerText = "Đang gửi kết quả về cho thầy Trí...";
-    submitBtn.disabled = true; // Khóa nút nộp bài
+        document.getElementById('status').innerText = "Đang lưu kết quả...";
+        document.getElementById('submitBtn').disabled = true;
 
-    // Gửi dữ liệu sang Google Sheets
-    fetch(scriptURL, {
-        method: 'POST',
-        mode: 'no-cors',
-        cache: 'no-cache',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: nameInput.value, class: classInput.value, score: score })
-    })
-    .then(() => {
-        document.getElementById('status').innerText = "Đã lưu kết quả: " + score + " điểm. Em hãy xem lại các câu sai màu đỏ nhé!";
-        resetBtn.style.display = "block"; // HIỆN NÚT RESET ĐỂ XÁC NHẬN
-    });
-}
+        fetch(scriptURL, {
+            method: 'POST',
+            mode: 'no-cors',
+            body: JSON.stringify({ name, class: lop, score })
+        }).then(() => {
+            document.getElementById('status').innerText = `Hoàn thành! Điểm của em: ${score}`;
+            document.getElementById('resetBtn').style.display = 'block';
+        });
+    }
 
-function lamLai() {
-    if (confirm("Em có chắc chắn muốn xóa kết quả cũ và làm bài mới không?")) {
-        location.reload(); // Tải lại trang để làm mới hoàn toàn
+    function lamLai() {
+        if (confirm("Làm bài mới sẽ xóa kết quả hiển thị hiện tại?")) location.reload();
     }
-}
-    // 1. Chặn chuột phải
-document.addEventListener('contextmenu', event => event.preventDefault());
+</script>
 
-// 2. Chặn các phím tắt phổ biến (F12, Ctrl+Shift+I, Ctrl+U, Ctrl+C)
-document.onkeydown = function(e) {
-    if (e.keyCode == 123) { // F12
-        return false;
-    }
-    if (e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) { // Ctrl+Shift+I
-        return false;
-    }
-    if (e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) { // Ctrl+Shift+J
-        return false;
-    }
-    if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) { // Ctrl+U (Xem source)
-        return false;
-    }
-    if (e.ctrlKey && e.keyCode == 'C'.charCodeAt(0)) { // Ctrl+C (Copy)
-        alert("Thầy nhắc: Không sao chép nội dung bài kiểm tra nhé!");
-        return false;
-    }
-};
-    </script>
 </body>
 </html>
