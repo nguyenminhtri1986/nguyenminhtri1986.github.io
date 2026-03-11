@@ -15,9 +15,15 @@
         button { display: block; width: 100%; padding: 15px; background: #27ae60; color: white; border: none; border-radius: 5px; font-size: 18px; cursor: pointer; transition: 0.3s; }
         button:hover { background: #2ecc71; }
         #status { text-align: center; font-weight: bold; margin-top: 20px; color: #e67e22; }
-   .correct { background-color: #d4edda !important; border: 1px solid #c3e6cb; padding: 5px; border-radius: 5px; color: #155724; font-weight: bold; }
-.wrong { background-color: #f8d7da !important; border: 1px solid #f5c6cb; padding: 5px; border-radius: 5px; color: #721c24; }
-.answer-key { font-size: 0.9em; margin-top: 5px; display: block; font-style: italic; }
+   /* Màu cho câu đúng và sai */
+.correct { background-color: #d4edda !important; border-left: 5px solid #28a745 !important; color: #155724; }
+.wrong { background-color: #f8d7da !important; border-left: 5px solid #dc3545 !important; color: #721c24; }
+
+/* Ẩn nút làm lại lúc đầu, chỉ hiện sau khi nộp bài */
+#resetBtn { display: none; background: #3498db; margin-top: 10px; }
+#submitBtn:disabled { background: #95a5a6; cursor: not-allowed; }
+
+.feedback { font-size: 0.9em; font-weight: bold; margin-top: 5px; display: block; }
     </style>
 </head>
 <body>
@@ -47,14 +53,16 @@
             <label><input type="radio" name="q2" value="0"> Máy in</label>
         </div>
     </div>
-
-    <button onclick="chamDiem()">Nộp Bài & Lưu Kết Quả</button>
-    <p id="status"></p>
+<button id="submitBtn" onclick="chamDiem()">Nộp Bài & Lưu Kết Quả</button>
+<button id="resetBtn" onclick="lamLai()">Làm bài mới (Reset)</button>
+<p id="status"></p>    
 </div>
 <script>
 function chamDiem() {
     const nameInput = document.getElementById('studentName');
     const classInput = document.getElementById('studentClass');
+    const submitBtn = document.getElementById('submitBtn');
+    const resetBtn = document.getElementById('resetBtn');
     const scriptURL = 'https://script.google.com/macros/s/AKfycbxsKAYFMG4WG8Q06KNxooCIuQfbqVSGHJwQ_1K7rAunap7V2ratV2Y3RoKG3DgHJoFk/exec';
 
     if (!nameInput.value || !classInput.value) {
@@ -65,26 +73,23 @@ function chamDiem() {
     let score = 0;
     const questions = document.querySelectorAll('.question');
     
-    questions.forEach((q, index) => {
+    questions.forEach((q) => {
         const selected = q.querySelector('input[type="radio"]:checked');
-        const allOptions = q.querySelectorAll('label');
+        const allRadios = q.querySelectorAll('input[type="radio"]');
         
-        // Reset màu cũ nếu có
-        q.classList.remove('correct', 'wrong');
+        // Khóa không cho sửa đáp án sau khi nộp
+        allRadios.forEach(r => r.disabled = true);
 
-        if (selected) {
-            if (selected.value === "1") {
-                score += 5;
-                q.classList.add('correct'); // Hiện màu xanh nếu đúng
-            } else {
-                q.classList.add('wrong'); // Hiện màu đỏ nếu sai
-            }
+        if (selected && selected.value === "1") {
+            score += 5;
+            q.classList.add('correct');
         } else {
-            q.classList.add('wrong'); // Không chọn cũng coi là sai
+            q.classList.add('wrong');
         }
     });
 
     document.getElementById('status').innerText = "Đang gửi kết quả về cho thầy Trí...";
+    submitBtn.disabled = true; // Khóa nút nộp bài
 
     // Gửi dữ liệu sang Google Sheets
     fetch(scriptURL, {
@@ -92,23 +97,18 @@ function chamDiem() {
         mode: 'no-cors',
         cache: 'no-cache',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-            name: nameInput.value, 
-            class: classInput.value, 
-            score: score 
-        })
+        body: JSON.stringify({ name: nameInput.value, class: classInput.value, score: score })
     })
     .then(() => {
-        alert("Em đã hoàn thành! Xem lại đáp án đúng/sai ở bên dưới nhé.");
-        document.getElementById('status').innerText = "Đã lưu kết quả: " + score + " điểm.";
-        
-        // Đợi 5 giây để học sinh xem đáp án rồi mới reset trang
-        setTimeout(() => {
-            if(confirm("Thầy sẽ reset trang để bạn khác làm bài nhé?")) {
-                location.reload(); // Cách nhanh nhất để reset toàn bộ trang
-            }
-        }, 5000);
+        document.getElementById('status').innerText = "Đã lưu kết quả: " + score + " điểm. Em hãy xem lại các câu sai màu đỏ nhé!";
+        resetBtn.style.display = "block"; // HIỆN NÚT RESET ĐỂ XÁC NHẬN
     });
+}
+
+function lamLai() {
+    if (confirm("Em có chắc chắn muốn xóa kết quả cũ và làm bài mới không?")) {
+        location.reload(); // Tải lại trang để làm mới hoàn toàn
+    }
 }
     </script>
 </body>
