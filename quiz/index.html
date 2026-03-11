@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trắc Nghiệm Tin Học 10 - Thầy Minh Trí</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; color: #333; line-height: 1.6; padding: 20px; }
+        .container { max-width: 700px; margin: auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        h1 { color: #2c3e50; text-align: center; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
+        .info-section { margin-bottom: 25px; display: flex; gap: 10px; }
+        input[type="text"] { padding: 10px; border: 1px solid #ddd; border-radius: 5px; flex: 1; }
+        .question { background: #f9f9f9; padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 5px solid #3498db; }
+        .options label { display: block; cursor: pointer; padding: 5px 0; }
+        button { display: block; width: 100%; padding: 15px; background: #27ae60; color: white; border: none; border-radius: 5px; font-size: 18px; cursor: pointer; transition: 0.3s; }
+        button:hover { background: #2ecc71; }
+        #status { text-align: center; font-weight: bold; margin-top: 20px; color: #e67e22; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>BÀI KIỂM TRA TRẮC NGHIỆM</h1>
+    
+    <div class="info-section">
+        <input type="text" id="studentName" placeholder="Họ và tên học sinh" required>
+        <input type="text" id="studentClass" placeholder="Lớp (Vd: 10A1)" required>
+    </div>
+
+    <div class="question">
+        <p><strong>Câu 1:</strong> Trong Python, để in dữ liệu ra màn hình ta dùng hàm nào?</p>
+        <div class="options">
+            <label><input type="radio" name="q1" value="0"> input()</label>
+            <label><input type="radio" name="q1" value="1"> print()</label>
+            <label><input type="radio" name="q1" value="0"> output()</label>
+        </div>
+    </div>
+
+    <div class="question">
+        <p><strong>Câu 2:</strong> Thiết bị nào sau đây là thiết bị vào của máy tính?</p>
+        <div class="options">
+            <label><input type="radio" name="q2" value="1"> Bàn phím</label>
+            <label><input type="radio" name="q2" value="0"> Màn hình</label>
+            <label><input type="radio" name="q2" value="0"> Máy in</label>
+        </div>
+    </div>
+
+    <button onclick="chamDiem()">Nộp Bài & Lưu Kết Quả</button>
+    <p id="status"></p>
+</div>
+
+<script>
+    function chamDiem() {
+        const name = document.getElementById('studentName').value;
+        const lop = document.getElementById('studentClass').value;
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbxsKAYFMG4WG8Q06KNxooCIuQfbqVSGHJwQ_1K7rAunap7V2ratV2Y3RoKG3DgHJoFk/exec';
+
+        if (!name || !lop) {
+            alert("Thầy nhắc em nhập đủ Họ tên và Lớp nhé!");
+            return;
+        }
+
+        let score = 0;
+        // Kiểm tra đáp án (Câu 1: q1, Câu 2: q2...)
+        const answers = document.querySelectorAll('input[type="radio"]:checked');
+        answers.forEach(ans => {
+            if (ans.value === "1") score += 5; // Mỗi câu đúng 5 điểm
+        });
+
+        document.getElementById('status').innerText = "Đang gửi kết quả về cho thầy Trí...";
+
+        // Gửi dữ liệu sang Google Sheets
+        fetch(scriptURL, {
+            method: 'POST',
+            mode: 'no-cors',
+            cache: 'no-cache',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                name: name, 
+                class: lop, 
+                score: score 
+            })
+        })
+        .then(() => {
+            document.getElementById('status').innerText = "Thành công! Em đã được: " + score + " điểm.";
+            alert("Kết quả của em đã được lưu lại!");
+        })
+        .catch(error => {
+            document.getElementById('status').innerText = "Lỗi kết nối, hãy báo lại với thầy!";
+            console.error('Error!', error);
+        });
+    }
+</script>
+
+</body>
+</html>
