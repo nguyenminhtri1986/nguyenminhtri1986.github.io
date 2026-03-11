@@ -15,6 +15,9 @@
         button { display: block; width: 100%; padding: 15px; background: #27ae60; color: white; border: none; border-radius: 5px; font-size: 18px; cursor: pointer; transition: 0.3s; }
         button:hover { background: #2ecc71; }
         #status { text-align: center; font-weight: bold; margin-top: 20px; color: #e67e22; }
+   .correct { background-color: #d4edda !important; border: 1px solid #c3e6cb; padding: 5px; border-radius: 5px; color: #155724; font-weight: bold; }
+.wrong { background-color: #f8d7da !important; border: 1px solid #f5c6cb; padding: 5px; border-radius: 5px; color: #721c24; }
+.answer-key { font-size: 0.9em; margin-top: 5px; display: block; font-style: italic; }
     </style>
 </head>
 <body>
@@ -48,65 +51,65 @@
     <button onclick="chamDiem()">Nộp Bài & Lưu Kết Quả</button>
     <p id="status"></p>
 </div>
-
 <script>
-    function chamDiem() {
-        const nameInput = document.getElementById('studentName');
-        const classInput = document.getElementById('studentClass');
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbxsKAYFMG4WG8Q06KNxooCIuQfbqVSGHJwQ_1K7rAunap7V2ratV2Y3RoKG3DgHJoFk/exec';
+function chamDiem() {
+    const nameInput = document.getElementById('studentName');
+    const classInput = document.getElementById('studentClass');
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbxsKAYFMG4WG8Q06KNxooCIuQfbqVSGHJwQ_1K7rAunap7V2ratV2Y3RoKG3DgHJoFk/exec';
 
-        if (!nameInput.value || !classInput.value) {
-            alert("Thầy nhắc em nhập đủ Họ tên và Lớp nhé!");
-            return;
-        }
-
-        let score = 0;
-        const selectedOptions = document.querySelectorAll('input[type="radio"]:checked');
-        
-        // Tính điểm
-        selectedOptions.forEach(ans => {
-            if (ans.value === "1") score += 5;
-        });
-
-        document.getElementById('status').innerText = "Đang gửi kết quả về cho thầy Trí...";
-
-        // Gửi dữ liệu
-        fetch(scriptURL, {
-            method: 'POST',
-            mode: 'no-cors',
-            cache: 'no-cache',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-                name: nameInput.value, 
-                class: classInput.value, 
-                score: score 
-            })
-        })
-        .then(() => {
-            // HIỂN THỊ THÔNG BÁO
-            alert("Chúc mừng em " + nameInput.value + " đã hoàn thành bài tập với " + score + " điểm!");
-            document.getElementById('status').innerText = "Đã lưu kết quả thành công!";
-
-            // --- ĐOẠN MÃ RESET Ở ĐÂY ---
-            // 1. Xóa tên và lớp
-            nameInput.value = "";
-            classInput.value = "";
-            
-            // 2. Bỏ chọn tất cả các nút radio (câu hỏi)
-            const allRadios = document.querySelectorAll('input[type="radio"]');
-            allRadios.forEach(radio => radio.checked = false);
-            
-            // 3. Sau 3 giây thì xóa dòng thông báo trạng thái
-            setTimeout(() => {
-                document.getElementById('status').innerText = "";
-            }, 3000);
-        })
-        .catch(error => {
-            alert("Có lỗi xảy ra, em hãy báo lại với thầy Trí nhé!");
-            console.error('Error!', error);
-        });
+    if (!nameInput.value || !classInput.value) {
+        alert("Thầy nhắc em nhập đủ Họ tên và Lớp nhé!");
+        return;
     }
-</script>
 
+    let score = 0;
+    const questions = document.querySelectorAll('.question');
+    
+    questions.forEach((q, index) => {
+        const selected = q.querySelector('input[type="radio"]:checked');
+        const allOptions = q.querySelectorAll('label');
+        
+        // Reset màu cũ nếu có
+        q.classList.remove('correct', 'wrong');
+
+        if (selected) {
+            if (selected.value === "1") {
+                score += 5;
+                q.classList.add('correct'); // Hiện màu xanh nếu đúng
+            } else {
+                q.classList.add('wrong'); // Hiện màu đỏ nếu sai
+            }
+        } else {
+            q.classList.add('wrong'); // Không chọn cũng coi là sai
+        }
+    });
+
+    document.getElementById('status').innerText = "Đang gửi kết quả về cho thầy Trí...";
+
+    // Gửi dữ liệu sang Google Sheets
+    fetch(scriptURL, {
+        method: 'POST',
+        mode: 'no-cors',
+        cache: 'no-cache',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+            name: nameInput.value, 
+            class: classInput.value, 
+            score: score 
+        })
+    })
+    .then(() => {
+        alert("Em đã hoàn thành! Xem lại đáp án đúng/sai ở bên dưới nhé.");
+        document.getElementById('status').innerText = "Đã lưu kết quả: " + score + " điểm.";
+        
+        // Đợi 5 giây để học sinh xem đáp án rồi mới reset trang
+        setTimeout(() => {
+            if(confirm("Thầy sẽ reset trang để bạn khác làm bài nhé?")) {
+                location.reload(); // Cách nhanh nhất để reset toàn bộ trang
+            }
+        }, 5000);
+    });
+}
+    </script>
 </body>
 </html>
