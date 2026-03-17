@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ Thống Trắc Nghiệm Online - Thầy Trí</title>
+    
+    <style>
+        :root { --primary-color: #2563eb; --bg-color: #f8fafc; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-color); margin: 0; padding: 20px; color: #1e293b; }
+        .container { max-width: 650px; margin: 0 auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+        h1 { text-align: center; color: var(--primary-color); margin-bottom: 30px; }
+        
+        .quiz-item { margin-bottom: 25px; padding: 20px; border: 1px solid #e2e8f0; border-radius: 10px; transition: 0.3s; }
+        .quiz-item:hover { border-color: var(--primary-color); box-shadow: 0 4px 12px rgba(37, 99, 235, 0.1); }
+        .question { font-size: 1.1rem; font-weight: 600; margin-bottom: 15px; display: block; }
+        
+        .option-label { display: block; padding: 10px; margin: 8px 0; background: #f1f5f9; border-radius: 6px; cursor: pointer; transition: 0.2s; }
+        .option-label:hover { background: #e2e8f0; }
+        .option-label input { margin-right: 10px; }
+
+        .btn-submit { width: 100%; padding: 15px; background: var(--primary-color); color: white; border: none; border-radius: 8px; font-size: 1.1rem; font-weight: bold; cursor: pointer; margin-top: 20px; }
+        .btn-submit:disabled { background: #94a3b8; cursor: not-allowed; }
+        
+        #result-box { margin-top: 30px; padding: 20px; border-radius: 10px; text-align: center; display: none; }
+        .success { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+        .loading { text-align: center; font-style: italic; color: #64748b; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>📝 Bài Tập Trắc Nghiệm</h1>
+    
+    <div id="quiz-content" class="loading">Đang lấy dữ liệu từ hệ thống...</div>
+    
+    <button id="btn-submit" class="btn-submit" style="display: none;">Nộp Bài & Xem Kết Quả</button>
+
+    <div id="result-box"></div>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    // Cấu hình Firebase của Trí
+    const firebaseConfig = {
+        apiKey: "AIzaSyD9ILXGDRCiN2i4imkOC_idOvbIv26MRB0",
+        authDomain: "tndemo-123.firebaseapp.com",
+        projectId: "tndemo-123",
+        storageBucket: "tndemo-123.firebasestorage.app",
+        messagingSenderId: "1077891220132",
+        appId: "1:1077891220132:web:f4f1902cbe7ba9cd46dc31",
+        measurementId: "G-HK9MN35T0L"
+    };
+
+    // Khởi tạo
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    let questionsData = [];
+
+    // Hàm lấy dữ liệu
+    async function loadData() {
+        try {
+            const querySnapshot = await getDocs(collection(db, "quiz_data"));
+            const contentDiv = document.getElementById('quiz-content');
+            contentDiv.innerHTML = '';
+            
+            if (querySnapshot.empty) {
+                contentDiv.innerHTML = 'Hiện chưa có câu hỏi nào trong hệ thống.';
+                return;
+            }
+
+            querySnapshot.forEach((doc) => {
+                const data = doc.data();
+                questionsData.push({ id: doc.id, ...data });
+
+                const itemHtml = `
+                    <div class="quiz-item">
+                        <span class="question">${data.question}</span>
+                        <div class="options">
+                            ${data.options.map((opt, index) => `
+                                <label class="option-label">
+                                    <input type="radio" name="q_${doc.id}" value="${index}">
+                                    ${opt}
+                                </label>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+                contentDiv.insertAdjacentHTML('beforeend', itemHtml);
+            });
+
+            document.getElementById('btn-submit').style.display = 'block';
+        } catch (error) {
+            console.error("Lỗi khi tải dữ liệu:", error);
+            document.getElementById('quiz-content').innerHTML = 'Có lỗi xảy ra khi kết nối dữ liệu.';
+        }
+    }
+
+    // Xử lý nộp bài
+    document.getElementById('btn-submit').addEventListener('click', () => {
+        let score = 0;
+        let total = questionsData.length;
+
+        questionsData.forEach(q => {
+            const selected = document.querySelector(`input[name="q_${q.id}"]:checked`);
+            if (selected && parseInt(selected.value) === q.answer) {
+                score++;
+            }
+        });
+
+        const resultBox = document.getElementById('result-box');
+        resultBox.className = 'success';
+        resultBox.style.display = 'block';
+        resultBox.innerHTML = `
+            <h3>Hoàn thành!</h3>
+            <p>Số câu đúng của bạn là: <strong>${score} / ${total}</strong></p>
+            <p>Điểm số: <strong>${((score / total) * 10).toFixed(2)}</strong></p>
+        `;
+        
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    });
+
+    // Chạy hàm tải dữ liệu
+    loadData();
+</script>
+
+</body>
+</html>
