@@ -3,47 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hệ Thống Trắc Nghiệm Online - Thầy Trí</title>
+    <title>Hệ Thống Trắc Nghiệm - Thầy Trí</title>
     
     <style>
-        :root { --primary-color: #2563eb; --bg-color: #f8fafc; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-color); margin: 0; padding: 20px; color: #1e293b; }
-        .container { max-width: 650px; margin: 0 auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
-        h1 { text-align: center; color: var(--primary-color); margin-bottom: 30px; }
+        :root { --primary: #2563eb; --bg: #f1f5f9; }
+        body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg); margin: 0; padding: 20px; display: flex; justify-content: center; }
+        .quiz-card { background: white; width: 100%; max-width: 600px; padding: 30px; border-radius: 12px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
+        h1 { text-align: center; color: var(--primary); margin-top: 0; }
         
-        .quiz-item { margin-bottom: 25px; padding: 20px; border: 1px solid #e2e8f0; border-radius: 10px; transition: 0.3s; }
-        .quiz-item:hover { border-color: var(--primary-color); box-shadow: 0 4px 12px rgba(37, 99, 235, 0.1); }
-        .question { font-size: 1.1rem; font-weight: 600; margin-bottom: 15px; display: block; }
+        .question-item { border-bottom: 1px solid #e2e8f0; padding: 20px 0; }
+        .question-text { font-size: 1.15rem; font-weight: 600; margin-bottom: 15px; display: block; }
         
-        .option-label { display: block; padding: 10px; margin: 8px 0; background: #f1f5f9; border-radius: 6px; cursor: pointer; transition: 0.2s; }
-        .option-label:hover { background: #e2e8f0; }
-        .option-label input { margin-right: 10px; }
+        .option-item { display: block; padding: 12px; margin: 8px 0; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; cursor: pointer; transition: 0.2s; }
+        .option-item:hover { background: #eff6ff; border-color: var(--primary); }
+        .option-item input { margin-right: 12px; }
 
-        .btn-submit { width: 100%; padding: 15px; background: var(--primary-color); color: white; border: none; border-radius: 8px; font-size: 1.1rem; font-weight: bold; cursor: pointer; margin-top: 20px; }
-        .btn-submit:disabled { background: #94a3b8; cursor: not-allowed; }
+        .btn-submit { width: 100%; padding: 15px; background: var(--primary); color: white; border: none; border-radius: 8px; font-size: 1.1rem; font-weight: bold; cursor: pointer; margin-top: 25px; transition: 0.3s; }
+        .btn-submit:hover { background: #1d4ed8; }
         
-        #result-box { margin-top: 30px; padding: 20px; border-radius: 10px; text-align: center; display: none; }
-        .success { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
-        .loading { text-align: center; font-style: italic; color: #64748b; }
+        #result-display { margin-top: 25px; padding: 20px; border-radius: 8px; text-align: center; display: none; font-size: 1.2rem; }
+        .success-box { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+        .error-msg { color: #dc2626; text-align: center; padding: 20px; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h1>📝 Bài Tập Trắc Nghiệm</h1>
+<div class="quiz-card">
+    <h1>📝 Trắc Nghiệm Online</h1>
     
-    <div id="quiz-content" class="loading">Đang lấy dữ liệu từ hệ thống...</div>
+    <div id="main-content">
+        <p style="text-align:center;">Đang tải câu hỏi từ Firebase...</p>
+    </div>
     
-    <button id="btn-submit" class="btn-submit" style="display: none;">Nộp Bài & Xem Kết Quả</button>
-
-    <div id="result-box"></div>
+    <button id="btn-submit" class="btn-submit" style="display: none;">Nộp bài và xem kết quả</button>
+    <div id="result-display"></div>
 </div>
 
 <script type="module">
+    // 1. Cấu hình Firebase SDK
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    // Cấu hình Firebase của Trí
     const firebaseConfig = {
         apiKey: "AIzaSyD9ILXGDRCiN2i4imkOC_idOvbIv26MRB0",
         authDomain: "tndemo-123.firebaseapp.com",
@@ -54,76 +54,77 @@
         measurementId: "G-HK9MN35T0L"
     };
 
-    // Khởi tạo
+    // 2. Khởi tạo ứng dụng
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
-    let questionsData = [];
+    let quizData = [];
 
-    // Hàm lấy dữ liệu
-    async function loadData() {
+    // 3. Hàm lấy dữ liệu từ Firestore
+    async function fetchQuestions() {
+        const contentArea = document.getElementById('main-content');
         try {
             const querySnapshot = await getDocs(collection(db, "quiz_data"));
-            const contentDiv = document.getElementById('quiz-content');
-            contentDiv.innerHTML = '';
+            contentArea.innerHTML = '';
             
             if (querySnapshot.empty) {
-                contentDiv.innerHTML = 'Hiện chưa có câu hỏi nào trong hệ thống.';
+                contentArea.innerHTML = '<p class="error-msg">Chưa có câu hỏi nào trong bộ sưu tập "quiz_data".</p>';
                 return;
             }
 
             querySnapshot.forEach((doc) => {
                 const data = doc.data();
-                questionsData.push({ id: doc.id, ...data });
+                quizData.push({ id: doc.id, ...data });
 
-                const itemHtml = `
-                    <div class="quiz-item">
-                        <span class="question">${data.question}</span>
-                        <div class="options">
-                            ${data.options.map((opt, index) => `
-                                <label class="option-label">
-                                    <input type="radio" name="q_${doc.id}" value="${index}">
-                                    ${opt}
-                                </label>
-                            `).join('')}
-                        </div>
+                // Tạo giao diện cho từng câu hỏi (khớp với field: cau-hoi, phuong-an)
+                const qBlock = document.createElement('div');
+                qBlock.className = 'question-item';
+                qBlock.innerHTML = `
+                    <span class="question-text">${data['cau-hoi']}</span>
+                    <div class="options-group">
+                        ${data['phuong-an'].map((opt, index) => `
+                            <label class="option-item">
+                                <input type="radio" name="q_${doc.id}" value="${index}">
+                                ${opt}
+                            </label>
+                        `).join('')}
                     </div>
                 `;
-                contentDiv.insertAdjacentHTML('beforeend', itemHtml);
+                contentArea.appendChild(qBlock);
             });
 
             document.getElementById('btn-submit').style.display = 'block';
-        } catch (error) {
-            console.error("Lỗi khi tải dữ liệu:", error);
-            document.getElementById('quiz-content').innerHTML = 'Có lỗi xảy ra khi kết nối dữ liệu.';
+
+        } catch (err) {
+            console.error(err);
+            contentArea.innerHTML = `<p class="error-msg">Lỗi kết nối: ${err.message}<br>Hãy kiểm tra lại Rules trong Firestore.</p>`;
         }
     }
 
-    // Xử lý nộp bài
+    // 4. Xử lý khi nhấn Nộp bài
     document.getElementById('btn-submit').addEventListener('click', () => {
         let score = 0;
-        let total = questionsData.length;
-
-        questionsData.forEach(q => {
-            const selected = document.querySelector(`input[name="q_${q.id}"]:checked`);
-            if (selected && parseInt(selected.value) === q.answer) {
+        
+        quizData.forEach(item => {
+            const selected = document.querySelector(`input[name="q_${item.id}"]:checked`);
+            // So sánh giá trị đã chọn với trường 'dap-an' trong Firestore
+            if (selected && parseInt(selected.value) === parseInt(item['dap-an'])) {
                 score++;
             }
         });
 
-        const resultBox = document.getElementById('result-box');
-        resultBox.className = 'success';
+        const resultBox = document.getElementById('result-display');
         resultBox.style.display = 'block';
+        resultBox.className = 'success-box';
         resultBox.innerHTML = `
-            <h3>Hoàn thành!</h3>
-            <p>Số câu đúng của bạn là: <strong>${score} / ${total}</strong></p>
-            <p>Điểm số: <strong>${((score / total) * 10).toFixed(2)}</strong></p>
+            <strong>Kết quả: ${score} / ${quizData.length} câu đúng</strong><br>
+            Điểm số: ${(score / quizData.length * 10).toFixed(1)}
         `;
         
-        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     });
 
-    // Chạy hàm tải dữ liệu
-    loadData();
+    // Chạy ứng dụng
+    fetchQuestions();
 </script>
 
 </body>
