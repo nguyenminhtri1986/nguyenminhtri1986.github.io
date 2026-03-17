@@ -4,45 +4,70 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hệ Thống Trắc Nghiệm - Thầy Trí</title>
-    
     <style>
-        :root { --primary: #2563eb; --bg: #f1f5f9; }
-        body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg); margin: 0; padding: 20px; display: flex; justify-content: center; }
-        .quiz-card { background: white; width: 100%; max-width: 600px; padding: 30px; border-radius: 12px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
-        h1 { text-align: center; color: var(--primary); margin-top: 0; }
+        :root { --primary: #2563eb; --bg: #f8fafc; --success: #16a34a; }
+        body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg); margin: 0; padding: 10px; }
         
-        .question-item { border-bottom: 1px solid #e2e8f0; padding: 20px 0; }
-        .question-text { font-size: 1.15rem; font-weight: 600; margin-bottom: 15px; display: block; }
+        .header-info { 
+            position: sticky; top: 0; z-index: 100;
+            background: white; padding: 15px 20px; 
+            border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            display: flex; justify-content: space-between; align-items: center;
+            max-width: 800px; margin: 0 auto 20px auto;
+        }
+        .student-inputs { display: flex; gap: 10px; flex-wrap: wrap; }
+        .student-inputs input { padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; outline: none; font-size: 14px; }
+        .student-inputs input:focus { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(37,99,235,0.1); }
         
-        .option-item { display: block; padding: 12px; margin: 8px 0; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; cursor: pointer; transition: 0.2s; }
-        .option-item:hover { background: #eff6ff; border-color: var(--primary); }
-        .option-item input { margin-right: 12px; }
+        .score-display { 
+            background: var(--primary); color: white; 
+            padding: 10px 20px; border-radius: 8px; 
+            text-align: center; min-width: 100px;
+        }
+        .score-display span { display: block; font-size: 1.5rem; font-weight: bold; }
 
-        .btn-submit { width: 100%; padding: 15px; background: var(--primary); color: white; border: none; border-radius: 8px; font-size: 1.1rem; font-weight: bold; cursor: pointer; margin-top: 25px; transition: 0.3s; }
-        .btn-submit:hover { background: #1d4ed8; }
+        .quiz-container { max-width: 800px; margin: 0 auto; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .question-item { margin-bottom: 25px; padding-bottom: 20px; border-bottom: 1px solid #f1f5f9; }
+        .question-text { font-size: 1.1rem; font-weight: 600; margin-bottom: 15px; display: block; color: #1e293b; }
         
-        #result-display { margin-top: 25px; padding: 20px; border-radius: 8px; text-align: center; display: none; font-size: 1.2rem; }
-        .success-box { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
-        .error-msg { color: #dc2626; text-align: center; padding: 20px; }
+        .option-item { display: block; padding: 12px 15px; margin: 8px 0; background: #f1f5f9; border-radius: 8px; cursor: pointer; transition: 0.2s; }
+        .option-item:hover { background: #e2e8f0; }
+        .option-item input { margin-right: 12px; transform: scale(1.2); }
+
+        .footer-actions { display: flex; gap: 10px; margin-top: 30px; flex-wrap: wrap; }
+        .btn { flex: 1; padding: 15px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 1rem; transition: 0.3s; min-width: 150px; }
+        .btn-reset { background: #e2e8f0; color: #475569; }
+        .btn-reset:hover { background: #cbd5e1; }
+        .btn-submit { background: var(--success); color: white; }
+        .btn-submit:hover { background: #15803d; opacity: 0.9; }
+        .btn-submit:disabled { background: #94a3b8; cursor: not-allowed; }
     </style>
 </head>
 <body>
 
-<div class="quiz-card">
-    <h1>📝 Trắc Nghiệm Online</h1>
-    
-    <div id="main-content">
-        <p style="text-align:center;">Đang tải câu hỏi từ Firebase...</p>
+<div class="header-info">
+    <div class="student-inputs">
+        <input type="text" id="student-name" placeholder="Họ và tên học sinh..." required>
+        <input type="text" id="student-class" placeholder="Lớp..." style="width: 80px;">
     </div>
+    <div class="score-display">
+        <small>ĐIỂM SỐ</small>
+        <span id="live-score">0.0</span>
+    </div>
+</div>
+
+<div class="quiz-container">
+    <div id="quiz-content" style="text-align: center; padding: 20px;">Đang tải bộ đề từ Firebase...</div>
     
-    <button id="btn-submit" class="btn-submit" style="display: none;">Nộp bài và xem kết quả</button>
-    <div id="result-display"></div>
+    <div class="footer-actions" id="actions-area" style="display: none;">
+        <button class="btn btn-reset" id="btn-reload">Làm lại từ đầu</button>
+        <button class="btn btn-submit" id="btn-finish">Hoàn thành & Gửi điểm</button>
+    </div>
 </div>
 
 <script type="module">
-    // 1. Cấu hình Firebase SDK
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, collection, getDocs, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyD9ILXGDRCiN2i4imkOC_idOvbIv26MRB0",
@@ -50,82 +75,96 @@
         projectId: "tndemo-123",
         storageBucket: "tndemo-123.firebasestorage.app",
         messagingSenderId: "1077891220132",
-        appId: "1:1077891220132:web:f4f1902cbe7ba9cd46dc31",
-        measurementId: "G-HK9MN35T0L"
+        appId: "1:1077891220132:web:f4f1902cbe7ba9cd46dc31"
     };
 
-    // 2. Khởi tạo ứng dụng
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
     let quizData = [];
+    let currentScore = 0;
 
-    // 3. Hàm lấy dữ liệu từ Firestore
-    async function fetchQuestions() {
-        const contentArea = document.getElementById('main-content');
+    async function loadQuiz() {
         try {
             const querySnapshot = await getDocs(collection(db, "quiz_data"));
-            contentArea.innerHTML = '';
+            const content = document.getElementById('quiz-content');
+            content.innerHTML = '';
             
-            if (querySnapshot.empty) {
-                contentArea.innerHTML = '<p class="error-msg">Chưa có câu hỏi nào trong bộ sưu tập "quiz_data".</p>';
-                return;
-            }
-
             querySnapshot.forEach((doc) => {
                 const data = doc.data();
                 quizData.push({ id: doc.id, ...data });
 
-                // Tạo giao diện cho từng câu hỏi (khớp với field: cau-hoi, phuong-an)
-                const qBlock = document.createElement('div');
-                qBlock.className = 'question-item';
-                qBlock.innerHTML = `
-                    <span class="question-text">${data['cau-hoi']}</span>
-                    <div class="options-group">
-                        ${data['phuong-an'].map((opt, index) => `
-                            <label class="option-item">
-                                <input type="radio" name="q_${doc.id}" value="${index}">
-                                ${opt}
-                            </label>
-                        `).join('')}
-                    </div>
-                `;
-                contentArea.appendChild(qBlock);
+                const qHtml = `
+                    <div class="question-item">
+                        <span class="question-text">${data['cau-hoi']}</span>
+                        <div>
+                            ${data['phuong-an'].map((opt, idx) => `
+                                <label class="option-item">
+                                    <input type="radio" name="${doc.id}" value="${idx}" class="quiz-radio"> ${opt}
+                                </label>
+                            `).join('')}
+                        </div>
+                    </div>`;
+                content.insertAdjacentHTML('beforeend', qHtml);
             });
 
-            document.getElementById('btn-submit').style.display = 'block';
-
-        } catch (err) {
-            console.error(err);
-            contentArea.innerHTML = `<p class="error-msg">Lỗi kết nối: ${err.message}<br>Hãy kiểm tra lại Rules trong Firestore.</p>`;
+            document.getElementById('actions-area').style.display = 'flex';
+            document.querySelectorAll('.quiz-radio').forEach(radio => {
+                radio.addEventListener('change', calculateScore);
+            });
+        } catch (e) {
+            document.getElementById('quiz-content').innerHTML = "Lỗi tải đề: " + e.message;
         }
     }
 
-    // 4. Xử lý khi nhấn Nộp bài
-    document.getElementById('btn-submit').addEventListener('click', () => {
-        let score = 0;
-        
-        quizData.forEach(item => {
-            const selected = document.querySelector(`input[name="q_${item.id}"]:checked`);
-            // So sánh giá trị đã chọn với trường 'dap-an' trong Firestore
-            if (selected && parseInt(selected.value) === parseInt(item['dap-an'])) {
-                score++;
+    function calculateScore() {
+        let correctCount = 0;
+        quizData.forEach(q => {
+            const selected = document.querySelector(`input[name="${q.id}"]:checked`);
+            if (selected && parseInt(selected.value) === parseInt(q['dap-an'])) {
+                correctCount++;
             }
         });
+        currentScore = (correctCount / quizData.length) * 10;
+        document.getElementById('live-score').innerText = currentScore.toFixed(1);
+    }
 
-        const resultBox = document.getElementById('result-display');
-        resultBox.style.display = 'block';
-        resultBox.className = 'success-box';
-        resultBox.innerHTML = `
-            <strong>Kết quả: ${score} / ${quizData.length} câu đúng</strong><br>
-            Điểm số: ${(score / quizData.length * 10).toFixed(1)}
-        `;
-        
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
+    document.getElementById('btn-reload').onclick = () => {
+        if(confirm("Bạn muốn xóa hết bài làm để làm lại?")) location.reload();
+    };
 
-    // Chạy ứng dụng
-    fetchQuestions();
+    // XỬ LÝ LƯU ĐIỂM LÊN FIREBASE
+    document.getElementById('btn-finish').onclick = async () => {
+        const name = document.getElementById('student-name').value.trim();
+        const lop = document.getElementById('student-class').value.trim();
+        const btn = document.getElementById('btn-finish');
+
+        if(!name) {
+            alert("Vui lòng nhập Họ và Tên học sinh!");
+            return;
+        }
+
+        try {
+            btn.disabled = true;
+            btn.innerText = "Đang gửi điểm...";
+
+            // Gửi dữ liệu vào collection 'bang_diem'
+            await addDoc(collection(db, "bang_diem"), {
+                ho_ten: name,
+                lop: lop,
+                diem: currentScore.toFixed(1),
+                thoi_gian: serverTimestamp()
+            });
+
+            alert(`Chúc mừng ${name}! Điểm số ${currentScore.toFixed(1)} đã được ghi nhận vào hệ thống.`);
+            location.reload(); // Reset sau khi thành công
+        } catch (error) {
+            alert("Lỗi khi gửi điểm: " + error.message);
+            btn.disabled = false;
+            btn.innerText = "Hoàn thành & Gửi điểm";
+        }
+    };
+
+    loadQuiz();
 </script>
-
 </body>
 </html>
