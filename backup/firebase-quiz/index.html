@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kiểm tra Tin học - Thầy Trí</title>
+    <style>
+        :root { --primary: #2563eb; --bg: #f8fafc; --correct: #22c55e; --wrong: #ef4444; }
+        body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg); margin: 0; padding: 15px; }
+        
+        /* Tiêu đề và Nhập liệu */
+        .header-container { max-width: 700px; margin: 0 auto 20px auto; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        h1 { color: var(--primary); margin: 0 0 20px 0; text-align: center; }
+        
+        .student-form { display: flex; flex-direction: column; gap: 12px; align-items: flex-start; }
+        .student-form label { font-weight: bold; margin-bottom: -8px; }
+        .student-form input { width: 100%; max-width: 400px; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 16px; }
+
+        .score-box { margin-top: 15px; padding: 15px; background: var(--primary); color: white; border-radius: 8px; font-weight: bold; width: fit-content; }
+
+        /* Câu hỏi và Đáp án - Căn trái */
+        .quiz-container { max-width: 700px; margin: 0 auto; background: white; padding: 25px; border-radius: 12px; text-align: left; }
+        .question-item { margin-bottom: 30px; padding: 15px; border-radius: 8px; border-left: 4px solid #e2e8f0; }
+        .question-text { font-size: 1.1rem; font-weight: 600; margin-bottom: 15px; display: block; }
+        
+        .option-item { display: flex; align-items: center; padding: 12px; margin: 8px 0; background: #f1f5f9; border-radius: 8px; cursor: pointer; transition: 0.2s; }
+        .option-item:hover { background: #e2e8f0; }
+        .option-item input { margin-right: 12px; transform: scale(1.2); }
+
+        /* Màu sắc phản hồi Đúng/Sai */
+        .option-correct { background-color: #dcfce7 !important; border: 1px solid var(--correct); color: #166534; }
+        .option-wrong { background-color: #fee2e2 !important; border: 1px solid var(--wrong); color: #991b1b; }
+        .feedback-text { font-size: 0.9rem; font-weight: bold; margin-top: 8px; display: block; }
+
+        .btn-group { display: flex; gap: 10px; margin-top: 20px; }
+        .btn { flex: 1; padding: 15px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 1rem; }
+        .btn-submit { background: var(--correct); color: white; }
+        .btn-reset { background: #64748b; color: white; }
+    </style>
+</head>
+<body>
+
+<div class="header-container">
+    <h1>KIỂM TRA TIN HỌC</h1>
+    <div class="student-form">
+        <label>Họ và tên:</label>
+        <input type="text" id="student-name" placeholder="Nhập họ tên...">
+        <label>Lớp:</label>
+        <input type="text" id="student-class" placeholder="Nhập lớp...">
+    </div>
+    <div id="final-score-box" class="score-box" style="display: none;">Điểm số: <span id="score-val">0</span></div>
+</div>
+
+<div class="quiz-container">
+    <div id="quiz-content">Đang tải đề thi...</div>
+    
+    <div class="btn-group" id="actions" style="display: none;">
+        <button class="btn btn-reset" onclick="location.reload()">Làm lại</button>
+        <button class="btn btn-submit" id="btn-finish">Hoàn thành & Gửi bài</button>
+    </div>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, collection, getDocs, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyD9ILXGDRCiN2i4imkOC_idOvbIv26MRB0",
+        authDomain: "tndemo-123.firebaseapp.com",
+        projectId: "tndemo-123",
+        storageBucket: "tndemo-123.firebasestorage.app",
+        messagingSenderId: "1077891220132",
+        appId: "1:1077891220132:web:f4f1902cbe7ba9cd46dc31"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    let quizData = [];
+
+    async function loadQuiz() {
+        const querySnapshot = await getDocs(collection(db, "quiz_data"));
+        const content = document.getElementById('quiz-content');
+        content.innerHTML = '';
+        
+        querySnapshot.forEach((doc) => {
+            const data = doc.data();
+            quizData.push({ id: doc.id, ...data });
+
+            const qHtml = `
+                <div class="question-item" id="qbox_${doc.id}">
+                    <span class="question-text">${data['cau-hoi']}</span>
+                    <div id="options_${doc.id}">
+                        ${data['phuong-an'].map((opt, idx) => `
+                            <label class="option-item" id="label_${doc.id}_${idx}">
+                                <input type="radio" name="${doc.id}" value="${idx}"> ${opt}
+                            </label>
+                        `).join('')}
+                    </div>
+                    <span id="feedback_${doc.id}" class="feedback-text"></span>
+                </div>`;
+            content.insertAdjacentHTML('beforeend', qHtml);
+        });
+        document.getElementById('actions').style.display = 'flex';
+    }
+
+    document.getElementById('btn-finish').onclick = async () => {
+        const name = document.getElementById('student-name').value;
+        if(!name) return alert("Em vui lòng nhập Họ tên!");
+
+        let correctCount = 0;
+        quizData.forEach(q => {
+            const selected = document.querySelector(`input[name="${q.id}"]:checked`);
+            const correctIdx = parseInt(q['dap-an']);
+            
+            // Highlight đáp án đúng
+            document.getElementById(`label_${q.id}_${correctIdx}`).classList.add('option-correct');
+
+            if (selected) {
+                const selectedIdx = parseInt(selected.value);
+                if (selectedIdx === correctIdx) {
+                    correctCount++;
+                    document.getElementById(`feedback_${q.id}`).innerText = "✓ Chính xác";
+                    document.getElementById(`feedback_${q.id}`).style.color = "var(--correct)";
+                } else {
+                    document.getElementById(`label_${q.id}_${selectedIdx}`).classList.add('option-wrong');
+                    document.getElementById(`feedback_${q.id}`).innerText = "✕ Sai rồi";
+                    document.getElementById(`feedback_${q.id}`).style.color = "var(--wrong)";
+                }
+            } else {
+                document.getElementById(`feedback_${q.id}`).innerText = "! Chưa trả lời";
+                document.getElementById(`feedback_${q.id}`).style.color = "orange";
+            }
+            
+            // Vô hiệu hóa các input sau khi nộp
+            document.querySelectorAll(`input[name="${q.id}"]`).forEach(input => input.disabled = true);
+        });
+
+        const finalScore = (correctCount / quizData.length) * 10;
+        document.getElementById('score-val').innerText = finalScore.toFixed(1);
+        document.getElementById('final-score-box').style.display = 'block';
+        document.getElementById('btn-finish').disabled = true;
+
+        // Lưu vào Firebase
+        await addDoc(collection(db, "bang-diem"), {
+            "ho-ten": name,
+            "lop": document.getElementById('student-class').value,
+            "diem": finalScore.toFixed(1),
+            "thoi-gian": serverTimestamp()
+        });
+        
+        alert("Đã nộp bài và lưu kết quả thành công!");
+    };
+
+    loadQuiz();
+</script>
+</body>
+</html>
