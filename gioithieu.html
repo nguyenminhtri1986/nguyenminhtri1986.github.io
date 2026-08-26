@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quan Điểm Cá Nhân</title>
+<style>
+/* Thiết lập nền trắng và font chữ có chân giống trong ảnh */
+body {
+	font-family: "Times New Roman", Times, serif;
+	background-color: #ffffff;
+	color: #333333;
+	margin: 0;
+	padding: 40px 20px;
+	display: flex;
+	justify-content: center;
+}
+/* Khung chứa nội dung được căn giữa */
+.about-container {
+	max-width: 900px;
+	width: 100%;
+	text-align: center;
+}
+/* Đường gạch ngang mảnh màu xám nhạt ở trên cùng */
+.divider {
+	border: 0;
+	border-top: 1px solid #e5e5e5;
+	margin-bottom: 35px;
+}
+/* Tiêu đề chính */
+.section-title {
+	font-size: 26px;
+	font-weight: bold;
+	color: #222222;
+	text-transform: uppercase;
+	margin-bottom: 20px;
+	letter-spacing: 1px;
+}
+/* Đoạn văn bản quan điểm cá nhân */
+.quote-text {
+	font-size: 16px;
+	line-height: 1.6;
+	color: #444444;
+	margin: 0 auto 40px auto;
+	max-width: 850px; /* Giới hạn độ rộng để chữ tự động xuống dòng giống ảnh */
+}
+/* Khung chứa ảnh để căn giữa ảnh */
+.profile-img-container {
+	display: flex;
+	justify-content: center;
+}
+/* Xử lý ảnh bo tròn */
+.profile-img {
+	width: 480px;  /* Đường kính của ảnh */
+	height: 480px; /* Đường kính của ảnh */
+	border-radius: 50%; /* Lệnh bo tròn thành hình tròn hoàn hảo */
+	object-fit: cover; /* Giúp ảnh không bị méo khi bị cắt tròn */
+	box-shadow: 0 8px 25px rgba(0,0,0,0.1); /* Thêm bóng đổ nhẹ cho ảnh nổi bật hơn */
+}
+
+/* TỐI ƯU CHO ĐIỆN THOẠI DI ĐỘNG */
+@media (max-width: 600px) {
+.profile-img {
+	width: 300px;
+	height: 300px;
+}
+.section-title {
+	font-size: 22px;
+}
+.quote-text {
+	font-size: 15px;
+	padding: 0 10px;
+}
+}
+</style>
+</head>
+<body>
+<div class="about-container"> 
+  <!-- Đường viền ngang -->
+  <hr class="divider">
+  
+  <!-- Tiêu đề -->
+  <div class="section-title">QUAN ĐIỂM CÁ NHÂN</div>
+  <!-- Đường viền ngang -->
+  <hr class="divider">
+  
+  <!-- Nội dung văn bản -->
+  <p class="quote-text"> Trong đời, ai ai cũng sẽ gặp phải những tình huống éo le, hoặc phải đứng trước những thách thức mà mình không ngờ đến, khi đó mỗi người đều sẽ có quan điểm và thái độ khác nhau khi đối diện với chúng. Cách mà bạn lựa chọn sẽ quyết định bạn là kẻ chiến thắng hay người thất bại. </p>
+  
+  <!-- Ảnh đại diện -->
+  <div class="profile-img-container"> 
+    <!-- THẦY ĐỔI ĐƯỜNG LINK ẢNH VÀO THUỘC TÍNH SRC BÊN DƯỚI NHÉ --> 
+    <img src="images/hinhcanhan.jpg" alt="Hình ảnh gia đình" class="profile-img"> </div>
+</div>
+</body>
+</html>

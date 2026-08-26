@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kho Phần Mềm Học Tập</title>
+<!-- Tích hợp icon FontAwesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<!-- Tích hợp Font chữ Inter -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+    /* =========================================
+       CẤU TRÚC GIAO DIỆN CHUNG
+    ========================================= */
+    body {
+        font-family: 'Inter', "Times New Roman", Times, serif;
+        background-color: #f4f6f9; /* Màu nền xám nhạt dịu mắt */
+        margin: 0;
+        padding: 20px;
+        color: #333;
+    }
+
+    .container {
+        max-width: 1000px; 
+        margin: 0 auto;
+        background-color: #ffffff; 
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(26, 5, 43, 0.05); /* Đổ bóng nhẹ ngả tím */
+    }
+
+    /* =========================================
+       KHỐI TIÊU ĐỀ TRANG (BANNER)
+    ========================================= */
+    .page-header {
+        background: linear-gradient(135deg, #0d0415 0%, #2a0b45 100%); /* Tone màu tím đen đồng bộ menu */
+        color: white;
+        padding: 30px 20px;
+        border-radius: 10px;
+        text-align: center;
+        margin-bottom: 40px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .page-header h1 {
+        margin: 0 0 10px 0;
+        font-size: 28px;
+        text-transform: uppercase;
+        color: #ffcc00; /* Điểm nhấn màu vàng */
+        letter-spacing: 1px;
+    }
+
+    .page-header p {
+        margin: 0;
+        font-size: 15px;
+        opacity: 0.9;
+        line-height: 1.6;
+    }
+
+    /* =========================================
+       LƯỚI CHỨA CÁC THƯ MỤC (GRID LAYOUT)
+    ========================================= */
+    .folder-grid {
+        display: grid;
+        /* Tự động chia 2 cột trên PC và 1 cột trên Điện thoại */
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 25px;
+        padding: 10px;
+    }
+
+    /* Thiết kế từng thẻ Thư mục */
+    .folder-card {
+        background-color: #ffffff;
+        border: 1px solid #d8d2e0;
+        border-radius: 12px;
+        padding: 35px 20px;
+        text-align: center;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* Hiệu ứng nảy lên khi rê chuột */
+    .folder-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(42, 11, 69, 0.1);
+        border-color: #2a0b45;
+    }
+
+    /* Biểu tượng thư mục */
+    .folder-icon {
+        font-size: 65px;
+        color: #ffcc00; /* Màu vàng đặc trưng */
+        margin-bottom: 20px;
+        transition: all 0.3s ease;
+    }
+
+    /* Đổi màu icon sang tím khi rê chuột */
+    .folder-card:hover .folder-icon {
+        color: #2a0b45; 
+    }
+
+    /* Tên thư mục */
+    .folder-title {
+        font-size: 18px;
+        font-weight: 600;
+        color: #1a052b;
+        margin: 0 0 12px 0;
+    }
+
+    /* Đoạn văn mô tả ngắn */
+    .folder-desc {
+        font-size: 14px;
+        color: #666;
+        margin: 0 0 25px 0;
+        line-height: 1.5;
+        flex-grow: 1; /* Đẩy nút bấm xuống dưới cùng */
+    }
+
+    /* Nút "Mở thư mục" */
+    .open-btn {
+        background-color: #f0ebf5; /* Nền xám tím nhạt */
+        color: #2a0b45;
+        padding: 10px 25px;
+        border-radius: 30px;
+        font-size: 14px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    /* Đảo ngược màu nút khi rê chuột */
+    .folder-card:hover .open-btn {
+        background-color: #2a0b45;
+        color: #ffffff;
+    }
+
+    /* Tối ưu khoảng cách trên thiết bị di động */
+    @media (max-width: 600px) {
+        .container { padding: 15px; }
+        .page-header { padding: 20px 15px; }
+        .page-header h1 { font-size: 22px; }
+        .folder-card { padding: 25px 15px; }
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    
+    <!-- KHỐI TIÊU ĐỀ TRANG -->
+    <div class="page-header">
+        <h1><i class="fas fa-cloud-download-alt" style="margin-right: 10px;"></i> TÀI NGUYÊN PHẦN MỀM</h1>
+        <p>Hệ thống lưu trữ phần mềm phục vụ thực hành tin học</p>
+    </div>
+
+    <!-- KHU VỰC CHỨA 4 THƯ MỤC -->
+    <div class="folder-grid">
+        
+        <!-- Thẻ 1: Hệ thống -->
+        <a href="https://c3nguyenbinhkhiemdongnai-my.sharepoint.com/:f:/g/personal/nguyenminhtri_thptnguyenbinhkhiem_edu_vn/IgCHN7xelQu7Qr3V2IX30p8yAY49PQfsHka8ADC3XD6rC4o?e=atVy9b" target="_blank" class="folder-card">
+            <i class="fas fa-folder-open folder-icon"></i>
+            <h3 class="folder-title">Phần mềm Hệ thống</h3>
+            <p class="folder-desc">Chứa các file cài đặt hệ điều hành và công cụ khôi phục, quản lý dữ liệu.</p>
+            <span class="open-btn">Mở thư mục <i class="fas fa-arrow-right" style="font-size: 12px;"></i></span>
+        </a>
+
+        <!-- Thẻ 2: Ứng dụng -->
+        <a href="https://c3nguyenbinhkhiemdongnai-my.sharepoint.com/:f:/g/personal/nguyenminhtri_thptnguyenbinhkhiem_edu_vn/IgAOg5hIekyOS6wU3VjDXvTlASq1t027_QKIEHiuSczdykM?e=ruVqMK" target="_blank" class="folder-card">
+            <i class="fas fa-folder-open folder-icon"></i>
+            <h3 class="folder-title">Phần mềm Ứng dụng</h3>
+            <p class="folder-desc">Các môi trường lập trình (Python, C++) và phần mềm văn phòng thực hành.</p>
+            <span class="open-btn">Mở thư mục <i class="fas fa-arrow-right" style="font-size: 12px;"></i></span>
+        </a>
+
+        <!-- Thẻ 3: Tiện ích -->
+        <a href="https://c3nguyenbinhkhiemdongnai-my.sharepoint.com/:f:/g/personal/nguyenminhtri_thptnguyenbinhkhiem_edu_vn/IgBNsw09MbQ6QbN5wjJaHNVpAbenwuAC1thRbL6rAHZJIVA?e=6XXwh8" target="_blank" class="folder-card">
+            <i class="fas fa-folder-open folder-icon"></i>
+            <h3 class="folder-title">Phần mềm Tiện ích</h3>
+            <p class="folder-desc">Các công cụ hỗ trợ gõ tiếng Việt, phần mềm nén giải nén và trình duyệt web.</p>
+            <span class="open-btn">Mở thư mục <i class="fas fa-arrow-right" style="font-size: 12px;"></i></span>
+        </a>
+
+        <!-- Thẻ 4: Hỗ trợ học tập -->
+        <a href="https://c3nguyenbinhkhiemdongnai-my.sharepoint.com/:f:/g/personal/nguyenminhtri_thptnguyenbinhkhiem_edu_vn/IgBR3hXtiVt1SaD225LJus5DAVmUHF-FDeCnRzpXflgXlgQ?e=eMsQNc" target="_blank" class="folder-card">
+            <i class="fas fa-graduation-cap folder-icon"></i>
+            <h3 class="folder-title">Phần mềm Hỗ trợ học tập</h3>
+            <p class="folder-desc">Các công cụ thiết kế trò chơi tương tác, làm bài kiểm tra và sơ đồ tư duy.</p>
+            <span class="open-btn">Mở thư mục <i class="fas fa-arrow-right" style="font-size: 12px;"></i></span>
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+</html>

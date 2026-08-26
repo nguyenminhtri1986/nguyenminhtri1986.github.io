@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thông Tin Liên Hệ</title>
+    <!-- Nhúng thư viện Font Awesome để hiển thị các biểu tượng (icon) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* Thiết lập font chữ và màu nền chung */
+        body {
+            background-color: #ffffff;
+            color: #222222;
+            margin: 0;
+            padding: 40px 20px;
+        }
+
+        /* Khung chứa nội dung được căn giữa trang */
+        .contact-container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        /* Phần tiêu đề được kẹp giữa 2 đường kẻ ngang */
+        .header-section {
+            border-top: 1px solid #e5e5e5;
+            border-bottom: 1px solid #e5e5e5;
+            padding: 30px 0;
+            margin-bottom: 40px;
+        }
+
+        /* Định dạng tiêu đề chính */
+        .title {
+            font-size: 28px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin: 0 0 10px 0;
+            letter-spacing: 1px;
+            color: #222222;
+        }
+
+        /* Định dạng dòng chữ nghiêng phụ đề */
+        .subtitle {
+            font-style: italic;
+            font-size: 18px;
+            color: #555555;
+            margin: 0;
+        }
+
+        /* Khung chứa các dòng thông tin liên hệ */
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Căn giữa toàn bộ danh sách */
+            gap: 15px; /* Khoảng cách giữa các dòng */
+        }
+
+        /* Định dạng từng dòng thông tin */
+        .contact-item {
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            color: #333333;
+        }
+
+        /* Định dạng các biểu tượng icon (Khoảng cách, kích thước) */
+        .contact-item i {
+            width: 25px; /* Giữ độ rộng cố định để các icon thẳng hàng với nhau hơn */
+            margin-right: 10px;
+            color: #111111;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="contact-container">
+        <!-- Khối Tiêu Đề (Có 2 đường gạch trên dưới) -->
+        <div class="header-section">
+            <h1 class="title">THÔNG TIN LIÊN HỆ</h1>
+            <p class="subtitle">Mọi chi tiết xin vui lòng liên hệ</p>
+        </div>
+        
+        <!-- Khối Thông Tin Chi Tiết -->
+        <div class="contact-info">
+            <div class="contact-item">
+                <i class="fas fa-user"></i> Nguyễn Minh Trí
+            </div>
+            <div class="contact-item">
+                <i class="fas fa-map-marker-alt"></i> Trường THPT Nguyễn Bỉnh Khiêm
+            </div>
+            <div class="contact-item">
+                <i class="fas fa-phone-alt"></i> Điện thoại: 0902 604 456
+            </div>
+            <div class="contact-item">
+                <i class="fas fa-envelope"></i> Email: nguyenminhtri@live.com
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ Thống Dữ Liệu Môn Học</title>
+    <!-- Các thư viện Font và Icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- File CSS của bạn -->
+    <link href="css/index.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+
+    <!-- Thanh Top Header -->
+    <div class="top-header">
+        <div style="font-weight: 600;"><i class="fas fa-server"></i> WEBSITE NGUYỄN MINH TRÍ</div>
+        <button onclick="toggleMenu()"><i class="fas fa-bars"></i></button>
+    </div>
+
+    <!-- Khung chứa toàn bộ phần thân (Menu + Cột Phải) -->
+    <div class="main-container">
+        
+        <!-- Khung Menu Trái (Full chiều cao) -->
+        <div class="sidebar-container" id="mySidebar">
+            <iframe src="menu.html" name="khung_menu"></iframe>
+        </div>
+
+        <!-- Lớp phủ mờ cho điện thoại -->
+        <div class="mobile-overlay" onclick="closeMenuFromIframe()"></div>
+
+        <!-- CỘT PHẢI (Chứa Nội dung và Footer) -->
+        <div class="right-column">
+            
+            <!-- Khung Nội dung Phải -->
+            <div class="content-area">
+                <iframe src="trangchu.html" name="khung_noidung" id="khung_noidung"></iframe>
+            </div>
+
+            <!-- Khung Footer -->
+            <div class="footer-area">
+                <iframe src="footer.html" name="khung_footer" scrolling="no"></iframe>
+            </div>
+            
+        </div>
+    </div>
+
+    <!-- Script điều khiển Menu cho Mobile -->
+    <script>
+        function toggleMenu() {
+            if(window.innerWidth <= 768) {
+                document.getElementById("mySidebar").classList.toggle("open-mobile");
+            }
+        }
+        
+        function closeMenuFromIframe() {
+            if(window.innerWidth <= 768) {
+                document.getElementById("mySidebar").classList.remove("open-mobile");
+            }
+        }
+    </script>
+</body>
+</html>

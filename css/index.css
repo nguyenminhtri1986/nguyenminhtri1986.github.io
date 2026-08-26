@@ -1,0 +1,78 @@
+/* Thiết lập cơ bản toàn trang */
+body, html {
+    margin: 0; padding: 0; height: 100%;
+    font-family: 'Inter', Arial, sans-serif;
+    overflow: hidden;
+    display: flex; flex-direction: column;
+}
+
+/* Thanh Header */
+.top-header {
+    background-color: #0d0014; color: white;
+    padding: 15px 20px; display: flex; align-items: center; justify-content: space-between;
+    z-index: 1001;
+}
+
+.top-header button {
+    background: none; border: none; color: white; font-size: 24px; cursor: pointer;
+}
+
+/* Vùng chứa chính */
+.main-container {
+    display: flex; flex: 1; position: relative; overflow: hidden;
+}
+
+/* Khung Menu Trái */
+.sidebar-container {
+    width: 260px; background-color: #1a0026;
+    transition: left 0.3s ease, margin-left 0.3s ease;
+    z-index: 1000;
+}
+
+/* Lớp phủ mờ (Mặc định ẩn) */
+.mobile-overlay {
+    display: none; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.6); z-index: 999;
+}
+
+/* ----------------------------------------
+   CỘT PHẢI (Chứa Nội dung và Footer)
+---------------------------------------- */
+.right-column {
+    display: flex;
+    flex-direction: column; /* Xếp dọc: Nội dung trên, Footer dưới */
+    flex: 1; 
+    position: relative;
+    width: 100%;
+}
+
+.content-area {
+    flex: 1; /* Tự động co giãn chiếm hết không gian trống */
+    background-color: #f4f6f9;
+    position: relative;
+}
+
+.footer-area {
+    height: 50px; /* Chiều cao cố định của Footer */
+    background-color: #11001a;
+}
+
+/* Cài đặt dùng chung cho mọi thẻ Iframe */
+iframe { 
+    width: 100%; height: 100%; border: none; display: block; 
+}
+
+/* ----------------------------------------
+   GIAO DIỆN ĐIỆN THOẠI (Dưới 768px)
+---------------------------------------- */
+@media (max-width: 768px) {
+    .sidebar-container {
+        position: absolute; height: 100%; 
+        left: -260px; /* Giấu menu sang trái */
+        margin-left: 0;
+        box-shadow: 2px 0 10px rgba(0,0,0,0.5);
+    }
+    /* Các class được thêm bằng JavaScript để mở menu */
+    .sidebar-container.open-mobile { left: 0; }
+    .sidebar-container.open-mobile ~ .mobile-overlay { display: block; }
+}

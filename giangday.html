@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Công Tác Giảng Dạy - Bảng Điều Khiển</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+    /* =========================================
+       NỀN TRANG VÀ BỐ CỤC CHUNG
+    ========================================= */
+    body {
+        font-family: 'Inter', Arial, sans-serif;
+        margin: 0;
+        padding: 50px 0; 
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-height: 100vh;
+        box-sizing: border-box;
+        background: #f4f6f9;
+    }
+
+    /* =========================================
+       KHỐI BANNER MÔN HỌC (Tông Tím Đen)
+    ========================================= */
+    .dashboard-banner {
+        background: linear-gradient(135deg, #13031f 0%, #30084a 100%);
+        color: white;
+        width: 90%; 
+        max-width: 1600px; 
+        padding: 50px 50px;
+        border-radius: 20px;
+        box-shadow: 0 10px 25px rgba(19, 3, 31, 0.15);
+        margin-bottom: 50px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 20px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .dashboard-banner::after {
+        content: '';
+        position: absolute;
+        top: -50px;
+        right: -50px;
+        width: 250px;
+        height: 250px;
+        background: rgba(255, 204, 0, 0.1); /* Họa tiết mờ màu vàng */
+        border-radius: 50%;
+    }
+
+    /* Nút Quay Lại */
+    .back-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(255, 255, 255, 0.15);
+        color: #ffffff;
+        text-decoration: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 15px;
+        margin-bottom: 20px;
+        transition: background 0.2s;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .back-button:hover {
+        background: rgba(255, 255, 255, 0.3);
+    }
+
+    .banner-content {
+        width: 100%;
+        z-index: 1; /* Đảm bảo nổi lên trên khối tròn trang trí */
+    }
+
+    .banner-content h1 {
+        color: #ffcc00;
+        margin: 0 0 15px 0;
+        font-size: 36px; 
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+    }
+
+    .banner-content p {
+        margin: 8px 0;
+        font-size: 18px; 
+        opacity: 0.95;
+    }
+
+    .banner-icon i {
+        font-size: 100px; 
+        color: rgba(255, 255, 255, 0.15);
+        position: absolute;
+        right: 50px;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    /* =========================================
+       LƯỚI HIỂN THỊ CÁC MÔN HỌC (3 Cột)
+    ========================================= */
+    .subject-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr); 
+        gap: 40px; 
+        width: 90%; 
+        max-width: 1600px;
+    }
+
+    .subject-card {
+        background: #ffffff;
+        border: 1px solid #e9ecef;
+        border-radius: 18px;
+        padding: 40px 30px; 
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 20px; 
+        text-decoration: none;
+        color: #333;
+        transition: all 0.2s ease;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+    }
+
+    .subject-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(48, 8, 74, 0.08); /* Đổ bóng tông tím */
+        border-color: #30084a; /* Viền tông tím khi trỏ vào */
+    }
+
+    .card-icon-box {
+        background-color: #f0ebf5; /* Nền icon tím nhạt */
+        width: 90px; 
+        height: 90px;
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 45px; 
+        color: #30084a; /* Icon màu tím đậm */
+        transition: all 0.2s ease;
+    }
+
+    .subject-card:hover .card-icon-box {
+        background-color: #30084a; /* Đổi màu nền thành tím đậm */
+        color: #ffcc00; /* Đổi màu icon thành vàng */
+    }
+
+    .card-text h3 {
+        margin: 0;
+        font-size: 22px; 
+        color: #13031f; /* Chữ tiêu đề tím đen */
+        font-weight: 700;
+    }
+
+    .card-text p {
+        margin: 10px 0 0 0;
+        font-size: 16px; 
+        color: #666;
+        line-height: 1.6;
+    }
+
+    /* =========================================
+       RESPONSIVE CHO ĐIỆN THOẠI & TABLET
+    ========================================= */
+    @media (max-width: 1200px) {
+        .subject-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 768px) {
+        .subject-grid { grid-template-columns: 1fr; }
+        .dashboard-banner { padding: 30px 20px; }
+        .banner-icon { display: none; }
+        .banner-content h1 { font-size: 26px; }
+    }
+</style>
+</head>
+<body>
+
+    <!-- Khối Banner Môn Học -->
+    <div class="dashboard-banner">
+        <div class="banner-content">
+            <a href="index.html" class="back-button"><i class="fas fa-arrow-left"></i> Trang chủ</a>
+            <h1>DANH MỤC GIẢNG DẠY</h1>
+            <p>Lựa chọn môn học để truy cập bài giảng, giáo án và hệ thống bài tập.</p>
+        </div>
+        <div class="banner-icon">
+            <i class="fas fa-book-open"></i>
+        </div>
+    </div>
+
+    <!-- Lưới Hiển Thị Các Môn Học -->
+    <div class="subject-grid">
+        
+        <!-- Môn Tin học 10 -->
+        <a href="giangday/tinhoc10.html" class="subject-card">
+            <div class="card-icon-box"><i class="fas fa-laptop-code"></i></div>
+            <div class="card-text">
+                <h3>Tin học Lớp 10</h3>
+                <p>Kiến thức nền tảng về khoa học máy tính, mạng máy tính và đạo đức công nghệ.</p>
+            </div>
+        </a>
+
+        <!-- Môn Tin học 11 -->
+        <a href="giangday/tinhoc11.html" class="subject-card">
+            <div class="card-icon-box"><i class="fas fa-database"></i></div>
+            <div class="card-text">
+                <h3>Tin học Lớp 11</h3>
+                <p>Khám phá hệ quản trị cơ sở dữ liệu, lập trình cơ bản và thiết kế thuật toán.</p>
+            </div>
+        </a>
+
+        <!-- Môn Tin học 12 -->
+        <a href="giangday/tinhoc12.html" class="subject-card">
+            <div class="card-icon-box"><i class="fas fa-microchip"></i></div>
+            <div class="card-text">
+                <h3>Tin học Lớp 12</h3>
+                <p>Mạng máy tính nâng cao, hệ điều hành và các xu hướng công nghệ thông tin hiện đại.</p>
+            </div>
+        </a>
+
+        <!-- Lập trình Windows Nâng cao -->
+        <a href="giangday/laptrinhwindowsnangcao.html" class="subject-card">
+            <div class="card-icon-box"><i class="fab fa-windows"></i></div>
+            <div class="card-text">
+                <h3>Lập trình Windows Nâng cao (Ado.net)</h3>
+                <p>Phát triển ứng dụng Desktop, kết nối ADO.Net và quản trị dữ liệu chuyên sâu.</p>
+            </div>
+        </a>
+
+        <!-- Bồi dưỡng HSG -->
+        <a href="boiduonghsg.html" class="subject-card">
+            <div class="card-icon-box"><i class="fas fa-trophy"></i></div>
+            <div class="card-text">
+                <h3>Bồi dưỡng HSG Tin Học</h3>
+                <p>Ngân hàng đề thi, thuật toán nâng cao và tài liệu luyện thi học sinh giỏi các cấp.</p>
+            </div>
+        </a>
+
+        <!-- Dự án / Thực hành -->
+        <a href="thuchanh.html" class="subject-card">
+            <div class="card-icon-box"><i class="fas fa-project-diagram"></i></div>
+            <div class="card-text">
+                <h3>Dự Án Thực Hành</h3>
+                <p>Không gian lưu trữ các dự án cuối kỳ, bài tập lớn và sản phẩm thực hành của học sinh.</p>
+            </div>
+        </a>
+
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trang Chủ - Bảng Điều Khiển</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+    /* =========================================
+       NỀN TRANG VÀ BỐ CỤC CHUNG
+    ========================================= */
+    body {
+        font-family: 'Inter', Arial, sans-serif;
+        margin: 0;
+        padding: 50px 0; /* Bỏ padding hai bên để width: 90% hoạt động chuẩn nhất */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-height: 100vh;
+        box-sizing: border-box;
+        
+        /* Nền màu sáng, thanh lịch */
+        background: #f4f6f9;
+    }
+
+    /* =========================================
+       KHỐI BANNER CHÀO MỪNG
+    ========================================= */
+    .dashboard-banner {
+        background: linear-gradient(135deg, #13031f 0%, #30084a 100%);
+        color: white;
+        width: 90%; /* ĐÃ SỬA: Chiếm 90% màn hình */
+        max-width: 1600px; /* Giới hạn tối đa để trên màn hình quá to không bị loãng */
+        padding: 50px 50px;
+        border-radius: 20px;
+        box-shadow: 0 10px 25px rgba(19, 3, 31, 0.15);
+        margin-bottom: 50px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 20px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* Trang trí thêm hình khối mờ trong banner */
+    .dashboard-banner::after {
+        content: '';
+        position: absolute;
+        top: -50px;
+        right: -50px;
+        width: 250px;
+        height: 250px;
+        background: rgba(255, 204, 0, 0.1);
+        border-radius: 50%;
+    }
+
+    .banner-content h1 {
+        color: #ffcc00;
+        margin: 0 0 15px 0;
+        font-size: 36px; /* Chữ banner to hơn */
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+    }
+
+    .banner-content p {
+        margin: 8px 0;
+        font-size: 18px; /* Chữ mô tả to hơn */
+        opacity: 0.95;
+    }
+    
+    .school-tag {
+        display: inline-block;
+        background: rgba(255, 255, 255, 0.15);
+        padding: 10px 22px;
+        border-radius: 30px;
+        font-size: 15px;
+        font-weight: 500;
+        margin-top: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .banner-icon i {
+        font-size: 100px; /* Icon banner to hơn */
+        color: rgba(255, 255, 255, 0.2);
+    }
+
+    /* =========================================
+       LƯỚI ĐIỀU HƯỚNG TRUNG TÂM (2x2)
+    ========================================= */
+    .quick-access-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 40px; /* Tăng khoảng cách giữa các thẻ */
+        width: 90%; /* ĐÃ SỬA: Chiếm 90% màn hình */
+        max-width: 1600px;
+    }
+
+    .access-card {
+        background: #ffffff;
+        border: 1px solid #e9ecef;
+        border-radius: 18px;
+        padding: 45px 35px; /* Tăng độ phình của thẻ */
+        display: flex;
+        align-items: flex-start;
+        gap: 25px; /* Khoảng cách giữa icon và chữ lớn hơn */
+        text-decoration: none;
+        color: #333;
+        transition: all 0.2s ease;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .access-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(48, 8, 74, 0.08);
+        border-color: #30084a;
+    }
+
+    .card-icon-box {
+        background-color: #f0ebf5;
+        width: 85px; /* Khung icon to hơn */
+        height: 85px;
+        border-radius: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 40px; /* Icon to hơn */
+        color: #30084a;
+        flex-shrink: 0;
+        transition: all 0.2s ease;
+    }
+
+    .access-card:hover .card-icon-box {
+        background-color: #30084a;
+        color: #ffcc00;
+    }
+
+    .card-text h3 {
+        margin: 0 0 12px 0;
+        font-size: 24px; /* Tiêu đề thẻ to hơn */
+        color: #13031f;
+        font-weight: 700;
+    }
+
+    .card-text p {
+        margin: 0;
+        font-size: 16px; /* Chữ mô tả to hơn */
+        color: #666;
+        line-height: 1.6;
+    }
+
+    /* =========================================
+       THIẾT KẾ THẺ TRỌNG TÂM (TĨNH)
+    ========================================= */
+    .featured-card {
+        border: 2px solid #ffcc00;
+    }
+
+    .featured-card:hover {
+        border-color: #30084a;
+    }
+
+    /* Nhãn Ruy-băng cho mục trọng tâm */
+    .ribbon {
+        position: absolute;
+        top: 25px;
+        right: -45px;
+        background: #ffcc00;
+        color: #13031f;
+        padding: 8px 50px;
+        font-size: 14px; /* Chữ ruy băng to hơn */
+        font-weight: 700;
+        transform: rotate(45deg);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        letter-spacing: 1px;
+    }
+
+    /* =========================================
+       RESPONSIVE CHO ĐIỆN THOẠI & TABLET
+    ========================================= */
+    @media (max-width: 992px) {
+        .quick-access-grid { 
+            grid-template-columns: 1fr; /* Xuống 1 cột trên màn hình nhỏ */
+        }
+        .dashboard-banner { 
+            text-align: center; 
+            justify-content: center; 
+            padding: 40px 20px; 
+        }
+        .banner-icon { display: none; }
+        .banner-content h1 { font-size: 28px; }
+    }
+</style>
+</head>
+<body>
+
+    <!-- Khối Banner -->
+    <div class="dashboard-banner">
+        <div class="banner-content">
+            <h1>HỆ THỐNG DỮ LIỆU MÔN HỌC</h1>
+            <p><i class="fas fa-chalkboard-teacher"></i> Giáo viên phụ trách: <strong>Thầy Trí Nguyễn Minh</strong></p>
+            <span class="school-tag"><i class="fas fa-school" style="color: #ffcc00;"></i> THPT Nguyễn Bỉnh Khiêm</span>
+        </div>
+        <div class="banner-icon">
+            <i class="fas fa-laptop-code"></i>
+        </div>
+    </div>
+
+    <!-- Khối Phím Tắt Truy Cập Nhanh -->
+    <div class="quick-access-grid">
+        
+        <!-- Thẻ 1: Giảng Dạy (ĐƯỢC ĐÁNH DẤU TRỌNG TÂM) -->
+        <a href="giangday.html" class="access-card featured-card">
+            <div class="ribbon">TRỌNG TÂM</div>
+            <div class="card-icon-box"><i class="fas fa-graduation-cap"></i></div>
+            <div class="card-text">
+                <h3>Công Tác Giảng Dạy</h3>
+                <p>Khung chương trình, hệ thống giáo án, bài giảng lý thuyết và các bài tập thực hành trên lớp.</p>
+            </div>
+        </a>
+
+        <!-- Thẻ 2: Kho Phần Mềm -->
+        <a href="phanmem.html" class="access-card">
+            <div class="card-icon-box"><i class="fas fa-cogs"></i></div>
+            <div class="card-text">
+                <h3>Kho Phần Mềm</h3>
+                <p>Liên kết tải về các công cụ lập trình, phần mềm tiện ích và ứng dụng hỗ trợ quá trình học tập.</p>
+            </div>
+        </a>
+
+        <!-- Thẻ 3: Tài Liệu Tham Khảo -->
+        <a href="tailieu.html" class="access-card">
+            <div class="card-icon-box"><i class="fas fa-book-reader"></i></div>
+            <div class="card-text">
+                <h3>Tài Liệu Tham Khảo</h3>
+                <p>Thư viện sách điện tử (PDF), tài liệu chuyên sâu, và ngân hàng đề thi các năm để ôn luyện.</p>
+            </div>
+        </a>
+
+        <!-- Thẻ 4: Góc Giải Trí -->
+        <a href="giaitri.html" class="access-card">
+            <div class="card-icon-box"><i class="fas fa-gamepad"></i></div>
+            <div class="card-text">
+                <h3>Góc Giải Trí</h3>
+                <p>Thư giãn sau những giờ học căng thẳng với các mini-game trí tuệ, âm nhạc và video thú vị.</p>
+            </div>
+        </a>
+
+    </div>
+
+</body>
+</html>

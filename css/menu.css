@@ -1,0 +1,140 @@
+@charset "utf-8";
+/* CSS Document */
+
+/* Đảm bảo đệm (padding) không làm phình kích thước thật của phần tử */
+*, *:before, *:after {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Cambria, "Hoefler Text", "Liberation Serif", Times, "Times New Roman", "serif";
+    
+    /* Hiệu ứng chuyển sắc mượt mà từ tím than sáng (trên) xuống tím đen sâu (dưới) */
+    background: linear-gradient(180deg, #1c0631 0%, #0d0415 100%);
+    
+    color: white;
+    width: 100%; /* Tràn vừa khít với độ rộng iframe */
+    min-height: 100vh; /* Đảm bảo dải màu kéo dài xuyên suốt chiều cao màn hình */
+}
+
+/* =========================================
+   TIÊU ĐỀ MENU
+========================================= */
+.menu-title {
+    padding: 20px;
+    text-align: center;
+    background-color: #06020a; 
+    border-bottom: 2px solid #2a0b45;
+    font-weight: 600;
+}
+
+/* =========================================
+   DANH SÁCH MENU CHÍNH
+========================================= */
+a, .dropdown-btn {
+    padding: 15px 35px 15px 20px; 
+    text-decoration: none;
+    font-size: 15px;
+    color: #f0ebf5;
+    display: block;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+    border-bottom: 1px solid #1a072b; 
+    border-left: 4px solid transparent;
+    position: relative; 
+    transition: all 0.3s ease; 
+    
+    /* Xử lý chữ dài tự động xuống hàng */
+    white-space: normal; 
+    word-wrap: break-word; 
+    line-height: 1.5; 
+}
+
+a:hover, .dropdown-btn:hover {
+    background-color: #2a0b45; 
+    border-left: 4px solid #ffcc00; 
+    font-weight: bold; /* IN ĐẬM CHỮ KHI RÊ CHUỘT */
+}
+
+i.left-icon {
+    width: 25px;
+    margin-right: 10px;
+    color: #d1c4e9;
+}
+
+/* Neo cố định mũi tên để không bị lệch khi chữ xuống hàng */
+.fa-caret-down {
+    position: absolute; 
+    right: 15px;
+    top: 50%; 
+    transform: translateY(-50%); 
+}
+
+/* =========================================
+   DANH SÁCH MENU CON (SUB-MENU)
+========================================= */
+.dropdown-container {
+    display: none;
+    background-color: #150622; 
+}
+
+.dropdown:hover .dropdown-container {
+    display: block;
+}
+
+.dropdown-container a {
+    color: #d1c4e9;
+    padding: 12px 20px 12px 50px; 
+    border-bottom: 1px solid #2a0b45; 
+    font-size: 14px;
+    position: relative; 
+    transition: all 0.3s ease; 
+    border-left: 4px solid transparent;
+}
+
+/* Biểu tượng mũi tên ẩn mặc định */
+.dropdown-container a::before {
+    content: "\f105"; 
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    position: absolute;
+    left: 25px; 
+    opacity: 0; 
+    transform: translateX(-10px); 
+    transition: all 0.3s ease;
+    color: #ffcc00; 
+}
+
+/* Hiệu ứng khi rê chuột vào bài học cụ thể */
+.dropdown-container a:hover {
+    background-color: #2a0b45; 
+    color: #ffffff; 
+    padding-left: 55px; 
+    border-left: 4px solid #ffcc00; 
+    font-weight: bold; /* IN ĐẬM CHỮ KHI RÊ CHUỘT VÀO DANH SÁCH CON */
+}
+
+/* Hiện mũi tên khi rê chuột */
+.dropdown-container a:hover::before {
+    opacity: 1; 
+    transform: translateX(0); 
+}
+
+/* =========================================
+   ẨN THANH CUỘN (SCROLLBAR)
+========================================= */
+html, body {
+    -ms-overflow-style: none;  
+    scrollbar-width: none;  
+    margin: 0; 
+    padding: 0;
+}
+
+html::-webkit-scrollbar, body::-webkit-scrollbar {
+    display: none; 
+}

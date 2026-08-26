@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="css/menu.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+
+<!--  <div class="menu-title"><i class="fas fa-server"></i> DANH MỤC</div>--> 
+
+<a href="trangchu.html" target="khung_noidung" onclick="tuDongAnMenu()"><i class="fas fa-home left-icon"></i> Trang chủ</a> <a href="gioithieu.html" target="khung_noidung" onclick="tuDongAnMenu()"><i class="fas fa-info left-icon"></i> Giới thiệu</a>
+<div class="dropdown">
+	  <a class="dropdown-btn" href="giangday.html" target="khung_noidung" onclick="tuDongAnMenu()">
+	  <i class="fas fa-graduation-cap left-icon"></i> Giảng dạy <i class="fas fa-caret-down"></i>
+	  </a>
+  <div class="dropdown-container"> 
+	  <a href="giangday/tinhoc10.html" target="khung_noidung" onclick="tuDongAnMenu()">Tin học 10</a> 
+	  <a href="giangday/tinhoc11.html" target="khung_noidung" onclick="tuDongAnMenu()">Tin học 11</a>
+	  <a href="giangday/tinhoc12.html" target="khung_noidung" onclick="tuDongAnMenu()">Tin học 12</a>
+	  <a href="giangday/laptrinhwindowsnangcao.html" target="khung_noidung" onclick="tuDongAnMenu()">Lập trình Windows nâng cao (ADO.Net)</a>
+	</div>
+</div>
+<a href="phanmem.html" target="khung_noidung" onclick="tuDongAnMenu()"><i class="fas fa-folder left-icon"></i> Phần mềm</a> <a href="lienhe.html" target="khung_noidung" onclick="tuDongAnMenu()"><i class="fas fa-address-card left-icon"></i> Liên hệ</a> 
+<script>
+        function tuDongAnMenu() {
+            // Kiểm tra xem trang có đang nằm trong iframe và hàm cha có tồn tại không
+            if(window.parent && typeof window.parent.closeMenuFromIframe === 'function') {
+                window.parent.closeMenuFromIframe();
+            }
+        }
+    </script>
+</body>
+</html>
