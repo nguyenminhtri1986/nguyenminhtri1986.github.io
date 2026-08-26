@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kho Tài Liệu Tham Khảo</title>
+<!-- Tích hợp icon FontAwesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<!-- Tích hợp Font chữ Inter -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+    /* =========================================
+       CẤU TRÚC GIAO DIỆN CHUNG
+    ========================================= */
+    body {
+        font-family: 'Inter', "Times New Roman", Times, serif;
+        background-color: #f4f6f9;
+        margin: 0;
+        padding: 20px;
+        color: #333;
+    }
+
+    .container {
+        max-width: 1000px; 
+        margin: 0 auto;
+        background-color: #ffffff; 
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(26, 5, 43, 0.05);
+    }
+
+    /* =========================================
+       KHỐI TIÊU ĐỀ TRANG (BANNER)
+    ========================================= */
+    .page-header {
+        background: linear-gradient(135deg, #0d0415 0%, #2a0b45 100%);
+        color: white;
+        padding: 30px 20px;
+        border-radius: 10px;
+        text-align: center;
+        margin-bottom: 40px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .page-header h1 {
+        margin: 0 0 10px 0;
+        font-size: 28px;
+        text-transform: uppercase;
+        color: #ffcc00;
+        letter-spacing: 1px;
+    }
+
+    .page-header p {
+        margin: 0;
+        font-size: 15px;
+        opacity: 0.9;
+        line-height: 1.6;
+    }
+
+    /* =========================================
+       LƯỚI CHỨA CÁC THƯ MỤC (GRID LAYOUT)
+    ========================================= */
+    .folder-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 25px;
+        padding: 10px;
+    }
+
+    /* Thiết kế từng thẻ Thư mục */
+    .folder-card {
+        background-color: #ffffff;
+        border: 1px solid #d8d2e0;
+        border-radius: 12px;
+        padding: 35px 20px;
+        text-align: center;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* Hiệu ứng nảy lên khi rê chuột */
+    .folder-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(42, 11, 69, 0.1);
+        border-color: #2a0b45;
+    }
+
+    /* Biểu tượng thư mục */
+    .folder-icon {
+        font-size: 65px;
+        color: #ffcc00;
+        margin-bottom: 20px;
+        transition: all 0.3s ease;
+    }
+
+    /* Đổi màu icon sang tím khi rê chuột */
+    .folder-card:hover .folder-icon {
+        color: #2a0b45; 
+    }
+
+    /* Tên thư mục */
+    .folder-title {
+        font-size: 18px;
+        font-weight: 600;
+        color: #1a052b;
+        margin: 0 0 12px 0;
+    }
+
+    /* Đoạn văn mô tả ngắn */
+    .folder-desc {
+        font-size: 14px;
+        color: #666;
+        margin: 0 0 25px 0;
+        line-height: 1.5;
+        flex-grow: 1;
+    }
+
+    /* Nút "Mở thư mục" */
+    .open-btn {
+        background-color: #f0ebf5;
+        color: #2a0b45;
+        padding: 10px 25px;
+        border-radius: 30px;
+        font-size: 14px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    /* Đảo ngược màu nút khi rê chuột */
+    .folder-card:hover .open-btn {
+        background-color: #2a0b45;
+        color: #ffffff;
+    }
+
+    /* Tối ưu khoảng cách trên thiết bị di động */
+    @media (max-width: 600px) {
+        .container { padding: 15px; }
+        .page-header { padding: 20px 15px; }
+        .page-header h1 { font-size: 22px; }
+        .folder-card { padding: 25px 15px; }
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    
+    <!-- KHỐI TIÊU ĐỀ TRANG -->
+    <div class="page-header">
+        <h1><i class="fas fa-book-reader" style="margin-right: 10px;"></i> KHO TÀI LIỆU THAM KHẢO</h1>
+        <p>Hệ thống lưu trữ tài liệu học tập, bài giảng và đề thi các khối lớp</p>
+    </div>
+
+    <!-- KHU VỰC CHỨA 3 THƯ MỤC -->
+    <div class="folder-grid">
+        
+        <!-- Thẻ 1: Lớp 10 -->
+        <!-- LƯU Ý: Thay dải '#1' ở href bằng đường link thư mục Sharepoint/Drive thật của bạn -->
+        <a href="https://c3nguyenbinhkhiemdongnai-my.sharepoint.com/:f:/g/personal/nguyenminhtri_thptnguyenbinhkhiem_edu_vn/IgChWzAiN3-TRZRvmaKvVsIwATxXEJ4iaLGzF-MI7dVkXDM?e=SNpmbW" target="_blank" class="folder-card">
+            <i class="fas fa-folder-open folder-icon"></i>
+            <h3 class="folder-title">Tài liệu Lớp 10</h3>
+            <p class="folder-desc">Chứa các bài giảng, đề cương ôn tập và bài tập nền tảng dành cho học sinh Lớp 10.</p>
+            <span class="open-btn">Mở thư mục <i class="fas fa-arrow-right" style="font-size: 12px;"></i></span>
+        </a>
+
+        <!-- Thẻ 2: Lớp 11 -->
+        <!-- LƯU Ý: Thay dải '#2' ở href bằng đường link thư mục Sharepoint/Drive thật của bạn -->
+        <a href="https://c3nguyenbinhkhiemdongnai-my.sharepoint.com/:f:/g/personal/nguyenminhtri_thptnguyenbinhkhiem_edu_vn/IgDXsEMXuPybR41g9JwQksfPAZeAoJe1LxzmM3yg90hQpe8?e=bGQd27" target="_blank" class="folder-card">
+            <i class="fas fa-folder-open folder-icon"></i>
+            <h3 class="folder-title">Tài liệu Lớp 11</h3>
+            <p class="folder-desc">Tổng hợp kiến thức trọng tâm, tài liệu nâng cao và đề thi thử cho chương trình Lớp 11.</p>
+            <span class="open-btn">Mở thư mục <i class="fas fa-arrow-right" style="font-size: 12px;"></i></span>
+        </a>
+
+        <!-- Thẻ 3: Lớp 12 -->
+        <!-- LƯU Ý: Thay dải '#3' ở href bằng đường link thư mục Sharepoint/Drive thật của bạn -->
+        <a href="https://c3nguyenbinhkhiemdongnai-my.sharepoint.com/:f:/g/personal/nguyenminhtri_thptnguyenbinhkhiem_edu_vn/IgALBbKpNlF6QL96i3ZZKgJUAd557ei8ClHlxpudR586vCw?e=ARLChS" target="_blank" class="folder-card">
+            <i class="fas fa-graduation-cap folder-icon"></i>
+            <h3 class="folder-title">Tài liệu Lớp 12</h3>
+            <p class="folder-desc">Chuyên đề ôn thi THPT Quốc gia, đề thi chính thức các năm và tài liệu chuyên sâu Lớp 12.</p>
+            <span class="open-btn">Mở thư mục <i class="fas fa-arrow-right" style="font-size: 12px;"></i></span>
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+</html>
