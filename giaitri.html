@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giải trí</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f9;
+        }
+        h1 {
+            color: #333;
+        }
+        #player-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            max-width: 500px;
+            margin: auto;
+        }
+        audio {
+            width: 100%;
+            margin-bottom: 15px;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            padding: 10px;
+            background-color: #e9ecef;
+            margin-bottom: 5px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        li:hover {
+            background-color: #d1d5db;
+        }
+        .active {
+            background-color: #007bff;
+            color: white;
+        }
+        .active:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+<div id="player-container">
+    <h1>Nghe nhạc giải trí</h1>
+    <h3 id="current-song">Đang tải...</h3>
+    <audio id="audio-player" controls>
+        Trình duyệt của bạn không hỗ trợ thẻ audio.
+    </audio>
+    
+    <h2>Danh sách bài hát</h2>
+    <ul id="playlist">
+        <!-- Danh sách bài hát sẽ được load tự động vào đây -->
+    </ul>
+</div>
+
+<script>
+    // URL API của thư mục mp3 trên GitHub của bạn
+    const apiUrl = 'https://api.github.com/repos/nguyenminhtri1986/nguyenminhtri1986.github.io/contents/mp3';
+    
+    const audioPlayer = document.getElementById('audio-player');
+    const playlistElement = document.getElementById('playlist');
+    const currentSongElement = document.getElementById('current-song');
+    
+    let songs = [];
+    let currentSongIndex = 0;
+
+    // Hàm gọi API GitHub để lấy danh sách file mp3
+    async function loadSongs() {
+        try {
+            const response = await fetch(apiUrl);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const data = await response.json();
+            
+            // Lọc ra các file có đuôi .mp3
+            songs = data.filter(item => item.name.endsWith('.mp3'));
+            
+            if (songs.length > 0) {
+                renderPlaylist();
+                playSong(0); // Phát bài đầu tiên tự động
+            } else {
+                currentSongElement.textContent = "Không tìm thấy bài hát nào.";
+            }
+        } catch (error) {
+            console.error('Lỗi khi tải danh sách bài hát:', error);
+            currentSongElement.textContent = "Lỗi tải danh sách.";
+        }
+    }
+
+    // Hàm hiển thị danh sách bài hát
+    function renderPlaylist() {
+        playlistElement.innerHTML = '';
+        songs.forEach((song, index) => {
+            const li = document.createElement('li');
+            // Xóa đuôi .mp3 để hiển thị tên đẹp hơn
+            li.textContent = song.name.replace('.mp3', ''); 
+            li.onclick = () => playSong(index);
+            
+            if (index === currentSongIndex) {
+                li.classList.add('active');
+            }
+            playlistElement.appendChild(li);
+        });
+    }
+
+    // Hàm phát nhạc
+    function playSong(index) {
+        currentSongIndex = index;
+        const song = songs[index];
+        
+        // URL để phát trực tiếp từ raw.githubusercontent
+        const rawUrl = `https://raw.githubusercontent.com/nguyenminhtri1986/nguyenminhtri1986.github.io/main/mp3/${encodeURIComponent(song.name)}`;
+        
+        audioPlayer.src = rawUrl;
+        currentSongElement.textContent = `Đang phát: ${song.name.replace('.mp3', '')}`;
+        
+        // Cập nhật class active trong playlist
+        Array.from(playlistElement.children).forEach((li, i) => {
+            li.classList.toggle('active', i === index);
+        });
+        
+        audioPlayer.play().catch(e => console.error("Không thể tự động phát nhạc:", e));
+    }
+
+    // Sự kiện khi kết thúc bài hát, tự động chuyển bài tiếp theo
+    audioPlayer.addEventListener('ended', () => {
+        currentSongIndex++;
+        if (currentSongIndex < songs.length) {
+            playSong(currentSongIndex);
+        } else {
+            // Quay lại bài đầu tiên nếu hết danh sách (tùy chọn)
+            playSong(0); 
+        }
+    });
+
+    // Bắt đầu tải danh sách khi mở trang
+    loadSongs();
+
+</script>
+
+</body>
+</html>
