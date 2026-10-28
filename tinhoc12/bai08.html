@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tin học 12 - THPT Nguyễn Bỉnh Khiêm (Bài 8)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+        }
+
+        /* Tùy chỉnh thanh cuộn */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        
+        .dark-scroll::-webkit-scrollbar-thumb { background: #4b5563; }
+        .dark-scroll::-webkit-scrollbar-thumb:hover { background: #6b7280; }
+
+        /* Code Editor Style */
+        .editor-font { font-family: 'Fira Code', monospace; }
+        
+        #editor-container {
+            display: flex;
+            background-color: #1e1e1e;
+            overflow: hidden;
+            position: relative;
+        }
+        #line-numbers {
+            padding: 1rem 0.5rem;
+            text-align: right;
+            color: #858585;
+            background-color: #1e1e1e;
+            user-select: none;
+            overflow: hidden;
+            min-width: 3rem;
+            line-height: 1.5;
+            font-size: 13px;
+            border-right: 1px solid #333;
+        }
+        #code-editor {
+            flex-grow: 1;
+            padding: 1rem;
+            background-color: #1e1e1e;
+            color: #d4d4d4;
+            outline: none;
+            resize: none;
+            line-height: 1.5;
+            font-size: 13px;
+            white-space: pre;
+            overflow: auto;
+            border: none;
+        }
+        #code-editor::selection { background: #264f78; }
+
+        /* Vòng tròn điểm số */
+        .score-circle {
+            border: 2px dashed #f87171;
+            color: #ef4444;
+            border-radius: 50%;
+            width: 4.5rem;
+            height: 4.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.5rem;
+            background-color: #fffafa;
+            transition: all 0.3s ease;
+        }
+        .score-circle.perfect {
+            border: 2px solid #10b981;
+            color: #10b981;
+            background-color: #f0fdf4;
+        }
+        
+        /* Cây DOM */
+        .dom-node {
+            margin-left: 1.2rem;
+            border-left: 1px dashed #cbd5e1;
+            padding-left: 0.5rem;
+            padding-top: 0.25rem;
+            padding-bottom: 0.25rem;
+        }
+        .dom-tag {
+            color: #2563eb;
+            background: #eff6ff;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        .dom-text {
+            color: #4b5563;
+            font-size: 0.85rem;
+            margin-left: 0.5rem;
+        }
+
+        .hint-content {
+            display: none;
+        }
+        .hint-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col lg:flex-row items-stretch p-2 gap-2 bg-[#f3f4f6]">
+
+    <!-- Cột 1: Thông tin bài học và Tiêu chí (Rubric) -->
+    <aside class="w-full lg:w-[360px] xl:w-[400px] flex flex-col bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden shrink-0 z-10">
+        
+        <!-- Header Bài học -->
+        <div class="p-3 border-b border-gray-100 shrink-0 bg-white z-10 relative">
+            <div class="flex items-center justify-between mb-2 gap-2">
+                <span class="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Bài 8. Định dạng, Danh sách, Hình ảnh</span>
+                <span id="lesson-tag" class="text-[11px] font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded whitespace-nowrap shrink-0">Nhận biết</span>
+            </div>
+            <h2 id="lesson-title" class="text-lg font-bold text-gray-900 leading-snug mb-1.5 break-words">Tên bài học</h2>
+            <div id="lesson-desc" class="text-[13px] text-gray-700 leading-relaxed space-y-1.5 break-words">
+                <!-- Nội dung mô tả -->
+            </div>
+        </div>
+
+        <!-- Phiếu tiêu chí (Full size) -->
+        <div class="flex-1 p-3 pb-4">
+            <h3 class="text-sm font-semibold text-gray-800 mb-2 flex items-center gap-2">
+                Phiếu tiêu chí
+            </h3>
+            <ul id="criteria-list" class="space-y-2.5">
+                <!-- Items render bằng JS -->
+            </ul>
+        </div>
+
+        <!-- Chấm điểm & Điều hướng -->
+        <div class="p-3 bg-white shrink-0 border-t border-gray-50 mt-auto">
+            <!-- Nút hành động -->
+            <div class="flex gap-2 mb-4">
+                <button onclick="submitCode()" class="flex-1 bg-gray-900 hover:bg-black text-white py-2 rounded-lg flex items-center justify-center gap-2 text-[13px] font-semibold transition-colors shadow-sm">
+                    <i class="fa-solid fa-scissors transform -rotate-90"></i> Chấm bài <span class="text-gray-400 font-normal text-[11px] ml-1 border-l border-gray-600 pl-1.5">Ctrl+↵</span>
+                </button>
+                <button onclick="showSubmitDialog()" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg flex items-center justify-center gap-2 text-[13px] font-semibold transition-colors shadow-sm">
+                    <i class="fa-solid fa-paper-plane"></i> Nộp bài
+                </button>
+            </div>
+            
+            <!-- Điểm số -->
+            <div class="flex justify-center mb-2">
+                <div id="score-display" class="score-circle shadow-inner !w-16 !h-16 !text-xl">0/0</div>
+            </div>
+            <p id="feedback-msg" class="text-[11.5px] text-red-500 text-center mb-4 min-h-[1.5rem] font-medium leading-relaxed"></p>
+            
+            <!-- Nút Qua câu -->
+            <div class="flex items-center justify-between text-[13px] text-gray-700 font-medium border-t border-gray-100 pt-3">
+                <button onclick="changeLesson(-1)" id="btn-prev" class="hover:text-blue-600 hover:bg-blue-50 px-2.5 py-1.5 rounded-lg flex items-center gap-1.5 transition-colors"><i class="fa-solid fa-arrow-left"></i> Trước</button>
+                <span id="lesson-counter" class="text-gray-800 font-bold bg-gray-100 px-3 py-1 rounded-full text-xs">1 / 3</span>
+                <button onclick="changeLesson(1)" id="btn-next" class="hover:text-blue-600 hover:bg-blue-50 px-2.5 py-1.5 rounded-lg flex items-center gap-1.5 transition-colors">Sau <i class="fa-solid fa-arrow-right"></i></button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Cột 2: Code Editor -->
+    <section class="w-full lg:flex-1 flex flex-col rounded-xl overflow-hidden bg-[#1e1e1e] border border-gray-800 shadow-xl min-h-[500px]">
+        <!-- Editor Header Tabs -->
+        <div class="bg-[#191919] flex items-end px-2 border-b border-gray-800 shrink-0 h-10 select-none">
+            <div class="bg-[#1e1e1e] text-gray-300 hover:text-white text-xs font-medium px-4 py-2 border-t-2 border-yellow-500 h-full flex items-center gap-2 cursor-pointer transition-colors">
+                <i class="fa-brands fa-html5 text-orange-500 text-sm"></i> index.html
+            </div>
+        </div>
+
+        <!-- Textarea & Line numbers -->
+        <div id="editor-container" class="flex-1 editor-font">
+            <div id="line-numbers" class="dark-scroll">1</div>
+            <textarea id="code-editor" class="dark-scroll" spellcheck="false" wrap="off"></textarea>
+        </div>
+
+        <!-- Editor Toolbar -->
+        <div class="bg-[#252526] px-4 py-2 flex items-center gap-2.5 shrink-0 text-[13px] border-t border-gray-800 overflow-x-auto whitespace-nowrap">
+            <button onclick="updatePreview()" class="text-gray-300 hover:text-white hover:bg-[#333333] px-2.5 py-1 rounded flex items-center gap-1.5 transition-colors">
+                <i class="fa-solid fa-play text-green-500"></i> Chạy lại
+            </button>
+            <button onclick="copyCode(event)" class="text-gray-300 hover:text-white hover:bg-[#333333] px-2.5 py-1 rounded flex items-center gap-1.5 transition-colors">
+                <i class="fa-regular fa-copy"></i> Chép mã
+            </button>
+            <button onclick="downloadHTML()" class="text-gray-300 hover:text-white hover:bg-[#333333] px-2.5 py-1 rounded flex items-center gap-1.5 transition-colors">
+                <i class="fa-solid fa-file-arrow-down"></i> Tải mã
+            </button>
+            <button onclick="resetCode()" class="text-gray-300 hover:text-white hover:bg-[#333333] px-2.5 py-1 rounded flex items-center gap-1.5 transition-colors">
+                <i class="fa-solid fa-rotate-left"></i> Làm lại
+            </button>
+            <span class="text-gray-500 ml-auto text-[11px] hidden lg:block shrink-0">Ctrl + Enter chạy <span class="mx-2 text-gray-700">|</span> Tab thụt lề</span>
+        </div>
+    </section>
+
+    <!-- Cột 3: Preview & Inspector -->
+    <section class="w-full lg:w-[360px] xl:w-[400px] flex flex-col gap-2 shrink-0 overflow-hidden relative min-h-[500px]">
+        
+        <!-- Cửa sổ Live Preview -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 flex-1 flex flex-col overflow-hidden">
+            <!-- Trình duyệt Mockup -->
+            <div class="bg-gray-50 px-3 py-2 flex items-center gap-4 border-b border-gray-200 shrink-0">
+                <div class="flex gap-1.5">
+                    <div class="w-3 h-3 rounded-full bg-[#ff5f56]"></div>
+                    <div class="w-3 h-3 rounded-full bg-[#ffbd2e]"></div>
+                    <div class="w-3 h-3 rounded-full bg-[#27c93f]"></div>
+                </div>
+                
+                <div class="flex-1 flex justify-center">
+                    <div class="bg-gray-200/80 p-1 rounded-md flex gap-1">
+                        <button id="btn-view-student" onclick="togglePreviewMode('student')" class="px-4 py-1 text-xs font-semibold bg-white shadow-sm rounded text-gray-800 transition-all">Bài làm</button>
+                        <button id="btn-view-sample" onclick="togglePreviewMode('sample')" class="px-4 py-1 text-xs font-semibold text-gray-500 hover:text-gray-700 rounded transition-all"><i class="fa-solid fa-eye"></i> Mẫu</button>
+                    </div>
+                </div>
+                
+                <div class="text-[10px] text-gray-400 font-medium">Bấm vào trong để soi phần tử</div>
+            </div>
+            <!-- Iframe cho code -->
+            <iframe id="preview-frame" class="w-full flex-1 bg-white"></iframe>
+        </div>
+
+        <!-- Cửa sổ Inspector (Cây DOM & Báo lỗi) -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 h-[30%] flex flex-col overflow-hidden shrink-0">
+            <div class="h-1 bg-gray-100 border-b border-gray-200 w-full flex justify-center items-center">
+                <div class="w-8 h-0.5 bg-gray-300 rounded-full"></div>
+            </div>
+            
+            <div class="flex border-b border-gray-100 bg-white px-2 shrink-0 pt-1">
+                <button onclick="switchTab('dom')" id="tab-btn-dom" class="px-4 py-2 text-sm font-semibold text-blue-600 border-b-2 border-blue-600">Cây DOM</button>
+                <button onclick="switchTab('element')" id="tab-btn-element" class="px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700">Phần tử</button>
+                <button onclick="switchTab('error')" id="tab-btn-error" class="px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700">Lỗi cú pháp</button>
+            </div>
+            
+            <div class="flex-1 overflow-y-auto bg-white p-4 font-mono text-sm">
+                <div id="tab-content-dom" class="block">
+                    <div class="text-blue-700 font-bold mb-1 text-xs bg-blue-50 border border-blue-100 inline-block px-1.5 py-0.5 rounded shadow-sm">document</div>
+                    <div id="dom-tree-container"></div>
+                </div>
+                
+                <div id="tab-content-element" class="hidden">
+                    <p class="text-gray-400 text-xs text-center mt-4 italic">Bấm vào một thẻ HTML bên trên để xem thuộc tính.</p>
+                </div>
+
+                <div id="tab-content-error" class="hidden" id="syntax-log">
+                    <p class="text-sm text-green-600 flex items-center gap-2">
+                        <i class="fa-solid fa-check-circle"></i> Chưa phát hiện lỗi cú pháp nào. Mã sạch.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Hộp thoại Modal UI -->
+    <div id="custom-modal" class="fixed inset-0 bg-black/60 hidden z-50 flex items-center justify-center backdrop-blur-sm transition-opacity p-3 md:p-5">
+        <div class="bg-white rounded-xl shadow-2xl w-[450px] max-w-full max-h-full flex flex-col overflow-hidden transform transition-transform">
+            <div class="px-5 py-4 border-b border-gray-100 flex items-center justify-between bg-gray-50/50 shrink-0">
+                <h3 id="modal-title-text" class="font-bold text-gray-800 text-lg">Thông báo</h3>
+                <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 transition-colors"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <div id="modal-body" class="p-5 text-gray-600 overflow-y-auto overscroll-contain"></div>
+            <div id="modal-footer" class="px-5 py-3 bg-gray-50 flex justify-end gap-2 border-t border-gray-100 shrink-0"></div>
+        </div>
+    </div>
+
+    <!-- JavaScript Xử Lý -->
+    <script>
+        // --- DỮ LIỆU BÀI 8 ---
+        const allLessons = [
+            {
+                id: 4,
+                chapter: "Bài 8. Định dạng văn bản, danh sách và hình ảnh",
+                title: "Câu 1: Định dạng chữ cơ bản",
+                tag: "Nhận biết",
+                description: `
+                    <p class="mb-2 text-[13px]">Sử dụng các thẻ định dạng để làm nổi bật văn bản trong trang web.</p>
+                    <div class="bg-blue-50 border border-blue-100 p-2.5 rounded-lg text-xs text-blue-800 mb-3">
+                        <strong>💡 Yêu cầu thực hiện:</strong>
+                        <ul class="list-decimal pl-5 mt-1.5 space-y-1">
+                            <li>Bao quanh chữ <strong>in đậm</strong> bằng thẻ <code>&lt;b&gt;</code> hoặc <code>&lt;strong&gt;</code>.</li>
+                            <li>Bao quanh chữ <em>in nghiêng</em> bằng thẻ <code>&lt;i&gt;</code> hoặc <code>&lt;em&gt;</code>.</li>
+                            <li>Bao quanh chữ <u>gạch chân</u> bằng thẻ <code>&lt;u&gt;</code>.</li>
+                        </ul>
+                    </div>
+                `,
+                initialCode: `<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Định dạng văn bản</title>
+</head>
+<body>
+    <p>Đoạn văn này có chữ in đậm, chữ in nghiêng, và chữ gạch chân.</p>
+</body>
+</html>`,
+                sampleCode: `<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Định dạng văn bản</title>
+</head>
+<body>
+    <p>Đoạn văn này có chữ <b>in đậm</b>, chữ <i>in nghiêng</i>, và chữ <u>gạch chân</u>.</p>
+</body>
+</html>`,
+                criteria: [
+                    {
+                        title: 'Có sử dụng thẻ <code class="text-blue-600">&lt;b&gt;</code> hoặc <code class="text-blue-600">&lt;strong&gt;</code>',
+                        hint: "Thêm cặp thẻ &lt;b&gt;...&lt;/b&gt; xung quanh từ muốn in đậm.",
+                        validate: (doc, code) => {
+                            if (doc.querySelector('b') || doc.querySelector('strong')) return { pass: true };
+                            return { pass: false, error: "Chưa tìm thấy thẻ b hoặc strong." };
+                        }
+                    },
+                    {
+                        title: 'Có sử dụng thẻ <code class="text-blue-600">&lt;i&gt;</code> hoặc <code class="text-blue-600">&lt;em&gt;</code>',
+                        hint: "Thêm cặp thẻ &lt;i&gt;...&lt;/i&gt; xung quanh từ muốn in nghiêng.",
+                        validate: (doc, code) => {
+                            if (doc.querySelector('i') || doc.querySelector('em')) return { pass: true };
+                            return { pass: false, error: "Chưa tìm thấy thẻ i hoặc em." };
+                        }
+                    },
+                    {
+                        title: 'Có sử dụng thẻ <code class="text-blue-600">&lt;u&gt;</code>',
+                        hint: "Thêm cặp thẻ &lt;u&gt;...&lt;/u&gt; xung quanh từ muốn gạch chân.",
+                        validate: (doc, code) => {
+                            if (doc.querySelector('u')) return { pass: true };
+                            return { pass: false, error: "Chưa tìm thấy thẻ u (gạch chân)." };
+                        }
+                    }
+                ]
+            },
+            {
+                id: 5,
+                chapter: "Bài 8. Định dạng văn bản, danh sách và hình ảnh",
+                title: "Câu 2: Tạo danh sách liệt kê",
+                tag: "Thông hiểu",
+                description: `
+                    <p class="mb-2 text-[13px]">Danh sách giúp trình bày các mục hoặc các bước một cách rõ ràng. Hãy tạo 2 loại danh sách theo yêu cầu.</p>
+                    <div class="bg-blue-50 border border-blue-100 p-2.5 rounded-lg text-xs text-blue-800 mb-3">
+                        <strong>💡 Các bước thực hiện:</strong>
+                        <ul class="list-decimal pl-5 mt-1.5 space-y-1">
+                            <li>Tạo 1 danh sách không có thứ tự <code>&lt;ul&gt;</code> liệt kê 2 môn học yêu thích.</li>
+                            <li>Tạo 1 danh sách có thứ tự <code>&lt;ol&gt;</code> liệt kê 2 bước để học tốt môn Tin học.</li>
+                            <li>Sử dụng thẻ <code>&lt;li&gt;</code> cho từng mục bên trong danh sách.</li>
+                        </ul>
+                    </div>
+                `,
+                initialCode: `<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Danh sách</title>
+</head>
+<body>
+    <h3>Các môn học yêu thích:</h3>
+    <!-- Thêm danh sách ul ở đây -->
+
+    <h3>Các bước học tốt:</h3>
+    <!-- Thêm danh sách ol ở đây -->
+
+</body>
+</html>`,
+                sampleCode: `<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Danh sách</title>
+</head>
+<body>
+    <h3>Các môn học yêu thích:</h3>
+    <ul>
+        <li>Toán học</li>
+        <li>Tin học</li>
+    </ul>
+
+    <h3>Các bước học tốt:</h3>
+    <ol>
+        <li>Lắng nghe giảng trên lớp</li>
+        <li>Thực hành viết code ở nhà</li>
+    </ol>
+</body>
+</html>`,
+                criteria: [
+                    {
+                        title: 'Có chứa thẻ <code class="text-blue-600">&lt;ul&gt;</code> (danh sách không thứ tự)',
+                        hint: "Mở và đóng cặp thẻ &lt;ul&gt;&lt;/ul&gt;",
+                        validate: (doc, code) => {
+                            if (doc.querySelector('ul')) return { pass: true };
+                            return { pass: false, error: "Chưa có thẻ ul." };
+                        }
+                    },
+                    {
+                        title: 'Có chứa thẻ <code class="text-blue-600">&lt;ol&gt;</code> (danh sách có thứ tự)',
+                        hint: "Mở và đóng cặp thẻ &lt;ol&gt;&lt;/ol&gt;",
+                        validate: (doc, code) => {
+                            if (doc.querySelector('ol')) return { pass: true };
+                            return { pass: false, error: "Chưa có thẻ ol." };
+                        }
+                    },
+                    {
+                        title: 'Có sử dụng ít nhất 4 thẻ <code class="text-blue-600">&lt;li&gt;</code>',
+                        hint: "Mỗi mục bên trong danh sách phải được đặt trong cặp thẻ &lt;li&gt;Nội dung&lt;/li&gt;.",
+                        validate: (doc, code) => {
+                            let lis = doc.querySelectorAll('li');
+                            if (lis && lis.length >= 4) return { pass: true };
+                            return { pass: false, error: `Bạn mới có ${lis ? lis.length : 0} thẻ li. Yêu cầu ít nhất 4.` };
+                        }
+                    }
+                ]
+            },
+            {
+                id: 6,
+                chapter: "Bài 8. Định dạng văn bản, danh sách và hình ảnh",
+                title: "Câu 3: Chèn hình ảnh và liên kết",
+                tag: "Vận dụng",
+                description: `
+                    <p class="mb-2 text-[13px]">Sử dụng thẻ <code>&lt;a&gt;</code> để dẫn link và thẻ <code>&lt;img&gt;</code> để làm sinh động trang web của em.</p>
+                    <div class="bg-blue-50 border border-blue-100 p-2.5 rounded-lg text-xs text-blue-800 mb-3">
+                        <strong>💡 Yêu cầu thực hiện:</strong>
+                        <ul class="list-decimal pl-5 mt-1.5 space-y-1">
+                            <li>Chèn một liên kết đến trang <code>https://google.com</code> bằng thẻ <code>&lt;a&gt;</code> có thuộc tính <b>href</b>.</li>
+                            <li>Chèn một hình ảnh bằng thẻ <code>&lt;img&gt;</code>, có thuộc tính <b>src</b> chứa đường dẫn ảnh bất kỳ.</li>
+                            <li>Thêm thuộc tính <b>alt</b> cho thẻ hình ảnh để miêu tả ảnh.</li>
+                        </ul>
+                    </div>
+                `,
+                initialCode: `<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Đa phương tiện</title>
+</head>
+<body>
+    <p>Tìm kiếm thông tin tại: </p>
+    
+    <p>Dưới đây là một bức ảnh đẹp:</p>
+    
+</body>
+</html>`,
+                sampleCode: `<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Đa phương tiện</title>
+</head>
+<body>
+    <p>Tìm kiếm thông tin tại: <a href="https://google.com">Trang chủ Google</a></p>
+    
+    <p>Dưới đây là một bức ảnh đẹp:</p>
+    <img src="https://picsum.photos/200/300" alt="Bức ảnh phong cảnh ngẫu nhiên">
+</body>
+</html>`,
+                criteria: [
+                    {
+                        title: 'Có chứa thẻ <code class="text-blue-600">&lt;a&gt;</code> và thuộc tính href',
+                        hint: "Ví dụ: <code>&lt;a href=\"https://google.com\"&gt;Google&lt;/a&gt;</code>",
+                        validate: (doc, code) => {
+                            let a = doc.querySelector('a');
+                            if (a && a.hasAttribute('href')) return { pass: true };
+                            return { pass: false, error: "Thiếu thẻ <a> hoặc thẻ <a> chưa có thuộc tính href." };
+                        }
+                    },
+                    {
+                        title: 'Có chứa thẻ <code class="text-blue-600">&lt;img&gt;</code> và thuộc tính src',
+                        hint: "Ví dụ: <code>&lt;img src=\"link-anh.jpg\"&gt;</code>",
+                        validate: (doc, code) => {
+                            let img = doc.querySelector('img');
+                            if (img && img.hasAttribute('src')) return { pass: true };
+                            return { pass: false, error: "Thiếu thẻ <img> hoặc thẻ <img> chưa có thuộc tính src." };
+                        }
+                    },
+                    {
+                        title: 'Thẻ <code class="text-blue-600">&lt;img&gt;</code> có thuộc tính mô tả alt',
+                        hint: "Thuộc tính alt dùng để mô tả ảnh khi mạng chậm không tải được. Ví dụ: <code>&lt;img src=\"...\" alt=\"Mô tả ảnh\"&gt;</code>",
+                        validate: (doc, code) => {
+                            let img = doc.querySelector('img');
+                            if (img && img.hasAttribute('alt') && img.getAttribute('alt').length > 0) return { pass: true };
+                            return { pass: false, error: "Thẻ <img> đang thiếu thuộc tính alt hoặc alt bị để trống." };
+                        }
+                    }
+                ]
+            }
+        ];
+
+        // --- BIẾN TRẠNG THÁI ---
+        let currentIndex = 0;
+        let currentPreviewMode = 'student';
+        let lastSubmittedCode = '';
+        
+        // --- DOM ELEMENTS ---
+        const editor = document.getElementById('code-editor');
+        const lineNumbers = document.getElementById('line-numbers');
+        const previewFrame = document.getElementById('preview-frame');
+        const criteriaList = document.getElementById('criteria-list');
+        const scoreDisplay = document.getElementById('score-display');
+        const feedbackMsg = document.getElementById('feedback-msg');
+
+        // --- LOGIC EDITOR & PREVIEW ---
+        function updateLineNumbers() {
+            const lines = editor.value.split('\n').length;
+            lineNumbers.innerHTML = Array(lines).fill(0).map((_, i) => i + 1).join('<br>');
+        }
+
+        editor.addEventListener('input', () => {
+            updateLineNumbers();
+            updatePreview(); 
+        });
+        
+        editor.addEventListener('scroll', () => {
+            lineNumbers.scrollTop = editor.scrollTop;
+        });
+
+        editor.addEventListener('keydown', function(e) {
+            if (e.key === 'Tab') {
+                e.preventDefault();
+                const start = this.selectionStart;
+                const end = this.selectionEnd;
+                this.value = this.value.substring(0, start) + "    " + this.value.substring(end);
+                this.selectionStart = this.selectionEnd = start + 4;
+                updateLineNumbers();
+                updatePreview();
+            }
+            if (e.ctrlKey && e.key === 'Enter') {
+                submitCode();
+            }
+        });
+
+        function updatePreview() {
+            allLessons[currentIndex].userCode = editor.value;
+
+            if (currentPreviewMode === 'sample') {
+                togglePreviewMode('student');
+            } else {
+                const code = editor.value;
+                previewFrame.srcdoc = code;
+            }
+        }
+
+        previewFrame.onload = () => {
+            updateDOMTree();
+        };
+
+        function updateDOMTree() {
+            const container = document.getElementById('dom-tree-container');
+            if (!container) return;
+            container.innerHTML = '';
+            
+            try {
+                const doc = previewFrame.contentDocument || previewFrame.contentWindow.document;
+                
+                function buildNode(el) {
+                    const div = document.createElement('div');
+                    div.className = 'dom-node';
+                    
+                    const tagSpan = document.createElement('span');
+                    tagSpan.className = 'dom-tag';
+                    tagSpan.innerText = el.tagName.toLowerCase();
+                    div.appendChild(tagSpan);
+                    
+                    if (['title', 'h1', 'h2', 'h3', 'p', 'span'].includes(el.tagName.toLowerCase())) {
+                        const textNode = document.createElement('span');
+                        textNode.className = 'dom-text truncate inline-block max-w-[200px] align-bottom';
+                        textNode.innerText = `"${el.innerText.substring(0, 30)}${el.innerText.length > 30 ? '...' : ''}"`;
+                        if(el.innerText.trim().length > 0) div.appendChild(textNode);
+                    }
+                    
+                    Array.from(el.children).forEach(child => {
+                        div.appendChild(buildNode(child));
+                    });
+                    
+                    return div;
+                }
+                
+                if (doc.documentElement) {
+                    container.appendChild(buildNode(doc.documentElement));
+                }
+            } catch (e) {
+                container.innerHTML = '<span class="text-gray-400 text-xs">Không thể phân tích cây DOM.</span>';
+            }
+        }
+
+        // --- LOGIC BÀI HỌC VÀ CHẤM ĐIỂM ---
+        function loadLesson(index) {
+            const lesson = allLessons[index];
+            document.getElementById('lesson-tag').innerText = lesson.tag;
+            document.getElementById('lesson-title').innerText = lesson.title;
+            document.getElementById('lesson-desc').innerHTML = lesson.description;
+            document.getElementById('lesson-counter').innerText = `${index + 1} / ${allLessons.length}`;
+            
+            document.getElementById('btn-prev').style.visibility = index === 0 ? 'hidden' : 'visible';
+            document.getElementById('btn-next').style.visibility = index === allLessons.length - 1 ? 'hidden' : 'visible';
+
+            editor.value = lesson.userCode !== undefined ? lesson.userCode : lesson.initialCode;
+            
+            togglePreviewMode('student');
+            updateLineNumbers();
+            updatePreview();
+            
+            criteriaList.innerHTML = '';
+            lesson.criteria.forEach((crit, i) => {
+                const li = document.createElement('li');
+                li.id = `crit-${i}`;
+                li.className = "flex items-start gap-2 pb-1";
+                
+                li.innerHTML = `
+                    <div class="mt-[2px] icon-box w-3.5 h-3.5 flex items-center justify-center flex-shrink-0 text-gray-300 font-bold text-[10px]">
+                        <i class="fa-solid fa-minus"></i>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-[12.5px] font-medium text-gray-700 crit-title leading-snug break-words">${crit.title}</p>
+                        <div class="err-container hidden mt-1">
+                            <p class="text-[11.5px] text-red-500 err-msg break-words"></p>
+                            <button onclick="toggleHint(${i})" class="text-[11.5px] text-blue-600 hover:underline mt-0.5 inline-block">Xem gợi ý</button>
+                            <div id="hint-${i}" class="hint-content bg-blue-50 border border-blue-100 p-2 rounded text-[11.5px] text-blue-800 mt-1 break-words">
+                                ${crit.hint}
+                            </div>
+                        </div>
+                    </div>
+                `;
+                criteriaList.appendChild(li);
+            });
+
+            scoreDisplay.innerText = `0/${lesson.criteria.length}`;
+            scoreDisplay.className = 'score-circle shadow-inner';
+            feedbackMsg.innerText = '';
+        }
+
+        function toggleHint(index) {
+            const hintBox = document.getElementById(`hint-${index}`);
+            hintBox.classList.toggle('active');
+        }
+
+        function submitCode() {
+            const code = editor.value;
+            const lesson = allLessons[currentIndex];
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(code, 'text/html');
+            
+            let passedCount = 0;
+            const total = lesson.criteria.length;
+
+            lesson.criteria.forEach((crit, i) => {
+                const result = crit.validate(doc, code);
+                const li = document.getElementById(`crit-${i}`);
+                const iconBox = li.querySelector('.icon-box');
+                const titleText = li.querySelector('.crit-title');
+                const errContainer = li.querySelector('.err-container');
+                const errMsg = li.querySelector('.err-msg');
+
+                if (result.pass) {
+                    passedCount++;
+                    iconBox.innerHTML = '<i class="fa-solid fa-check text-green-500"></i>';
+                    titleText.classList.remove('text-red-600', 'text-gray-700');
+                    titleText.classList.add('text-green-700');
+                    errContainer.classList.add('hidden');
+                } else {
+                    iconBox.innerHTML = '<i class="fa-solid fa-xmark text-red-500"></i>';
+                    titleText.classList.add('text-red-600');
+                    titleText.classList.remove('text-gray-700', 'text-green-700');
+                    errContainer.classList.remove('hidden');
+                    errMsg.innerHTML = result.error;
+                }
+            });
+
+            scoreDisplay.innerText = `${passedCount}/${total}`;
+            if (passedCount === total) {
+                scoreDisplay.className = 'score-circle perfect shadow-sm';
+                feedbackMsg.innerHTML = '<span class="text-green-600"><i class="fa-solid fa-party-horn"></i> Hoàn thành xuất sắc!</span>';
+            } else {
+                scoreDisplay.className = 'score-circle shadow-inner'; 
+                feedbackMsg.innerHTML = `Còn <span class="font-bold">${total - passedCount}</span> tiêu chí chưa đạt.<br/>Đọc dòng nhận xét màu đỏ.`;
+            }
+        }
+
+        function switchTab(tabName) {
+            ['dom', 'element', 'error'].forEach(t => {
+                document.getElementById(`tab-content-${t}`).classList.add('hidden');
+                document.getElementById(`tab-btn-${t}`).className = 'px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 transition-colors';
+            });
+            document.getElementById(`tab-content-${tabName}`).classList.remove('hidden');
+            document.getElementById(`tab-btn-${tabName}`).className = 'px-4 py-2 text-sm font-semibold text-blue-600 border-b-2 border-blue-600 transition-colors';
+        }
+
+        function togglePreviewMode(mode) {
+            currentPreviewMode = mode;
+            const btnStudent = document.getElementById('btn-view-student');
+            const btnSample = document.getElementById('btn-view-sample');
+
+            if (mode === 'student') {
+                btnStudent.className = 'px-4 py-1 text-xs font-semibold bg-white shadow-sm rounded text-gray-800 transition-all';
+                btnSample.className = 'px-4 py-1 text-xs font-semibold text-gray-500 hover:text-gray-700 rounded transition-all cursor-pointer';
+                previewFrame.srcdoc = editor.value;
+            } else {
+                btnSample.className = 'px-4 py-1 text-xs font-semibold bg-white shadow-sm rounded text-blue-600 transition-all cursor-pointer';
+                btnStudent.className = 'px-4 py-1 text-xs font-semibold text-gray-500 hover:text-gray-700 rounded transition-all cursor-pointer';
+                previewFrame.srcdoc = allLessons[currentIndex].sampleCode;
+            }
+        }
+
+        function changeLesson(dir) {
+            const newIndex = currentIndex + dir;
+            if (newIndex >= 0 && newIndex < allLessons.length) {
+                currentIndex = newIndex;
+                loadLesson(currentIndex);
+            }
+        }
+
+        function showModal(title, bodyHtml, footerHtml) {
+            document.getElementById('modal-title-text').innerText = title;
+            document.getElementById('modal-body').innerHTML = bodyHtml;
+            document.getElementById('modal-footer').innerHTML = footerHtml;
+            document.getElementById('custom-modal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('custom-modal').classList.add('hidden');
+        }
+
+        function resetCode() {
+            showModal(
+                "Xác nhận làm lại",
+                "Em có chắc muốn làm lại từ đầu câu này không? <br><br><b>Lưu ý:</b> Mọi mã code hiện tại của câu này sẽ bị xóa sạch.",
+                `<button onclick="closeModal()" class="px-4 py-2 text-gray-600 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 text-sm font-medium transition-colors">Hủy</button>
+                 <button onclick="executeReset()" class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 text-sm font-medium transition-colors flex items-center gap-2"><i class="fa-solid fa-trash-can"></i> Đồng ý xóa</button>`
+            );
+        }
+
+        function executeReset() {
+            closeModal();
+            allLessons[currentIndex].userCode = allLessons[currentIndex].initialCode;
+            editor.value = allLessons[currentIndex].initialCode;
+            updateLineNumbers();
+            updatePreview();
+            loadLesson(currentIndex); 
+        }
+
+        function showSubmitDialog() {
+            const lesson = allLessons[currentIndex];
+            const shortTitle = lesson.title.split(':')[0]; 
+            const fullTitle = lesson.chapter.split('.')[0] + " - " + shortTitle; 
+
+            showModal(
+                "Nộp bài - " + fullTitle,
+                `<div>
+                    <div class="bg-blue-50 text-blue-800 text-sm p-3 rounded-lg border border-blue-100 mb-4">
+                        <i class="fa-solid fa-circle-info mr-1"></i> Em đang nộp kết quả thực hành cho <b>${fullTitle}</b>.
+                    </div>
+                    <label class="block mb-1 text-sm font-medium text-gray-700">Họ và tên học sinh:</label>
+                    <input type="text" id="student-name" class="w-full border border-gray-300 rounded-lg px-3 py-2.5 mb-3 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-shadow" placeholder="Ví dụ: Nguyễn Văn A">
+                    
+                    <div class="flex gap-3">
+                        <div class="w-1/2">
+                            <label class="block mb-1 text-sm font-medium text-gray-700">Lớp:</label>
+                            <input type="text" id="student-class" class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-shadow" placeholder="Ví dụ: 12A1">
+                        </div>
+                        <div class="w-1/2">
+                            <label class="block mb-1 text-sm font-medium text-gray-700">Số thứ tự (STT):</label>
+                            <input type="number" id="student-stt" class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-shadow" placeholder="Ví dụ: 15">
+                        </div>
+                    </div>
+                    
+                    <p id="submit-error" class="text-red-500 text-sm mt-3 hidden font-medium"><i class="fa-solid fa-triangle-exclamation"></i> Vui lòng nhập đầy đủ Họ tên, Lớp và STT.</p>
+                </div>`,
+                `<button onclick="closeModal()" class="px-4 py-2 text-gray-600 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 text-sm font-medium transition-colors">Hủy</button>
+                 <button onclick="processSubmit()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-medium transition-colors flex items-center gap-2"><i class="fa-solid fa-check-to-slot"></i> Nộp & Xem kết quả</button>`
+            );
+        }
+
+        function processSubmit() {
+            const name = document.getElementById('student-name').value.trim();
+            const className = document.getElementById('student-class').value.trim();
+            const stt = document.getElementById('student-stt').value.trim();
+            
+            if (!name || !className || !stt) {
+                document.getElementById('submit-error').classList.remove('hidden');
+                return;
+            }
+
+            const lesson = allLessons[currentIndex];
+            const code = editor.value;
+            window.lastSubmittedCode = code; 
+
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(code, 'text/html');
+            
+            let passed = 0;
+            lesson.criteria.forEach(crit => {
+                if (crit.validate(doc, code).pass) { passed++; }
+            });
+            
+            const total = lesson.criteria.length;
+            const score10 = ((passed / total) * 10).toFixed(1); 
+
+            let feedbackIcon = passed === total 
+                ? '<i class="fa-solid fa-circle-check text-5xl text-green-500 mb-3 drop-shadow-sm"></i>' 
+                : '<i class="fa-solid fa-star-half-stroke text-5xl text-yellow-500 mb-3 drop-shadow-sm"></i>';
+                
+                let feedbackText = passed === total 
+                ? "Xuất sắc! Em đã hoàn thành tất cả tiêu chí." 
+                : `Em đã đạt ${passed}/${total} tiêu chí. Hãy cố gắng hoàn thiện các lỗi màu đỏ nhé!`;
+
+            const shortTitle = lesson.title.split(':')[0]; 
+            const fullTitle = lesson.chapter.split('.')[0] + " - " + shortTitle; 
+
+            const scriptUrl = 'https://script.google.com/macros/s/AKfycbzD-2I8qdXBAJiIT0gxyz6hfOdtLXFU9vQ34OFSIowXtvkypQDIe7tNmaXm8CF1K71Xug/exec'; 
+            
+            const submitBtn = document.querySelector('#custom-modal button.bg-blue-600');
+            if (submitBtn) {
+                submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang lưu điểm...';
+                submitBtn.disabled = true;
+                submitBtn.classList.add('opacity-70', 'cursor-not-allowed');
+            }
+
+            const payload = {
+                name: name,
+                className: className,
+                stt: stt, 
+                lessonTitle: fullTitle, 
+                passed: passed,
+                total: total,
+                score: score10
+            };
+
+            fetch(scriptUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify(payload)
+            })
+            .then(response => {
+                showResultModal(name, className, stt, fullTitle, passed, total, score10, feedbackIcon, feedbackText, true);
+                resetAfterSubmit();
+            })
+            .catch(error => {
+                console.error('Lỗi khi gửi lên Sheet:', error);
+                showResultModal(name, className, stt, fullTitle, passed, total, score10, feedbackIcon, feedbackText, false);
+                resetAfterSubmit();
+            });
+        }
+
+        function resetAfterSubmit() {
+            allLessons[currentIndex].userCode = allLessons[currentIndex].initialCode;
+            editor.value = allLessons[currentIndex].initialCode;
+            updateLineNumbers();
+            updatePreview();
+            loadLesson(currentIndex); 
+        }
+
+        function showResultModal(name, className, stt, lessonTitle, passed, total, score10, feedbackIcon, feedbackText, isSaved = null) {
+            closeModal();
+
+            let saveStatus = '';
+            if (isSaved === true) {
+                saveStatus = '<div class="text-xs text-green-600 font-semibold mb-2 bg-green-50 border border-green-200 py-1.5 px-3 rounded-full inline-flex items-center gap-1.5"><i class="fa-solid fa-cloud-arrow-up"></i> Đã lưu điểm lên hệ thống CSDL</div>';
+            } else if (isSaved === false) {
+                saveStatus = '<div class="text-xs text-red-500 font-semibold mb-2 bg-red-50 border border-red-200 py-1.5 px-3 rounded-full inline-flex items-center gap-1.5"><i class="fa-solid fa-triangle-exclamation"></i> Không thể lưu, vui lòng chụp màn hình báo cho GV</div>';
+            }
+
+            setTimeout(() => {
+                showModal(
+                    "Kết quả nộp bài",
+                    `<div class="text-center py-2">
+                        ${feedbackIcon}
+                        <h4 class="text-xl font-bold text-gray-800 mb-1">${name} - Lớp ${className} (STT: ${stt})</h4>
+                        <p class="text-gray-600 font-medium text-sm mb-3 border-b border-gray-100 pb-4 px-2 leading-relaxed">${lessonTitle}</p>
+                        ${saveStatus}
+                        
+                        <div class="bg-gray-50 border border-gray-200 rounded-xl p-4 text-left shadow-sm mt-1">
+                            <div class="flex justify-between items-center mb-3 pb-3 border-b border-gray-200/60">
+                                <span class="text-sm font-medium text-gray-600">Số tiêu chí hoàn thành:</span>
+                                <span class="font-bold text-gray-800 text-base">${passed} / ${total}</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm font-medium text-gray-600">Điểm (Thang 10):</span>
+                                <span class="font-black text-blue-600 text-xl">${score10}</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-500 mt-4 italic">${feedbackText}</p>
+                    </div>`,
+                    `<div class="flex flex-col gap-2 w-full">
+                        <div class="flex gap-2 w-full">
+                            <button onclick="downloadProduct('${name}', '${className}', '${stt}', '${lessonTitle}')" class="px-4 py-2 bg-orange-50 text-orange-700 border border-orange-200 rounded-lg hover:bg-orange-100 text-[13px] font-medium transition-colors flex-1 flex items-center justify-center gap-1.5"><i class="fa-brands fa-html5 text-orange-600 text-lg"></i> Tải Web (.html)</button>
+                            <button onclick="downloadResult('${name}', '${className}', '${stt}', '${lessonTitle}', ${passed}, ${total}, ${score10})" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-[13px] font-medium transition-colors flex-1 flex items-center justify-center gap-1.5"><i class="fa-solid fa-file-lines text-lg"></i> Tải Phiếu (.txt)</button>
+                        </div>
+                        <button onclick="closeModal()" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm font-medium transition-colors w-full mt-1">Đóng cửa sổ</button>
+                    </div>`
+                );
+            }, 300);
+        }
+
+        function copyCode(event) {
+            const code = editor.value;
+            const textArea = document.createElement("textarea");
+            textArea.value = code;
+            document.body.appendChild(textArea);
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                const btn = event.currentTarget;
+                const originalHtml = btn.innerHTML;
+                btn.innerHTML = '<i class="fa-solid fa-check text-green-500"></i> Đã chép';
+                setTimeout(() => { btn.innerHTML = originalHtml; }, 2000);
+            } catch (err) {
+                console.error('Không thể chép mã', err);
+            }
+            document.body.removeChild(textArea);
+        }
+
+        function downloadHTML() {
+            const code = editor.value;
+            const lesson = allLessons[currentIndex];
+            const shortChapter = lesson.chapter.split('.')[0].replace(/ /g, '');
+            const shortTitle = lesson.title.split(':')[0].replace(/ /g, '_'); 
+            const filename = `${shortChapter}_${shortTitle}.html`;
+            
+            const blob = new Blob([code], { type: 'text/html;charset=utf-8' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function downloadProduct(name, className, stt, lessonTitle) {
+            const code = window.lastSubmittedCode || editor.value; 
+            const cleanTitle = lessonTitle.replace(/ /g, '').replace(/-/g, '_'); 
+            const cleanName = name.replace(/ /g, '_');
+            
+            const filename = `SanPham_${className}_STT${stt}_${cleanName}_${cleanTitle}.html`;
+            const blob = new Blob([code], { type: 'text/html;charset=utf-8' });
+            
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function downloadResult(name, className, stt, lessonTitle, passed, total, score10) {
+            const lesson = allLessons[currentIndex];
+            const content = `KẾT QUẢ THỰC HÀNH TIN HỌC 12\n==============================\n\nSTT: ${stt}\nHọ và tên: ${name}\nLớp: ${className}\n\nTên bài: ${lesson.chapter}\nCâu hỏi: ${lesson.title}\n\nSố tiêu chí hoàn thành: ${passed} / ${total}\nĐiểm (Thang 10): ${score10}\n\nThời gian nộp: ${new Date().toLocaleString('vi-VN')}`;
+            
+            const cleanTitle = lessonTitle.replace(/ /g, '').replace(/-/g, '_');
+            const filename = `KetQua_${className}_STT${stt}_${name.replace(/ /g, '_')}_${cleanTitle}.txt`;
+            const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        window.onload = () => {
+            loadLesson(0);
+        };
+    </script>
+</body>
+</html>
