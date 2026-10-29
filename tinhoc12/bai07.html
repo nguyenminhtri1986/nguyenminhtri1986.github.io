@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tin học 12 - THPT Nguyễn Bỉnh Khiêm</title>
+    <title>Bài 07- Tin học 12 - THPT Nguyễn Bỉnh Khiêm</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -43,20 +43,37 @@
             font-size: 13px;
             border-right: 1px solid #333;
         }
-        #code-editor {
-            flex-grow: 1;
+        
+        /* CSS Mới cho Lớp màu nổi (Syntax Highlight) */
+        .code-layer {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
             padding: 1rem;
-            background-color: #1e1e1e;
-            color: #d4d4d4;
-            outline: none;
-            resize: none;
-            line-height: 1.5;
-            font-size: 13px;
-            white-space: pre;
-            overflow: auto;
+            margin: 0;
             border: none;
+            font-family: 'Fira Code', monospace;
+            font-size: 13px;
+            line-height: 1.5;
+            white-space: pre;
+            tab-size: 4;
         }
-        #code-editor::selection { background: #264f78; }
+        #highlight-layer {
+            color: #d4d4d4;
+            background-color: transparent;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden; /* Ẩn thanh cuộn, đồng bộ bằng JS */
+        }
+        #code-editor {
+            color: transparent; /* Ẩn text gốc, chỉ giữ con trỏ */
+            background-color: transparent;
+            caret-color: #d4d4d4;
+            resize: none;
+            outline: none;
+            z-index: 2;
+            overflow: auto; /* Trình duyệt cuộn dựa vào Editor */
+        }
+        #code-editor::selection { background: #264f78; color: transparent; }
 
         /* Vòng tròn điểm số */
         .score-circle {
@@ -116,9 +133,9 @@
         
         <!-- Header Bài học -->
         <div class="p-3 border-b border-gray-100 shrink-0 bg-white z-10 relative">
-            <div class="flex items-center justify-between mb-2">
+            <div class="flex items-center justify-between mb-2 gap-2">
                 <span class="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Bài 7. HTML và cấu trúc cơ bản</span>
-                <span id="lesson-tag" class="text-[11px] font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded">Nhận biết</span>
+                <span id="lesson-tag" class="text-[11px] font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded whitespace-nowrap shrink-0">Nhận biết</span>
             </div>
             <h2 id="lesson-title" class="text-lg font-bold text-gray-900 leading-snug mb-1.5 break-words">Tên bài học</h2>
             <div id="lesson-desc" class="text-[13px] text-gray-700 leading-relaxed space-y-1.5 break-words">
@@ -126,8 +143,8 @@
             </div>
         </div>
 
-        <!-- Phiếu tiêu chí (Full size) -->
-        <div class="flex-1 p-3 pb-4">
+        <!-- Phiếu tiêu chí (Gỡ bỏ flex-1 để không bị kéo giãn khoảng trống) -->
+        <div class="p-3 pb-2">
             <h3 class="text-sm font-semibold text-gray-800 mb-2 flex items-center gap-2">
                 Phiếu tiêu chí
             </h3>
@@ -136,10 +153,10 @@
             </ul>
         </div>
 
-        <!-- Chấm điểm & Điều hướng -->
-        <div class="p-3 bg-white shrink-0 border-t border-gray-50 mt-auto">
+        <!-- Chấm điểm & Điều hướng (Cân đối lại lề và thu nhỏ vòng điểm) -->
+        <div class="p-3 bg-white shrink-0 border-t border-gray-100 mt-2">
             <!-- Nút hành động -->
-            <div class="flex gap-2 mb-4">
+            <div class="flex gap-2 mb-3">
                 <button onclick="submitCode()" class="flex-1 bg-gray-900 hover:bg-black text-white py-2 rounded-lg flex items-center justify-center gap-2 text-[13px] font-semibold transition-colors shadow-sm">
                     <i class="fa-solid fa-scissors transform -rotate-90"></i> Chấm bài <span class="text-gray-400 font-normal text-[11px] ml-1 border-l border-gray-600 pl-1.5">Ctrl+↵</span>
                 </button>
@@ -148,14 +165,14 @@
                 </button>
             </div>
             
-            <!-- Điểm số -->
-            <div class="flex justify-center mb-2">
-                <div id="score-display" class="score-circle shadow-inner !w-16 !h-16 !text-xl">0/0</div>
+            <!-- Điểm số (Giảm kích thước vòng tròn đi một chút) -->
+            <div class="flex justify-center mb-1">
+                <div id="score-display" class="score-circle shadow-inner !w-14 !h-14 !text-lg">0/0</div>
             </div>
-            <p id="feedback-msg" class="text-[11.5px] text-red-500 text-center mb-4 min-h-[1.5rem] font-medium leading-relaxed"></p>
+            <p id="feedback-msg" class="text-[11.5px] text-red-500 text-center mb-3 min-h-[1.5rem] font-medium leading-relaxed"></p>
             
             <!-- Nút Qua câu -->
-            <div class="flex items-center justify-between text-[13px] text-gray-700 font-medium border-t border-gray-100 pt-3">
+            <div class="flex items-center justify-between text-[13px] text-gray-700 font-medium border-t border-gray-100 pt-2.5">
                 <button onclick="changeLesson(-1)" id="btn-prev" class="hover:text-blue-600 hover:bg-blue-50 px-2.5 py-1.5 rounded-lg flex items-center gap-1.5 transition-colors"><i class="fa-solid fa-arrow-left"></i> Trước</button>
                 <span id="lesson-counter" class="text-gray-800 font-bold bg-gray-100 px-3 py-1 rounded-full text-xs">1 / 3</span>
                 <button onclick="changeLesson(1)" id="btn-next" class="hover:text-blue-600 hover:bg-blue-50 px-2.5 py-1.5 rounded-lg flex items-center gap-1.5 transition-colors">Sau <i class="fa-solid fa-arrow-right"></i></button>
@@ -175,7 +192,12 @@
         <!-- Textarea & Line numbers -->
         <div id="editor-container" class="flex-1 editor-font">
             <div id="line-numbers" class="dark-scroll">1</div>
-            <textarea id="code-editor" class="dark-scroll" spellcheck="false" wrap="off"></textarea>
+            <div class="relative flex-1 overflow-hidden">
+                <!-- Lớp màu giả lập ở dưới -->
+                <pre id="highlight-layer" class="code-layer" aria-hidden="true"></pre>
+                <!-- Lớp gõ code trong suốt ở trên -->
+                <textarea id="code-editor" class="code-layer dark-scroll" spellcheck="false" wrap="off"></textarea>
+            </div>
         </div>
 
         <!-- Editor Toolbar -->
@@ -259,11 +281,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Nút Hỏi Gemini (Mock) -->
-        <button class="absolute bottom-4 right-4 bg-white border border-gray-200 text-gray-700 shadow-md hover:shadow-lg px-4 py-2 rounded-full text-sm font-medium flex items-center gap-2 transition-all z-20">
-            <span class="bg-gradient-to-r from-blue-500 to-purple-500 text-transparent bg-clip-text font-bold"><i class="fa-solid fa-sparkles text-purple-500"></i> Hỏi Gemini</span>
-        </button>
     </section>
 
     <!-- Hộp thoại Modal UI (Được tối ưu lại để có thể cuộn trên điện thoại nhỏ) -->
@@ -286,225 +303,199 @@
     <!-- JavaScript Xử Lý -->
     <script>
         // --- 1. DỮ LIỆU BÀI HỌC THEO PHIẾU BÀI TẬP ---
-        const lessons = [
+        const allLessons = [
             {
                 id: 1,
-                title: "Câu 1: Khởi tạo trang web đầu tiên",
+                chapter: "Bài 7. HTML và cấu trúc trang web",
+                title: "Câu 1: Cấu trúc cơ bản của trang web",
                 tag: "Nhận biết",
                 description: `
-                    <p class="mb-2 text-[13px]">Soạn thảo cấu trúc HTML chuẩn và các thẻ cơ bản theo yêu cầu. Khuyến khích gõ <b>Tiếng Việt có dấu</b>.</p>
+                    <p class="mb-2 text-[13px] text-gray-700">Mọi trang web đều được xây dựng dựa trên một bộ khung cấu trúc chuẩn (gồm <b>html, head, body</b>). Cấu trúc này giúp trình duyệt hiểu và hiển thị đúng nội dung.</p>
                     <div class="bg-blue-50 border border-blue-100 p-2.5 rounded-lg text-xs text-blue-800 mb-3">
-                        <strong>💡 Các bước thực hiện:</strong>
+                        <strong>💡 Yêu cầu thực hiện:</strong>
                         <ul class="list-decimal pl-5 mt-1.5 space-y-1">
-                            <li>Khai báo <code>&lt;!DOCTYPE html&gt;</code></li>
-                            <li>Mở thẻ <code>&lt;html lang="vi"&gt;</code></li>
-                            <li>Phần <code>&lt;head&gt;</code> chứa <code>&lt;meta charset="UTF-8"&gt;</code> và <code>&lt;title&gt;Trang web của tôi&lt;/title&gt;</code></li>
-                            <li>Phần <code>&lt;body&gt;</code> chứa nội dung:
-                                <ul class="list-disc pl-4 mt-1 text-gray-700">
-                                    <li>Thẻ <code>&lt;h1&gt;</code>: Chào mừng đến với HTML!</li>
-                                    <li>Thẻ <code>&lt;p&gt;</code>: Đây là trang web đầu tiên của em.</li>
-                                </ul>
-                            </li>
-                            <li>Đóng thẻ <code>&lt;/html&gt;</code> ở cuối cùng.</li>
+                            <li>Khai báo <code>&lt;!DOCTYPE html&gt;</code> ở dòng đầu tiên.</li>
+                            <li>Tạo cặp thẻ bao ngoài cùng là <code>&lt;html&gt; ... &lt;/html&gt;</code>.</li>
+                            <li>Bên trong <code>&lt;html&gt;</code>, tạo phần <code>&lt;head&gt;</code> chứa thẻ <code>&lt;title&gt;Trang của em&lt;/title&gt;</code>.</li>
+                            <li>Bên dưới phần <code>&lt;head&gt;</code>, tạo phần <code>&lt;body&gt;</code> chứa một thẻ tiêu đề <code>&lt;h1&gt;Chào mừng bạn đến với ngôn ngữ HTML&lt;/h1&gt;</code>.</li>
                         </ul>
                     </div>
                 `,
-                initialCode: ``,
-                sampleCode: `<!DOCTYPE html>
-<html lang="vi">
-    <head>
-        <meta charset="UTF-8">
-        <title>Trang web của tôi</title>
-    </head>
-    <body>
-        <h1>Chào mừng đến với HTML!</h1>
-        <p>Đây là trang web đầu tiên của em.</p>
-    </body>
-</html>`,
+                initialCode: `<!-- Bước 1: Khai báo DOCTYPE html ở dòng dưới -->
+
+
+<!-- Bước 2: Mở thẻ <html> bao quanh toàn trang -->
+
+
+    <!-- Bước 3: Tạo thẻ <head> chứa thẻ <title>Trang của em</title> -->
+    
+
+    <!-- Bước 4: Tạo thẻ <body> chứa thẻ <h1>Chào mừng bạn đến với ngôn ngữ HTML</h1> -->
+    
+
+<!-- Nhớ đóng thẻ </html> ở cuối cùng nhé -->
+`,
+                sampleCode: `<!DOCTYPE html>\n<html>\n<head>\n    <title>Trang của em</title>\n</head>\n<body>\n    <h1>Chào mừng bạn đến với ngôn ngữ HTML</h1>\n</body>\n</html>`,
                 criteria: [
                     {
-                        title: 'Có cấu trúc chuẩn: <code class="text-blue-600">&lt;!DOCTYPE html&gt;</code>, <code class="text-blue-600">&lt;html&gt;</code>, <code class="text-blue-600">&lt;head&gt;</code>, <code class="text-blue-600">&lt;body&gt;</code>',
-                        hint: "Hãy đảm bảo bạn đã gõ đúng chính tả <code>&lt;!DOCTYPE html&gt;</code> ở dòng 1 và có đủ thẻ đóng mở cho html, head, body.",
+                        title: 'Khai báo <code class="text-blue-600">&lt;!DOCTYPE html&gt;</code>',
+                        hint: "Hãy gõ &lt;!DOCTYPE html&gt; ở dòng đầu tiên để trình duyệt biết đây là tệp HTML.",
                         validate: (doc, code) => {
-                            let c = code.toLowerCase();
-                            if (c.includes("<!doctype html>") && c.includes("<html") && c.includes("</html>") && c.includes("<head>") && c.includes("</head>") && c.includes("<body>") && c.includes("</body>")) {
-                                return { pass: true };
-                            }
-                            return { pass: false, error: "Thiếu hoặc sai cấu trúc chuẩn." };
+                            const cleanCode = code.replace(/<!--[\s\S]*?-->/g, ''); // Xóa chú thích
+                            return cleanCode.toLowerCase().includes("<!doctype html>") ? { pass: true } : { pass: false, error: "Chưa có khai báo DOCTYPE hoặc viết sai cú pháp." };
                         }
                     },
                     {
-                        title: 'Có thẻ <code class="text-blue-600">&lt;title&gt;</code> với nội dung "Trang web của tôi"',
-                        hint: "Trong cặp thẻ <code>&lt;head&gt;</code>, thêm dòng: <code>&lt;title&gt;Trang web của tôi&lt;/title&gt;</code>",
+                        title: 'Có cặp thẻ <code class="text-blue-600">&lt;html&gt;</code> bao ngoài',
+                        hint: "Nhớ mở thẻ &lt;html&gt; và đóng thẻ &lt;/html&gt; ở cuối trang.",
                         validate: (doc, code) => {
-                            let title = doc.querySelector('title');
-                            let text = title ? title.innerText.toLowerCase() : '';
-                            if (text.includes("trang web của tôi") || text.includes("trang web cua toi")) return { pass: true };
-                            return { pass: false, error: "Chưa có thẻ title hoặc sai nội dung." };
+                            const cleanCode = code.replace(/<!--[\s\S]*?-->/g, '');
+                            return cleanCode.toLowerCase().includes("<html") && cleanCode.toLowerCase().includes("</html>") ? { pass: true } : { pass: false, error: "Thiếu cặp thẻ html." };
                         }
                     },
                     {
-                        title: 'Có thẻ <code class="text-blue-600">&lt;h1&gt;</code> với nội dung "Chào mừng đến với HTML!"',
-                        hint: "Trong cặp thẻ <code>&lt;body&gt;</code>, thêm dòng: <code>&lt;h1&gt;Chào mừng đến với HTML!&lt;/h1&gt;</code>",
+                        title: 'Có phần <code class="text-blue-600">&lt;head&gt;</code> chứa <code class="text-blue-600">&lt;title&gt;</code>',
+                        hint: "Bên trong head, hãy thêm cặp thẻ title đặt tên cho trang web.",
                         validate: (doc, code) => {
-                            let h1 = doc.querySelector('h1');
-                            let text = h1 ? h1.innerText.toLowerCase() : '';
-                            if (text.includes("chào mừng đến với html") || text.includes("chao mung den voi html")) return { pass: true };
-                            return { pass: false, error: "Chưa có thẻ h1 hoặc sai nội dung." };
+                            const cleanCode = code.replace(/<!--[\s\S]*?-->/g, '');
+                            return (cleanCode.toLowerCase().includes("<head") && cleanCode.toLowerCase().includes("<title")) ? { pass: true } : { pass: false, error: "Thiếu thẻ head hoặc thẻ title." };
                         }
                     },
                     {
-                        title: 'Có thẻ <code class="text-blue-600">&lt;p&gt;</code> với nội dung "Đây là trang web đầu tiên của em."',
-                        hint: "Ngay dưới thẻ h1, thêm: <code>&lt;p&gt;Đây là trang web đầu tiên của em.&lt;/p&gt;</code>",
+                        title: 'Có phần <code class="text-blue-600">&lt;body&gt;</code> chứa tiêu đề <code class="text-blue-600">&lt;h1&gt;</code>',
+                        hint: "Bên trong phần body, hãy tạo thẻ &lt;h1&gt;Chào mừng bạn đến với ngôn ngữ HTML&lt;/h1&gt;.",
                         validate: (doc, code) => {
-                            let p = doc.querySelector('p');
-                            let text = p ? p.innerText.toLowerCase() : '';
-                            if (text.includes("đây là trang web đầu tiên") || text.includes("day la trang web dau tien")) return { pass: true };
-                            return { pass: false, error: "Chưa có thẻ p hoặc sai nội dung." };
+                            const cleanCode = code.replace(/<!--[\s\S]*?-->/g, '');
+                            return (cleanCode.toLowerCase().includes("<body") && doc.querySelector('h1')) ? { pass: true } : { pass: false, error: "Thiếu thẻ body hoặc chưa có tiêu đề h1." };
                         }
                     }
                 ]
             },
             {
                 id: 2,
-                title: "Câu 2: Gỡ lỗi và hoàn thiện mã",
+                chapter: "Bài 7. HTML và cấu trúc trang web",
+                title: "Câu 2: Các phần tử HTML không lồng nhau",
                 tag: "Thông hiểu",
                 description: `
-                    <p class="mb-2 text-[13px] text-gray-700">Đoạn mã bên phải đang bị thiếu một số thẻ đóng và sai cấu trúc. Hãy tìm và sửa lỗi trực tiếp.</p>
-                    <div class="bg-yellow-50 border border-yellow-100 p-2.5 rounded-lg text-xs text-yellow-800">
-                        <strong>💡 Gợi ý các lỗi cần sửa:</strong>
+                    <p class="mb-2 text-[13px] text-gray-700">Theo lý thuyết, đa số các thẻ HTML đi theo cặp để lồng nhau. Nhưng cũng có <b>các thẻ rỗng (không lồng)</b> chỉ đứng một mình, ví dụ như thẻ ngắt dòng <code>&lt;br&gt;</code> hay đường kẻ ngang <code>&lt;hr&gt;</code>.</p>
+                    <div class="bg-blue-50 border border-blue-100 p-2.5 rounded-lg text-xs text-blue-800 mb-3">
+                        <strong>💡 Yêu cầu thực hiện:</strong>
                         <ul class="list-decimal pl-5 mt-1.5 space-y-1">
-                            <li>Thẻ <code>&lt;title&gt;</code> chưa được đóng.</li>
-                            <li>Thẻ <code>&lt;h1&gt;</code> chưa được đóng.</li>
-                            <li>Thiếu thẻ đóng <code>&lt;/body&gt;</code> ở cuối.</li>
-                            <li>Thiếu thẻ đóng <code>&lt;/html&gt;</code> ở cuối.</li>
+                            <li>Trong phần <code>&lt;body&gt;</code>, tạo một tiêu đề <code>&lt;h2&gt;Quê hương&lt;/h2&gt;</code>.</li>
+                            <li>Dùng thẻ <code>&lt;hr&gt;</code> (thẻ không lồng) ngay dưới tiêu đề để tạo một đường phân cách.</li>
+                            <li>Tạo đoạn văn bằng thẻ <code>&lt;p&gt;</code> chứa 2 câu thơ và tên tác giả. Dùng thẻ <code>&lt;br&gt;</code> (thẻ không lồng) để ngắt dòng.</li>
                         </ul>
                     </div>
                 `,
-                initialCode: `<html>
+                initialCode: `<!DOCTYPE html>
+<html>
 <head>
-    <title>Hồ sơ học sinh
+    <meta charset="utf-8">
+    <title>Thẻ không lồng</title>
 </head>
 <body>
-    <h1>Thông tin cá nhân
     
-    <p>Họ và tên: Nguyễn Văn A</p>
-`,
-                sampleCode: `<html>
-<head>
-    <!-- Đã đóng thẻ title -->
-    <title>Hồ sơ học sinh</title>
-</head>
-<body>
-    <!-- Đã đóng thẻ h1 -->
-    <h1>Thông tin cá nhân</h1>
+    <!-- Bước 1: Tạo thẻ <h2>Quê hương</h2> -->
     
-    <p>Họ và tên: Nguyễn Văn A</p>
 
-<!-- Đã đóng thẻ body và html -->
+    <!-- Bước 2: Chèn thẻ <hr> (đường kẻ ngang) ở đây -->
+    
+
+    <!-- Bước 3: Tạo thẻ <p> chứa 2 câu thơ và tên tác giả (Đỗ Trung Quân). -->
+    <!-- Dùng thẻ <br> để ngắt dòng giữa các câu thơ và trước tên tác giả -->
+    
+
 </body>
 </html>`,
+                sampleCode: `<!DOCTYPE html>\n<html>\n<head>\n    <meta charset="utf-8">\n    <title>Thẻ không lồng</title>\n</head>\n<body>\n    <h2>Quê hương</h2>\n    <hr>\n    <p>Quê hương là chùm khế ngọt<br>Cho con trèo hái mỗi ngày<br>Tác giả: Đỗ Trung Quân</p>\n</body>\n</html>`,
                 criteria: [
                     {
-                        title: 'Đã đóng thẻ <code class="text-blue-600">&lt;/title&gt;</code>',
-                        hint: "Sửa lại thành: <code>&lt;title&gt;Hồ sơ học sinh&lt;/title&gt;</code>",
-                        validate: (doc, code) => {
-                            if (code.toLowerCase().includes("</title>")) return { pass: true };
-                            return { pass: false, error: "Bạn chưa gõ thẻ đóng &lt;/title&gt;" };
-                        }
+                        title: 'Tạo thẻ tiêu đề <code class="text-blue-600">&lt;h2&gt;</code>',
+                        hint: "Hãy tạo một thẻ &lt;h2&gt; với tên bài thơ là Quê hương.",
+                        validate: (doc) => doc.querySelector('h2') ? { pass: true } : { pass: false, error: "Chưa tìm thấy thẻ h2." }
                     },
                     {
-                        title: 'Đã đóng thẻ <code class="text-blue-600">&lt;/h1&gt;</code>',
-                        hint: "Sửa lại thành: <code>&lt;h1&gt;Thông tin cá nhân&lt;/h1&gt;</code>",
-                        validate: (doc, code) => {
-                            if (code.toLowerCase().includes("</h1>")) return { pass: true };
-                            return { pass: false, error: "Bạn chưa gõ thẻ đóng &lt;/h1&gt;" };
-                        }
+                        title: 'Có dùng thẻ đường kẻ ngang <code class="text-blue-600">&lt;hr&gt;</code>',
+                        hint: "Chèn thẻ &lt;hr&gt; ngay bên dưới thẻ tiêu đề h2.",
+                        validate: (doc) => doc.querySelector('hr') ? { pass: true } : { pass: false, error: "Trang web chưa có thẻ rỗng hr." }
                     },
                     {
-                        title: 'Đã đóng thẻ <code class="text-blue-600">&lt;/body&gt;</code> và <code class="text-blue-600">&lt;/html&gt;</code>',
-                        hint: "Ở cuối file, hãy thêm hai dòng: <code>&lt;/body&gt;</code> và <code>&lt;/html&gt;</code>",
-                        validate: (doc, code) => {
-                            if (code.toLowerCase().includes("</body>") && code.toLowerCase().includes("</html>")) return { pass: true };
-                            return { pass: false, error: "Thiếu thẻ đóng &lt;/body&gt; hoặc &lt;/html&gt; ở cuối." };
+                        title: 'Đoạn văn <code class="text-blue-600">&lt;p&gt;</code> có chứa thẻ ngắt dòng <code class="text-blue-600">&lt;br&gt;</code>',
+                        hint: "Hãy chèn thẻ &lt;br&gt; vào giữa câu trong thẻ &lt;p&gt; để ép xuống dòng.",
+                        validate: (doc) => {
+                            let p = doc.querySelector('p');
+                            if (p && p.querySelector('br')) return { pass: true };
+                            return { pass: false, error: "Thiếu thẻ p hoặc thẻ p chưa lồng thẻ br bên trong." };
                         }
                     }
                 ]
             },
             {
                 id: 3,
-                title: "Câu 3: Vận dụng sáng tạo",
+                chapter: "Bài 7. HTML và cấu trúc trang web",
+                title: "Câu 3: Vận dụng tạo khối nội dung (Lồng thẻ)",
                 tag: "Vận dụng",
                 description: `
-                    <p class="mb-2 text-[13px] text-gray-700">Tự thiết kế trang web giới thiệu về bản thân và trường học đáp ứng tiêu chí:</p>
+                    <p class="mb-2 text-[13px] text-gray-700">Trong HTML, phần tử <code>&lt;div&gt;</code> thường được dùng để gom nhóm các thẻ khác lại với nhau, tạo thành cấu trúc cha - con (cấu trúc lồng nhau).</p>
                     <div class="bg-blue-50 border border-blue-100 p-2.5 rounded-lg text-xs text-blue-800 mb-3">
-                        <strong>💡 Các bước thực hiện:</strong>
+                        <strong>💡 Yêu cầu thực hiện:</strong>
                         <ul class="list-decimal pl-5 mt-1.5 space-y-1">
-                            <li>Gõ cấu trúc chuẩn HTML5 (DOCTYPE, html, head, body).</li>
-                            <li><code>&lt;head&gt;</code> tạo thẻ <code>&lt;title&gt;</code> là <strong>Họ tên của em</strong>.</li>
-                            <li><code>&lt;body&gt;</code> tạo thẻ <code>&lt;h1&gt;</code>: <strong>Giới thiệu bản thân</strong>.</li>
-                            <li>Dưới h1, tạo thẻ <code>&lt;h2&gt;</code>: <strong>Học sinh trường THPT Nguyễn Bỉnh Khiêm</strong>.</li>
-                            <li>Tạo 2 thẻ <code>&lt;p&gt;</code> nói về sở thích và ước mơ.</li>
+                            <li>Tạo khối <code>&lt;div&gt;</code> trong phần body để gom nhóm.</li>
+                            <li>Bên trong khối <code>&lt;div&gt;</code>, tạo tiêu đề <code>&lt;h3&gt;Sở thích của em&lt;/h3&gt;</code>.</li>
+                            <li>Dưới tiêu đề, chèn một đường kẻ ngang <code>&lt;hr&gt;</code> (thẻ không lồng).</li>
+                            <li>Dưới đường kẻ ngang, viết đoạn văn <code>&lt;p&gt;</code> giới thiệu sở thích. Dùng thẻ <code>&lt;em&gt;</code> lồng vào trong để in nghiêng 1 vài chữ.</li>
                         </ul>
                     </div>
                 `,
-                initialCode: ``,
-                sampleCode: `<!DOCTYPE html>
-<html lang="vi">
+                initialCode: `<!DOCTYPE html>
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Nguyễn Văn A</title>
+    <meta charset="utf-8">
+    <title>Vận dụng lồng thẻ</title>
 </head>
 <body>
-    <h1>Giới thiệu bản thân</h1>
-    <h2>Học sinh trường THPT Nguyễn Bỉnh Khiêm</h2>
     
-    <p>Xin chào mọi người, sở thích của em là đọc sách, nghe nhạc và tìm hiểu về máy tính.</p>
-    <p>Ước mơ trong tương lai của em là trở thành một kỹ sư công nghệ thông tin giỏi để sáng tạo ra những phần mềm có ích cho xã hội.</p>
+    <!-- Bước 1: Mở thẻ <div> ở đây để gom nhóm -->
+    
+
+        <!-- Bước 2: Tạo tiêu đề <h3>Sở thích của em</h3> -->
+        
+
+        <!-- Bước 3: Chèn thẻ rỗng <hr> làm đường kẻ ngang -->
+        
+
+        <!-- Bước 4: Tạo thẻ <p> chứa nội dung sở thích. -->
+        <!-- Dùng thẻ <em> bọc quanh 1 từ khóa để in nghiêng. -->
+        
+
+    <!-- Đóng thẻ </div> -->
+    
+
 </body>
 </html>`,
+                sampleCode: `<!DOCTYPE html>\n<html>\n<head>\n    <meta charset="utf-8">\n    <title>Vận dụng lồng thẻ</title>\n</head>\n<body>\n    <div>\n        <h3>Sở thích của em</h3>\n        <hr>\n        <p>Em rất thích học <em>Lập trình Web</em> vào cuối tuần.</p>\n    </div>\n</body>\n</html>`,
                 criteria: [
                     {
-                        title: 'Có đủ cấu trúc chuẩn HTML5',
-                        hint: "Gõ đủ các phần: <code>&lt;!DOCTYPE html&gt;</code>, <code>&lt;html&gt;</code>, <code>&lt;head&gt;...&lt;/head&gt;</code>, <code>&lt;body&gt;...&lt;/body&gt;</code>",
-                        validate: (doc, code) => {
-                            let c = code.toLowerCase();
-                            if (c.includes("<!doctype html>") && c.includes("<html") && c.includes("<head>") && c.includes("<body>")) return { pass: true };
-                            return { pass: false, error: "Trang web đang thiếu cấu trúc nền tảng." };
+                        title: 'Sử dụng thẻ gom nhóm <code class="text-blue-600">&lt;div&gt;</code>',
+                        hint: "Mở thẻ &lt;div&gt; và đóng thẻ &lt;/div&gt; để bao bọc các thẻ khác.",
+                        validate: (doc) => doc.querySelector('div') ? { pass: true } : { pass: false, error: "Trang web chưa có thẻ div." }
+                    },
+                    {
+                        title: 'Thẻ <code class="text-blue-600">&lt;div&gt;</code> chứa đúng thẻ <code class="text-blue-600">&lt;h3&gt;</code> và <code class="text-blue-600">&lt;hr&gt;</code>',
+                        hint: "Đảm bảo thẻ h3 và thẻ hr nằm bên trong cặp thẻ div.",
+                        validate: (doc) => {
+                            let div = doc.querySelector('div');
+                            if (div && div.querySelector('h3') && div.querySelector('hr')) return { pass: true };
+                            return { pass: false, error: "Thẻ div chưa chứa tiêu đề h3 hoặc đường kẻ ngang hr." };
                         }
                     },
                     {
-                        title: 'Có thẻ <code class="text-blue-600">&lt;title&gt;</code>',
-                        hint: "Bạn chưa viết thẻ <code>&lt;title&gt;Tên của bạn&lt;/title&gt;</code> trong phần head.",
-                        validate: (doc, code) => {
-                            if (doc.querySelector('title')) return { pass: true };
-                            return { pass: false, error: "Chưa tìm thấy thẻ title." };
-                        }
-                    },
-                    {
-                        title: 'Có thẻ <code class="text-blue-600">&lt;h1&gt;</code> "Giới thiệu bản thân"',
-                        hint: "Sử dụng: <code>&lt;h1&gt;Giới thiệu bản thân&lt;/h1&gt;</code>",
-                        validate: (doc, code) => {
-                            let h1 = doc.querySelector('h1');
-                            if (h1 && h1.innerText.toLowerCase().includes("giới thiệu bản thân")) return { pass: true };
-                            return { pass: false, error: "Chưa có thẻ h1 hoặc gõ sai chữ 'Giới thiệu bản thân'." };
-                        }
-                    },
-                    {
-                        title: 'Có thẻ <code class="text-blue-600">&lt;h2&gt;</code> "THPT Nguyễn Bỉnh Khiêm"',
-                        hint: "Sử dụng: <code>&lt;h2&gt;Học sinh trường THPT Nguyễn Bỉnh Khiêm&lt;/h2&gt;</code>",
-                        validate: (doc, code) => {
-                            let h2 = doc.querySelector('h2');
-                            if (h2 && h2.innerText.toLowerCase().includes("nguyễn bỉnh khiêm")) return { pass: true };
-                            return { pass: false, error: "Chưa có thẻ h2 hoặc thiếu tên trường Nguyễn Bỉnh Khiêm." };
-                        }
-                    },
-                    {
-                        title: 'Có ít nhất 2 thẻ <code class="text-blue-600">&lt;p&gt;</code>',
-                        hint: "Gõ 2 đoạn văn dùng cặp thẻ: <code>&lt;p&gt;Nội dung...&lt;/p&gt;</code>",
-                        validate: (doc, code) => {
-                            if (doc.querySelectorAll('p').length >= 2) return { pass: true };
-                            return { pass: false, error: `Mới có ${doc.querySelectorAll('p').length} thẻ p. Yêu cầu ít nhất 2.` };
+                        title: 'Thẻ <code class="text-blue-600">&lt;div&gt;</code> lồng đoạn văn <code class="text-blue-600">&lt;p&gt;</code>, bên trong có chữ in nghiêng <code class="text-blue-600">&lt;em&gt;</code>',
+                        hint: "Trong thẻ <p>, hãy bọc 1 vài từ bằng thẻ <em>...</em>",
+                        validate: (doc) => {
+                            let p = doc.querySelector('div p');
+                            if (p && (p.querySelector('em') || p.querySelector('i'))) return { pass: true };
+                            return { pass: false, error: "Chưa có đoạn văn p lồng trong div, hoặc đoạn văn thiếu thẻ in nghiêng em." };
                         }
                     }
                 ]
@@ -514,10 +505,11 @@
         // --- 2. BIẾN TRẠNG THÁI ---
         let currentIndex = 0;
         let currentPreviewMode = 'student';
-        let lastSubmittedCode = ''; // Biến lưu tạm mã nguồn vừa nộp
+        let lastSubmittedCode = '';
         
         // --- 3. DOM ELEMENTS ---
         const editor = document.getElementById('code-editor');
+        const highlightLayer = document.getElementById('highlight-layer');
         const lineNumbers = document.getElementById('line-numbers');
         const previewFrame = document.getElementById('preview-frame');
         const criteriaList = document.getElementById('criteria-list');
@@ -530,13 +522,26 @@
             lineNumbers.innerHTML = Array(lines).fill(0).map((_, i) => i + 1).join('<br>');
         }
 
+        // HÀM MỚI: Tự động đổi màu ghi chú
+        function updateHighlight() {
+            const text = editor.value;
+            const escaped = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            // Định dạng màu cho thẻ ghi chú HTML (màu xám chìm nhẹ, in nghiêng)
+            const highlighted = escaped.replace(/(&lt;!--[\s\S]*?--&gt;)/g, '<span class="text-[#6b7280] italic">$1</span>');
+            // Thêm ký tự ngắt dòng ảo để pre đồng bộ chiều cao với textarea
+            highlightLayer.innerHTML = highlighted + (text[text.length - 1] === '\n' ? ' ' : '');
+        }
+
         editor.addEventListener('input', () => {
             updateLineNumbers();
+            updateHighlight();
             updatePreview(); 
         });
         
         editor.addEventListener('scroll', () => {
             lineNumbers.scrollTop = editor.scrollTop;
+            highlightLayer.scrollTop = editor.scrollTop;
+            highlightLayer.scrollLeft = editor.scrollLeft;
         });
 
         editor.addEventListener('keydown', function(e) {
@@ -556,7 +561,7 @@
 
         function updatePreview() {
             // Lưu lại toàn bộ mã nguồn học sinh đang viết dở vào dữ liệu bài học
-            lessons[currentIndex].userCode = editor.value;
+            allLessons[currentIndex].userCode = editor.value;
 
             // Tự động chuyển về giao diện "Bài làm" nếu học sinh đang gõ code
             if (currentPreviewMode === 'sample') {
@@ -614,15 +619,15 @@
 
         // --- 5. LOGIC BÀI HỌC VÀ CHẤM ĐIỂM ---
         function loadLesson(index) {
-            const lesson = lessons[index];
+            const lesson = allLessons[index];
             document.getElementById('lesson-tag').innerText = lesson.tag;
             document.getElementById('lesson-title').innerText = lesson.title;
             document.getElementById('lesson-desc').innerHTML = lesson.description;
-            document.getElementById('lesson-counter').innerText = `${index + 1} / ${lessons.length}`;
+            document.getElementById('lesson-counter').innerText = `${index + 1} / ${allLessons.length}`;
             
             // Xử lý nút điều hướng
             document.getElementById('btn-prev').style.visibility = index === 0 ? 'hidden' : 'visible';
-            document.getElementById('btn-next').style.visibility = index === lessons.length - 1 ? 'hidden' : 'visible';
+            document.getElementById('btn-next').style.visibility = index === allLessons.length - 1 ? 'hidden' : 'visible';
 
             // Khôi phục mã nguồn đã lưu nếu học sinh đã từng gõ, nếu không thì lấy mã khởi tạo
             editor.value = lesson.userCode !== undefined ? lesson.userCode : lesson.initialCode;
@@ -630,6 +635,7 @@
             // Khôi phục lại chế độ xem Bài làm
             togglePreviewMode('student');
             updateLineNumbers();
+            updateHighlight();
             updatePreview();
             
             criteriaList.innerHTML = '';
@@ -670,7 +676,7 @@
 
         function submitCode() {
             const code = editor.value;
-            const lesson = lessons[currentIndex];
+            const lesson = allLessons[currentIndex];
             const parser = new DOMParser();
             const doc = parser.parseFromString(code, 'text/html');
             
@@ -733,13 +739,13 @@
             } else {
                 btnSample.className = 'px-4 py-1 text-xs font-semibold bg-white shadow-sm rounded text-blue-600 transition-all cursor-pointer';
                 btnStudent.className = 'px-4 py-1 text-xs font-semibold text-gray-500 hover:text-gray-700 rounded transition-all cursor-pointer';
-                previewFrame.srcdoc = lessons[currentIndex].sampleCode;
+                previewFrame.srcdoc = allLessons[currentIndex].sampleCode;
             }
         }
 
         function changeLesson(dir) {
             const newIndex = currentIndex + dir;
-            if (newIndex >= 0 && newIndex < lessons.length) {
+            if (newIndex >= 0 && newIndex < allLessons.length) {
                 currentIndex = newIndex;
                 loadLesson(currentIndex);
             }
@@ -768,19 +774,20 @@
 
         function executeReset() {
             closeModal();
-            lessons[currentIndex].userCode = lessons[currentIndex].initialCode;
-            editor.value = lessons[currentIndex].initialCode;
+            allLessons[currentIndex].userCode = allLessons[currentIndex].initialCode;
+            editor.value = allLessons[currentIndex].initialCode;
             updateLineNumbers();
+            updateHighlight();
             updatePreview();
             loadLesson(currentIndex); 
         }
 
         // HỆ THỐNG NỘP BÀI (HIỂN THỊ KẾT QUẢ TỪNG CÂU)
         function showSubmitDialog() {
-            const lesson = lessons[currentIndex];
+            const lesson = allLessons[currentIndex];
             // Lấy tên câu ngắn gọn gọn để hiển thị trên tiêu đề
             const shortTitle = lesson.title.split(':')[0]; 
-            const fullTitle = "Bài 7 - " + shortTitle; // Thêm tên Bài phía trước
+            const fullTitle = lesson.chapter.split('.')[0] + " - " + shortTitle; // Tự động lấy "Bài X - Câu Y"
 
             showModal(
                 "Nộp bài - " + fullTitle,
@@ -820,7 +827,7 @@
                 return;
             }
 
-            const lesson = lessons[currentIndex];
+            const lesson = allLessons[currentIndex];
             const code = editor.value;
             
             // LƯU LẠI MÃ ĐỂ HỌC SINH TẢI VỀ SAU KHI NỘP (DÙ CHO EDITOR BỊ RESET)
@@ -842,12 +849,12 @@
                 ? '<i class="fa-solid fa-circle-check text-5xl text-green-500 mb-3 drop-shadow-sm"></i>' 
                 : '<i class="fa-solid fa-star-half-stroke text-5xl text-yellow-500 mb-3 drop-shadow-sm"></i>';
                 
-            let feedbackText = passed === total 
+                let feedbackText = passed === total 
                 ? "Xuất sắc! Em đã hoàn thành tất cả tiêu chí." 
                 : `Em đã đạt ${passed}/${total} tiêu chí. Hãy cố gắng hoàn thiện các lỗi màu đỏ nhé!`;
 
             const shortTitle = lesson.title.split(':')[0]; 
-            const fullTitle = "Bài 7 - " + shortTitle; // Thêm tên Bài phía trước
+            const fullTitle = lesson.chapter.split('.')[0] + " - " + shortTitle; // Tự động lấy "Bài X - Câu Y"
 
             // THAY ĐỔI ĐƯỜNG LINK WEB APP CỦA BẠN VÀO ĐÂY SAU KHI LÀM PHẦN 2
             const scriptUrl = 'https://script.google.com/macros/s/AKfycbzD-2I8qdXBAJiIT0gxyz6hfOdtLXFU9vQ34OFSIowXtvkypQDIe7tNmaXm8CF1K71Xug/exec'; 
@@ -899,9 +906,10 @@
 
         // Hàm xóa mã nguồn và reset câu hỏi ngay sau khi nộp
         function resetAfterSubmit() {
-            lessons[currentIndex].userCode = lessons[currentIndex].initialCode;
-            editor.value = lessons[currentIndex].initialCode;
+            allLessons[currentIndex].userCode = allLessons[currentIndex].initialCode;
+            editor.value = allLessons[currentIndex].initialCode;
             updateLineNumbers();
+            updateHighlight();
             updatePreview();
             loadLesson(currentIndex); 
         }
@@ -950,6 +958,13 @@
             }, 300);
         }
 
+        // Hàm lấy thời gian hiện tại định dạng DDMMYYYY_HHhMM (Ví dụ: 29102026_16h45)
+        function getTimestamp() {
+            const now = new Date();
+            const pad = (n) => String(n).padStart(2, '0');
+            return `${pad(now.getDate())}${pad(now.getMonth() + 1)}${now.getFullYear()}_${pad(now.getHours())}h${pad(now.getMinutes())}`;
+        }
+
         function copyCode(event) {
             const code = editor.value;
             // Xử lý copy an toàn
@@ -971,9 +986,11 @@
 
         function downloadHTML() {
             const code = editor.value;
-            const lesson = lessons[currentIndex];
+            const lesson = allLessons[currentIndex];
+            const shortChapter = lesson.chapter.split('.')[0].replace(/ /g, '');
             const shortTitle = lesson.title.split(':')[0].replace(/ /g, '_'); 
-            const filename = `Bai7_${shortTitle}.html`;
+            const ts = getTimestamp();
+            const filename = `${shortChapter}_${shortTitle}_${ts}.html`;
             
             const blob = new Blob([code], { type: 'text/html;charset=utf-8' });
             const link = document.createElement('a');
@@ -991,8 +1008,9 @@
             // Xử lý chuỗi tên để làm tên file sạch sẽ (xóa khoảng trắng, dấu gạch nối dư)
             const cleanTitle = lessonTitle.replace(/ /g, '').replace(/-/g, '_'); 
             const cleanName = name.replace(/ /g, '_');
+            const ts = getTimestamp();
             
-            const filename = `SanPham_${className}_STT${stt}_${cleanName}_${cleanTitle}.html`;
+            const filename = `SanPham_${className}_STT${stt}_${cleanName}_${cleanTitle}_${ts}.html`;
             const blob = new Blob([code], { type: 'text/html;charset=utf-8' });
             
             const link = document.createElement('a');
@@ -1004,11 +1022,12 @@
         }
 
         function downloadResult(name, className, stt, lessonTitle, passed, total, score10) {
-            const lesson = lessons[currentIndex];
-            const content = `KẾT QUẢ THỰC HÀNH TIN HỌC 12\n==============================\n\nSTT: ${stt}\nHọ và tên: ${name}\nLớp: ${className}\n\nTên bài: Bài 7 - HTML và cấu trúc trang web cơ bản\nCâu hỏi: ${lesson.title}\n\nSố tiêu chí hoàn thành: ${passed} / ${total}\nĐiểm (Thang 10): ${score10}\n\nThời gian nộp: ${new Date().toLocaleString('vi-VN')}`;
+            const lesson = allLessons[currentIndex];
+            const content = `KẾT QUẢ THỰC HÀNH TIN HỌC 12\n==============================\n\nSTT: ${stt}\nHọ và tên: ${name}\nLớp: ${className}\n\nTên bài: ${lesson.chapter}\nCâu hỏi: ${lesson.title}\n\nSố tiêu chí hoàn thành: ${passed} / ${total}\nĐiểm (Thang 10): ${score10}\n\nThời gian nộp: ${new Date().toLocaleString('vi-VN')}`;
             
             const cleanTitle = lessonTitle.replace(/ /g, '').replace(/-/g, '_');
-            const filename = `KetQua_${className}_STT${stt}_${name.replace(/ /g, '_')}_${cleanTitle}.txt`;
+            const ts = getTimestamp();
+            const filename = `KetQua_${className}_STT${stt}_${name.replace(/ /g, '_')}_${cleanTitle}_${ts}.txt`;
             const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
             const link = document.createElement('a');
             link.href = URL.createObjectURL(blob);
