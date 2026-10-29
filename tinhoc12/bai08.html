@@ -111,21 +111,21 @@
     </div>
 
     <script>
-        // --- DỮ LIỆU BÀI 8 (CHUẨN THEO SGK TR. 46-51) ---
+        // --- DỮ LIỆU BÀI 8 (CHUẨN THEO SGK TR. 46-51 - BỔ SUNG KIẾN THỨC MỞ RỘNG) ---
         const allLessons = [
             {
                 id: 1,
                 chapter: "Bài 8. Định dạng văn bản",
-                title: "Câu 1: Định dạng tiêu đề",
+                title: "Câu 1: Phân cấp Tiêu đề và Đoạn văn",
                 tag: "Nhận biết",
                 description: `
-                    <p class="mb-2 text-[13px] text-gray-700">Trong HTML, thẻ tiêu đề giúp phân cấp và làm nổi bật các mục của trang web. Có 6 mức độ tiêu đề, từ <code>&lt;h1&gt;</code> (lớn nhất) đến <code>&lt;h6&gt;</code> (nhỏ nhất).</p>
+                    <p class="mb-2 text-[13px] text-gray-700">Trong HTML, trang web thường được tổ chức bằng các thẻ tiêu đề (từ <code>&lt;h1&gt;</code> lớn nhất đến <code>&lt;h6&gt;</code> nhỏ nhất) và phần nội dung văn bản dùng thẻ <code>&lt;p&gt;</code> (Paragraph).</p>
                     <div class="bg-blue-50 border border-blue-100 p-2.5 rounded-lg text-xs text-blue-800 mb-3">
                         <strong>💡 Yêu cầu thực hiện:</strong>
                         <ul class="list-decimal pl-5 mt-1.5 space-y-1">
-                            <li>Tạo thẻ <code>&lt;h1&gt;</code> cho tiêu đề chính: "Tin học 12".</li>
-                            <li>Tạo thẻ <code>&lt;h2&gt;</code> cho mục con: "Phần chung".</li>
-                            <li>Tạo thẻ <code>&lt;h3&gt;</code> cho mục nhỏ hơn: "Chủ đề 1. Máy tính và xã hội tri thức".</li>
+                            <li>Tạo tiêu đề chính của trang: "Ngôn ngữ HTML" bằng thẻ <code>&lt;h1&gt;</code>.</li>
+                            <li>Tạo tiêu đề phụ: "1. Thẻ văn bản" bằng thẻ <code>&lt;h2&gt;</code>.</li>
+                            <li>Tạo một đoạn văn bản: "HTML dùng để thiết kế web." bằng thẻ <code>&lt;p&gt;</code>.</li>
                         </ul>
                     </div>
                 `,
@@ -133,17 +133,17 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Định dạng tiêu đề</title>
+    <title>Tiêu đề và Đoạn văn</title>
 </head>
 <body>
     
-    <!-- Bước 1: Tạo thẻ <h1> cho chữ: Tin học 12 -->
+    <!-- Bước 1: Tạo thẻ <h1> bao quanh chữ: Ngôn ngữ HTML -->
     
 
-    <!-- Bước 2: Tạo thẻ <h2> cho chữ: Phần chung -->
+    <!-- Bước 2: Tạo thẻ <h2> bao quanh chữ: 1. Thẻ văn bản -->
     
 
-    <!-- Bước 3: Tạo thẻ <h3> cho chữ: Chủ đề 1. Máy tính và xã hội tri thức -->
+    <!-- Bước 3: Tạo thẻ <p> bao quanh chữ: HTML dùng để thiết kế web. -->
     
 
 </body>
@@ -152,45 +152,54 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Định dạng tiêu đề</title>
+    <title>Tiêu đề và Đoạn văn</title>
 </head>
 <body>
-    <h1>Tin học 12</h1>
-    <h2>Phần chung</h2>
-    <h3>Chủ đề 1. Máy tính và xã hội tri thức</h3>
+    <h1>Ngôn ngữ HTML</h1>
+    <h2>1. Thẻ văn bản</h2>
+    <p>HTML dùng để thiết kế web.</p>
 </body>
 </html>`,
                 criteria: [
                     {
                         title: 'Có sử dụng thẻ tiêu đề cấp 1 <code class="text-blue-600">&lt;h1&gt;</code>',
-                        hint: "Mở và đóng thẻ <h1>Tin học 12</h1>",
-                        validate: (doc) => doc.querySelector('h1') ? { pass: true } : { pass: false, error: "Thiếu thẻ h1." }
+                        hint: "Mở và đóng thẻ <h1>Ngôn ngữ HTML</h1>",
+                        validate: (doc, code) => {
+                            const cleanCode = code.replace(/<!--[\s\S]*?-->/g, '');
+                            return cleanCode.toLowerCase().includes("<h1>") ? { pass: true } : { pass: false, error: "Thiếu thẻ h1." };
+                        }
                     },
                     {
                         title: 'Có sử dụng thẻ tiêu đề cấp 2 <code class="text-blue-600">&lt;h2&gt;</code>',
-                        hint: "Mở và đóng thẻ <h2>Phần chung</h2>",
-                        validate: (doc) => doc.querySelector('h2') ? { pass: true } : { pass: false, error: "Thiếu thẻ h2." }
+                        hint: "Mở và đóng thẻ <h2>1. Thẻ văn bản</h2>",
+                        validate: (doc, code) => {
+                            const cleanCode = code.replace(/<!--[\s\S]*?-->/g, '');
+                            return cleanCode.toLowerCase().includes("<h2>") ? { pass: true } : { pass: false, error: "Thiếu thẻ h2." };
+                        }
                     },
                     {
-                        title: 'Có sử dụng thẻ tiêu đề cấp 3 <code class="text-blue-600">&lt;h3&gt;</code>',
-                        hint: "Mở và đóng thẻ <h3>Chủ đề 1...</h3>",
-                        validate: (doc) => doc.querySelector('h3') ? { pass: true } : { pass: false, error: "Thiếu thẻ h3." }
+                        title: 'Có sử dụng thẻ đoạn văn <code class="text-blue-600">&lt;p&gt;</code>',
+                        hint: "Mở và đóng thẻ <p>HTML dùng để thiết kế web.</p>",
+                        validate: (doc, code) => {
+                            const cleanCode = code.replace(/<!--[\s\S]*?-->/g, '');
+                            return cleanCode.toLowerCase().includes("<p>") ? { pass: true } : { pass: false, error: "Thiếu thẻ p." };
+                        }
                     }
                 ]
             },
             {
                 id: 2,
                 chapter: "Bài 8. Định dạng văn bản",
-                title: "Câu 2: Các thẻ định dạng kí tự",
+                title: "Câu 2: Các thẻ định dạng kí tự (Toán, Hóa học)",
                 tag: "Thông hiểu",
                 description: `
-                    <p class="mb-2 text-[13px] text-gray-700">HTML cung cấp các thẻ đặc biệt để định dạng chữ giống như trong Word, giúp đoạn văn bản trở nên sinh động và dễ đọc hơn.</p>
+                    <p class="mb-2 text-[13px] text-gray-700">Ngoài các thẻ in đậm, in nghiêng, HTML còn hỗ trợ tạo chỉ số dưới <code>&lt;sub&gt;</code> (vd: H<sub>2</sub>O) và chỉ số trên <code>&lt;sup&gt;</code> (vd: x<sup>2</sup>).</p>
                     <div class="bg-blue-50 border border-blue-100 p-2.5 rounded-lg text-xs text-blue-800 mb-3">
                         <strong>💡 Yêu cầu thực hiện:</strong>
                         <ul class="list-decimal pl-5 mt-1.5 space-y-1">
-                            <li>Tìm cụm từ "in đậm" và dùng cặp thẻ <code>&lt;b&gt;</code> hoặc <code>&lt;strong&gt;</code> bao quanh nó.</li>
-                            <li>Tìm cụm từ "in nghiêng" và dùng cặp thẻ <code>&lt;i&gt;</code> hoặc <code>&lt;em&gt;</code> bao quanh nó.</li>
-                            <li>Tìm cụm từ "gạch chân" và dùng cặp thẻ <code>&lt;u&gt;</code> bao quanh nó.</li>
+                            <li>Dùng thẻ <code>&lt;b&gt;</code> (hoặc <code>&lt;strong&gt;</code>) để in đậm từ "Công thức Hóa học".</li>
+                            <li>Sử dụng thẻ chỉ số dưới <code>&lt;sub&gt;</code> bao quanh số 2 để tạo chữ H<sub>2</sub>O.</li>
+                            <li>Sử dụng thẻ chỉ số trên <code>&lt;sup&gt;</code> bao quanh số 2 để tạo chữ X<sup>2</sup>.</li>
                         </ul>
                     </div>
                 `,
@@ -203,8 +212,17 @@
 <body>
     
     <p>
-        <!-- Bổ sung thẻ <b>, <i>, <u> vào các từ tương ứng dưới đây -->
-        Trong môn Tin học, em được học các thẻ in đậm, in nghiêng và gạch chân.
+        <!-- Bước 1: Bao quanh chữ "Công thức Hóa học" bằng thẻ <b> -->
+        Công thức Hóa học của nước là H2O.
+    </p>
+
+    <p>
+        <!-- Bước 2: Bao quanh số 2 trong cụm H2O (ở dòng trên) bằng thẻ <sub> -->
+    </p>
+
+    <p>
+        <!-- Bước 3: Tạo công thức Toán học. Bao quanh số 2 bằng thẻ <sup> -->
+        Công thức Toán học: X2 + Y = 10
     </p>
 
 </body>
@@ -216,24 +234,34 @@
     <title>Định dạng kí tự</title>
 </head>
 <body>
-    <p>Trong môn Tin học, em được học các thẻ <b>in đậm</b>, <i>in nghiêng</i> và <u>gạch chân</u>.</p>
+    <p><b>Công thức Hóa học</b> của nước là H<sub>2</sub>O.</p>
+    <p>Công thức Toán học: X<sup>2</sup> + Y = 10</p>
 </body>
 </html>`,
                 criteria: [
                     {
-                        title: 'Có sử dụng thẻ <code class="text-blue-600">&lt;b&gt;</code> hoặc <code class="text-blue-600">&lt;strong&gt;</code>',
-                        hint: "Sử dụng cặp thẻ <b>...</b>",
-                        validate: (doc) => (doc.querySelector('b') || doc.querySelector('strong')) ? { pass: true } : { pass: false, error: "Chưa tìm thấy thẻ b hoặc strong." }
+                        title: 'Có sử dụng thẻ in đậm <code class="text-blue-600">&lt;b&gt;</code> hoặc <code class="text-blue-600">&lt;strong&gt;</code>',
+                        hint: "Sử dụng cặp thẻ <b>Công thức Hóa học</b>",
+                        validate: (doc, code) => {
+                            const cleanCode = code.replace(/<!--[\s\S]*?-->/g, '');
+                            return (cleanCode.toLowerCase().includes("<b>") || cleanCode.toLowerCase().includes("<strong>")) ? { pass: true } : { pass: false, error: "Chưa tìm thấy thẻ b hoặc strong." };
+                        }
                     },
                     {
-                        title: 'Có sử dụng thẻ <code class="text-blue-600">&lt;i&gt;</code> hoặc <code class="text-blue-600">&lt;em&gt;</code>',
-                        hint: "Sử dụng cặp thẻ <i>...</i>",
-                        validate: (doc) => (doc.querySelector('i') || doc.querySelector('em')) ? { pass: true } : { pass: false, error: "Chưa tìm thấy thẻ i hoặc em." }
+                        title: 'Có sử dụng thẻ chỉ số dưới <code class="text-blue-600">&lt;sub&gt;</code> (Tạo H2O)',
+                        hint: "Viết H<sub>2</sub>O để đẩy số 2 xuống dưới.",
+                        validate: (doc, code) => {
+                            const cleanCode = code.replace(/<!--[\s\S]*?-->/g, '');
+                            return cleanCode.toLowerCase().includes("<sub>") ? { pass: true } : { pass: false, error: "Chưa tìm thấy thẻ sub." };
+                        }
                     },
                     {
-                        title: 'Có sử dụng thẻ <code class="text-blue-600">&lt;u&gt;</code>',
-                        hint: "Sử dụng cặp thẻ <u>...</u>",
-                        validate: (doc) => doc.querySelector('u') ? { pass: true } : { pass: false, error: "Chưa tìm thấy thẻ u (gạch chân)." }
+                        title: 'Có sử dụng thẻ chỉ số trên <code class="text-blue-600">&lt;sup&gt;</code> (Tạo X bình phương)',
+                        hint: "Viết X<sup>2</sup> để đẩy số 2 lên trên đầu.",
+                        validate: (doc, code) => {
+                            const cleanCode = code.replace(/<!--[\s\S]*?-->/g, '');
+                            return cleanCode.toLowerCase().includes("<sup>") ? { pass: true } : { pass: false, error: "Chưa tìm thấy thẻ sup." };
+                        }
                     }
                 ]
             },
@@ -243,13 +271,14 @@
                 title: "Câu 3: Trình bày bài thơ (Tổng hợp)",
                 tag: "Vận dụng",
                 description: `
-                    <p class="mb-2 text-[13px] text-gray-700">Bây giờ, em hãy vận dụng các thẻ vừa học (tiêu đề, đoạn văn, ngắt dòng, in nghiêng) để tự thiết kế một trang web hiển thị bài thơ theo đúng cấu trúc.</p>
+                    <p class="mb-2 text-[13px] text-gray-700">Em hãy vận dụng kết hợp thẻ ngắt dòng <code>&lt;br&gt;</code>, in nghiêng <code>&lt;i&gt;</code>, thẻ dạ quang <code>&lt;mark&gt;</code> và <b>thuộc tính màu chữ</b> để làm bài thơ sinh động hơn.</p>
                     <div class="bg-blue-50 border border-blue-100 p-2.5 rounded-lg text-xs text-blue-800 mb-3">
                         <strong>💡 Yêu cầu thực hiện:</strong>
                         <ul class="list-decimal pl-5 mt-1.5 space-y-1">
-                            <li>Tạo tiêu đề bài thơ "Quê Hương" bằng thẻ <code>&lt;h2&gt;</code>.</li>
-                            <li>Dùng thẻ <code>&lt;p&gt;</code> bao quanh 2 câu thơ. Dùng thẻ <code>&lt;br&gt;</code> để ngắt xuống dòng sau câu thơ đầu tiên.</li>
-                            <li>Tạo thêm 1 đoạn <code>&lt;p&gt;</code> phía dưới ghi "Tác giả: Đỗ Trung Quân", trong đó tên tác giả phải được in nghiêng bằng thẻ <code>&lt;em&gt;</code>.</li>
+                            <li>Thêm thuộc tính <code>style="color: red;"</code> vào thẻ <code>&lt;h2&gt;</code> để đổi tên bài thơ thành màu đỏ.</li>
+                            <li>Bao quanh 2 câu thơ bằng 1 thẻ <code>&lt;p&gt;</code>. Dùng <code>&lt;br&gt;</code> ở giữa để ngắt câu.</li>
+                            <li>Tô sáng bằng thẻ dạ quang <code>&lt;mark&gt;</code> cho cụm từ "chùm khế ngọt".</li>
+                            <li>Tạo đoạn văn dưới cùng ghi tên tác giả được in nghiêng bằng thẻ <code>&lt;em&gt;</code>.</li>
                         </ul>
                     </div>
                 `,
@@ -259,16 +288,19 @@
     <meta charset="utf-8">
 </head>
 <body>
+    <!-- Bước 1: Thêm style="color: red;" vào trong thẻ <h2> dưới đây để đổi màu -->
+    <h2>Quê Hương</h2>
     
-    <!-- Bước 1: Tạo tiêu đề bài thơ bằng thẻ <h2> -->
+    <!-- Bước 2: Mở thẻ <p> chứa 2 câu thơ. Dùng <br> ngắt dòng. -->
+    <!-- Quê hương là chùm khế ngọt -->
+    <!-- Cho con trèo hái mỗi ngày -->
+    
+    
+    <!-- Bước 3: Dùng thẻ <mark> bọc quanh từ "chùm khế ngọt" ở trên -->
     
 
-    <!-- Bước 2: Tạo thẻ <p> chứa 2 câu thơ. Dùng thẻ <br> ngắt dòng. -->
-    <!-- Câu 1: Quê hương là chùm khế ngọt -->
-    <!-- Câu 2: Cho con trèo hái mỗi ngày -->
-    
-
-    <!-- Bước 3: Tạo thẻ <p> ghi tên tác giả. Bọc tên Đỗ Trung Quân bằng thẻ <em> -->
+    <!-- Bước 4: Tạo thẻ <p> chứa tên tác giả. -->
+    <!-- Bọc tên Đỗ Trung Quân bằng thẻ in nghiêng <em> hoặc <i> -->
     
 
 </body>
@@ -279,9 +311,9 @@
     <meta charset="utf-8">
 </head>
 <body>
-    <h2>Quê Hương</h2>
+    <h2 style="color: red;">Quê Hương</h2>
     <p>
-        Quê hương là chùm khế ngọt<br>
+        Quê hương là <mark>chùm khế ngọt</mark><br>
         Cho con trèo hái mỗi ngày
     </p>
     <p>Tác giả: <em>Đỗ Trung Quân</em></p>
@@ -289,19 +321,36 @@
 </html>`,
                 criteria: [
                     {
-                        title: 'Dùng thẻ tiêu đề <code class="text-blue-600">&lt;h2&gt;</code> cho tên bài thơ',
-                        hint: "Dùng thẻ <h2>Quê Hương</h2>",
-                        validate: (doc) => doc.querySelector('h2') ? { pass: true } : { pass: false, error: "Thiếu thẻ h2." }
+                        title: 'Đổi màu chữ bằng thuộc tính <code class="text-blue-600">style="color: ..."</code>',
+                        hint: "Hãy sửa thẻ &lt;h2&gt; thành &lt;h2 style=\"color: red;\"&gt;",
+                        validate: (doc, code) => {
+                            const cleanCode = code.replace(/<!--[\s\S]*?-->/g, '');
+                            return (cleanCode.toLowerCase().includes("style=") && cleanCode.toLowerCase().includes("color:")) || cleanCode.toLowerCase().includes("color=") ? { pass: true } : { pass: false, error: "Chưa thêm thuộc tính màu chữ (style=\"color: red;\")." };
+                        }
                     },
                     {
-                        title: 'Có dùng đoạn văn <code class="text-blue-600">&lt;p&gt;</code> và thẻ xuống dòng <code class="text-blue-600">&lt;br&gt;</code>',
-                        hint: "Bao 2 câu thơ vào trong thẻ <p> và dùng <br> để ngắt dòng.",
-                        validate: (doc) => (doc.querySelector('p') && doc.querySelector('br')) ? { pass: true } : { pass: false, error: "Thiếu thẻ p hoặc thẻ br để xuống dòng." }
+                        title: 'Đoạn văn có dùng thẻ ngắt dòng <code class="text-blue-600">&lt;br&gt;</code>',
+                        hint: "Chèn <br> vào cuối câu thơ thứ nhất.",
+                        validate: (doc, code) => {
+                            const cleanCode = code.replace(/<!--[\s\S]*?-->/g, '');
+                            return cleanCode.toLowerCase().includes("<br>") ? { pass: true } : { pass: false, error: "Thiếu thẻ br để xuống dòng." };
+                        }
                     },
                     {
-                        title: 'Tên tác giả được in nghiêng bằng thẻ <code class="text-blue-600">&lt;em&gt;</code> hoặc <code class="text-blue-600">&lt;i&gt;</code>',
+                        title: 'Tô sáng chữ bằng thẻ <code class="text-blue-600">&lt;mark&gt;</code>',
+                        hint: "Viết <mark>chùm khế ngọt</mark> để chữ có nền vàng.",
+                        validate: (doc, code) => {
+                            const cleanCode = code.replace(/<!--[\s\S]*?-->/g, '');
+                            return cleanCode.toLowerCase().includes("<mark>") ? { pass: true } : { pass: false, error: "Chưa dùng thẻ mark." };
+                        }
+                    },
+                    {
+                        title: 'Tên tác giả được in nghiêng bằng <code class="text-blue-600">&lt;em&gt;</code> hoặc <code class="text-blue-600">&lt;i&gt;</code>',
                         hint: "Sử dụng <em>Đỗ Trung Quân</em>",
-                        validate: (doc) => (doc.querySelector('em') || doc.querySelector('i')) ? { pass: true } : { pass: false, error: "Tên tác giả chưa được in nghiêng." }
+                        validate: (doc, code) => {
+                            const cleanCode = code.replace(/<!--[\s\S]*?-->/g, '');
+                            return (cleanCode.toLowerCase().includes("<em>") || cleanCode.toLowerCase().includes("<i>")) ? { pass: true } : { pass: false, error: "Tên tác giả chưa được in nghiêng." };
+                        }
                     }
                 ]
             }
