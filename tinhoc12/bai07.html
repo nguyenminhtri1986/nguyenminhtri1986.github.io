@@ -414,9 +414,14 @@
             let feedbackIcon = passed === total ? '<i class="fa-solid fa-circle-check text-5xl text-green-500 mb-3 drop-shadow-sm"></i>' : '<i class="fa-solid fa-star-half-stroke text-5xl text-yellow-500 mb-3 drop-shadow-sm"></i>';
             let feedbackText = passed === total ? "Xuất sắc! Em đã hoàn thành tất cả tiêu chí." : `Em đã đạt ${passed}/${total} tiêu chí. Hãy cố gắng hoàn thiện các lỗi màu đỏ nhé!`;
             const fullTitle = lesson.chapter.split('.')[0] + " - " + lesson.title.split(':')[0]; 
+            
+            // ĐÃ TÍCH HỢP LINK GOOGLE SHEETS CHÍNH THỨC CỦA BẠN
             const scriptUrl = 'https://script.google.com/macros/s/AKfycbzD-2I8qdXBAJiIT0gxyz6hfOdtLXFU9vQ34OFSIowXtvkypQDIe7tNmaXm8CF1K71Xug/exec'; 
+            
             const submitBtn = document.querySelector('#custom-modal button.bg-blue-600'); if (submitBtn) { submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang lưu...'; submitBtn.disabled = true; submitBtn.classList.add('opacity-70'); }
-            const payload = { name: name, className: className, stt: stt, lessonTitle: fullTitle, passed: passed, total: total, score: score10 };
+            
+            // Gửi đầy đủ thông tin kể cả tag (Mức độ Nhận biết, Thông hiểu...)
+            const payload = { name: name, className: className, stt: stt, lessonTitle: fullTitle, passed: passed, total: total, score: score10, tag: lesson.tag };
 
             fetch(scriptUrl, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(payload) })
             .then(response => { showResultModal(name, className, stt, fullTitle, passed, total, score10, feedbackIcon, feedbackText, true); resetAfterSubmit(); })
