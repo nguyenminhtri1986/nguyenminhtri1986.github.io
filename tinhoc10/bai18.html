@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài 18. Các lệnh vào ra đơn giản</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- CodeMirror for Code Editor -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/dracula.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/python/python.min.js"></script>
+
+    <!-- Pyodide for Browser Python Execution -->
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.23.4/full/pyodide.js"></script>
+
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        html { font-size: 16px; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            margin: 0;
+            background-color: #f0f2f5;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+        .CodeMirror {
+            height: 100% !important;
+            min-height: 260px;
+            font-family: 'Fira Code', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .CodeMirror-scroll { min-height: 260px; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        .bg-ide-dark { background-color: #1e1e1e; }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-6px); }
+            75% { transform: translateX(6px); }
+        }
+        .animate-shake { animation: shake 0.4s ease-in-out; }
+        @keyframes bounce-scale {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+        .animate-bounce-scale { animation: bounce-scale 0.5s ease-in-out; }
+    </style>
+</head>
+<body class="min-h-screen lg:h-[100dvh] flex flex-col text-slate-800 bg-[#f0f2f5] lg:overflow-hidden">
+
+    <!-- Top Navigation Bar -->
+    <header class="bg-white min-h-[46px] flex flex-wrap items-center justify-between gap-2 px-4 py-1.5 shrink-0 border-b border-slate-200 shadow-2xs">
+        <div class="flex flex-wrap items-center gap-2 min-w-0">
+            <h1 class="font-bold text-slate-800 text-sm tracking-tight leading-snug break-words">Bài 18. Các lệnh vào ra đơn giản</h1>
+            <div id="status-badge" class="flex items-center text-[11px] font-medium text-yellow-700 bg-yellow-50 px-2 py-0.5 rounded-full border border-yellow-200 shrink-0">
+                Đang tải Pyodide...
+            </div>
+        </div>
+        <div class="hidden sm:flex items-center shrink-0">
+            <span class="text-[11px] font-medium text-slate-600 bg-slate-100 px-2.5 py-0.5 rounded-full border border-slate-200">Tin học 10 • Python Lab</span>
+        </div>
+    </header>
+
+    <!-- Main 3-Column Workspace -->
+    <div class="flex-1 flex flex-col lg:flex-row lg:overflow-hidden p-2 gap-2 lg:gap-0 w-full max-w-full">
+        
+        <!-- Left Column: Task Instructions -->
+        <aside id="col-left" class="w-full lg:w-[32%] lg:min-w-[260px] bg-white rounded-xl border border-slate-200 flex flex-col shrink-0 shadow-sm min-w-0">
+            <div class="flex-1 lg:overflow-y-auto flex flex-col break-words">
+                <div class="p-3 sm:p-3.5 pb-2.5">
+                    <div class="flex flex-wrap items-center justify-between gap-1.5 mb-1.5">
+                        <span id="lesson-label" class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">BÀI 18. CÁC LỆNH VÀO RA ĐƠN GIẢN</span>
+                        <span id="q-level" class="text-[11px] font-semibold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-100 shrink-0">Nhận biết</span>
+                    </div>
+                    
+                    <h2 id="q-title" class="text-[15px] font-bold text-slate-900 mb-1.5 leading-snug"></h2>
+                    <div id="q-desc" class="text-[12.5px] text-slate-700 mb-2.5 leading-[1.45] space-y-1.5 overflow-x-auto"></div>
+
+                    <!-- Instruction Box -->
+                    <div class="mb-2.5 bg-blue-50/60 rounded-lg p-2.5 border border-blue-100">
+                        <div class="flex items-center space-x-1.5 text-blue-800 font-semibold text-xs mb-1">
+                            <svg class="w-3.5 h-3.5 text-amber-500 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path d="M11 3a1 1 0 10-2 0v1a1 1 0 102 0V3zM15.657 5.757a1 1 0 00-1.414-1.414l-.707.707a1 1 0 001.414 1.414l.707-.707zM18 10a1 1 0 01-1 1h-1a1 1 0 110-2h1a1 1 0 011 1zM5.05 6.464A1 1 0 106.464 5.05l-.707-.707a1 1 0 00-1.414 1.414l.707.707zM5 10a1 1 0 01-1 1H3a1 1 0 110-2h1a1 1 0 011 1zM8 16v-1h4v1a2 2 0 11-4 0zM12 14c.015-.34.208-.646.477-.859a4 4 0 10-4.954 0c.27.213.462.519.476.859h4.002z"></path></svg>
+                            <span>Yêu cầu thực hiện (Viết bên tab main.py):</span>
+                        </div>
+                        <ol id="q-reqs" class="list-decimal list-inside text-[12px] text-blue-900/90 space-y-1 ml-0.5 leading-[1.4]"></ol>
+                    </div>
+
+                    <!-- Rubric -->
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-xs uppercase tracking-wide mb-1.5 border-t border-slate-100 pt-2">Phiếu tiêu chí</h3>
+                        <ul id="q-criteria" class="text-[11.5px] text-slate-600 space-y-1.5"></ul>
+                    </div>
+                </div>
+
+                <!-- Footer Actions -->
+                <div class="bg-slate-50/90 border-t border-slate-200/80 px-3 py-2.5 flex flex-col space-y-2 shrink-0 mt-1">
+                    <div class="flex flex-wrap sm:flex-nowrap gap-2">
+                        <button id="grade-btn" class="flex-1 min-w-[120px] h-8 bg-[#1c1c1e] hover:bg-black text-white px-2.5 rounded-lg flex items-center justify-center space-x-1.5 font-medium transition-colors shadow-sm text-xs">
+                            <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <span>Chấm bài</span>
+                            <span class="hidden xl:inline text-slate-400 text-[10px] border border-slate-600 px-1 rounded bg-slate-800">Ctrl+↵</span>
+                        </button>
+                        <button id="submit-btn" class="flex-1 min-w-[100px] h-8 bg-blue-600 hover:bg-blue-700 text-white px-2.5 rounded-lg flex items-center justify-center space-x-1.5 font-medium transition-colors shadow-sm text-xs">
+                            <svg class="w-3.5 h-3.5 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path></svg>
+                            <span>Nộp bài</span>
+                        </button>
+                    </div>
+                    
+                    <div class="flex items-center justify-between">
+                        <button id="prev-btn" class="h-8 text-slate-600 hover:text-slate-900 disabled:opacity-30 transition-colors flex items-center px-2.5 rounded-lg hover:bg-slate-200/70 text-xs font-medium">
+                            <svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg> Trước
+                        </button>
+                        
+                        <div class="flex items-center gap-2.5">
+                            <div id="score-circle" class="w-10 h-10 rounded-full border-2 border-dashed border-red-500 flex items-center justify-center text-red-500 font-bold text-sm bg-white transition-colors duration-300 shadow-2xs">
+                                <span id="score-text">0/3</span>
+                            </div>
+                            <span id="page-indicator" class="text-slate-600 bg-slate-200/70 px-2.5 py-0.5 rounded-full text-[11px] font-semibold">Câu 1 / 3</span>
+                        </div>
+
+                        <button id="next-btn" class="h-8 text-slate-600 hover:text-slate-900 disabled:opacity-30 transition-colors flex items-center px-2.5 rounded-lg hover:bg-slate-200/70 text-xs font-medium">
+                            Sau <svg class="w-3.5 h-3.5 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Resizer Left -->
+        <div id="drag-left" title="Kéo để thay đổi độ rộng" class="hidden lg:flex w-2.5 cursor-col-resize justify-center items-center group shrink-0 z-10 select-none">
+            <div class="w-1 h-10 bg-slate-300 group-hover:bg-blue-500 rounded-full transition-colors"></div>
+        </div>
+
+        <!-- Middle Column: Code Editor -->
+        <main id="col-main" class="w-full lg:flex-1 flex flex-col bg-[#1e1e1e] rounded-xl overflow-hidden border border-slate-200 shadow-sm min-h-[340px] lg:min-h-0 min-w-[240px]">
+            <!-- Editor Tab -->
+            <div class="flex bg-[#1e1e1e] border-b border-[#2d2d2d] text-xs h-9 shrink-0">
+                <div class="flex items-center px-3.5 bg-[#1e1e1e] text-slate-200 border-t-2 border-orange-500 font-medium">
+                    <span class="w-2 h-2 rounded-full bg-orange-400 mr-2"></span>
+                    main.py
+                </div>
+            </div>
+
+            <!-- CodeMirror Container -->
+            <div class="flex-1 relative bg-ide-dark min-h-[260px]">
+                <textarea id="code-editor"></textarea>
+            </div>
+
+            <!-- Bottom Toolbar -->
+            <div class="bg-[#1e1e1e] px-3 py-1.5 flex flex-wrap items-center gap-3 text-xs font-medium border-t border-[#2d2d2d] shrink-0">
+                <button id="run-btn" class="flex items-center text-slate-300 hover:text-white py-1 px-1.5 rounded hover:bg-slate-800 transition-colors">
+                    <svg class="w-3.5 h-3.5 mr-1.5 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"></path></svg>
+                    Chạy lại
+                </button>
+                <button id="copy-btn" class="flex items-center text-slate-300 hover:text-white py-1 px-1.5 rounded hover:bg-slate-800 transition-colors">
+                    <svg class="w-3.5 h-3.5 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                    Chép mã
+                </button>
+                <button id="download-btn" class="flex items-center text-slate-300 hover:text-white py-1 px-1.5 rounded hover:bg-slate-800 transition-colors">
+                    <svg class="w-3.5 h-3.5 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                    Tải mã
+                </button>
+                <button id="reset-btn" class="flex items-center text-slate-300 hover:text-white py-1 px-1.5 rounded hover:bg-slate-800 transition-colors">
+                    <svg class="w-3.5 h-3.5 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                    Làm lại
+                </button>
+            </div>
+        </main>
+
+        <!-- Resizer Right -->
+        <div id="drag-right" title="Kéo để thay đổi độ rộng" class="hidden lg:flex w-2.5 cursor-col-resize justify-center items-center group shrink-0 z-10 select-none">
+            <div class="w-1 h-10 bg-slate-300 group-hover:bg-blue-500 rounded-full transition-colors"></div>
+        </div>
+
+        <!-- Right Column: Output Terminal & Hints -->
+        <aside id="col-right" class="w-full lg:w-[27%] lg:min-w-[240px] flex flex-col shrink-0 min-h-[340px] lg:min-h-0 min-w-0">
+            <div class="flex-1 bg-white rounded-xl border border-slate-200 flex flex-col shadow-sm overflow-hidden">
+                <!-- Tabs Header -->
+                <div class="h-10 bg-white border-b border-slate-200 flex items-center px-3 justify-between relative shrink-0">
+                    <div class="flex space-x-1.5 shrink-0">
+                        <div class="w-2.5 h-2.5 rounded-full bg-red-400"></div>
+                        <div class="w-2.5 h-2.5 rounded-full bg-yellow-400"></div>
+                        <div class="w-2.5 h-2.5 rounded-full bg-green-400"></div>
+                    </div>
+
+                    <div class="flex bg-slate-100 rounded-full p-0.5 text-xs border border-slate-200 whitespace-nowrap">
+                        <button id="tab-terminal-btn" class="px-3 py-0.5 bg-white shadow-sm rounded-full text-slate-800 font-medium transition-all">Bài làm</button>
+                        <button id="tab-hint-btn" class="px-3 py-0.5 text-slate-500 hover:text-slate-800 font-medium transition-all rounded-full">Hướng dẫn</button>
+                    </div>
+
+                    <div class="w-8 shrink-0 hidden sm:block"></div>
+                </div>
+                
+                <!-- Terminal Tab Content -->
+                <div id="tab-terminal-content" class="flex-1 flex flex-col bg-[#1e1e1e] relative overflow-hidden">
+                    <!-- Input Area for Python input() -->
+                    <div class="bg-[#252526] border-b border-[#333] p-2.5 shrink-0">
+                        <div class="flex flex-wrap items-center justify-between gap-1 mb-1">
+                            <label for="stdin-input" class="text-[11px] font-semibold text-slate-300 uppercase tracking-wider">Dữ liệu đầu vào (Input)</label>
+                            <span class="text-[10px] text-slate-400">Mỗi giá trị 1 dòng</span>
+                        </div>
+                        <textarea id="stdin-input" rows="3" class="w-full bg-[#1e1e1e] text-slate-200 font-mono text-xs p-2 rounded border border-[#3c3c3c] focus:outline-none focus:border-blue-500 resize-none leading-relaxed" placeholder="Nhập dữ liệu mẫu..."></textarea>
+                    </div>
+                    <div id="terminal-output" class="flex-1 p-3 text-xs sm:text-[13px] font-mono whitespace-pre-wrap break-words overflow-y-auto text-slate-200 leading-relaxed">
+                        <span class="text-slate-500 italic">Kết quả chạy mã sẽ hiển thị ở đây...</span>
+                    </div>
+                    <div class="border-t border-[#2d2d2d] bg-[#1e1e1e] py-1.5 px-3 text-[11px] shrink-0">
+                        <span id="test-status" class="text-slate-400">Sẵn sàng chạy mã...</span>
+                    </div>
+                </div>
+
+                <!-- Hint Tab Content -->
+                <div id="tab-hint-content" class="hidden flex-1 flex-col p-3.5 overflow-y-auto bg-white break-words select-none">
+                    <h3 class="font-bold text-slate-800 text-xs uppercase tracking-wide mb-1.5">Kết quả mẫu mong muốn:</h3>
+                    <div id="hint-expected" class="bg-slate-100 p-2.5 rounded-lg font-mono text-xs text-slate-800 mb-4 border border-slate-200 whitespace-pre-wrap overflow-x-auto"></div>
+                    
+                    <h3 class="font-bold text-slate-800 text-xs uppercase tracking-wide mb-1.5">Gợi ý cấu trúc lệnh (Không sao chép nguyên văn):</h3>
+                    <p id="hint-text" class="text-[12.5px] text-slate-600 mb-2.5 leading-relaxed"></p>
+                    <div class="bg-blue-50 border border-blue-100 p-2.5 rounded-lg overflow-x-auto">
+                        <code id="hint-code" class="text-xs font-mono text-blue-700 whitespace-pre"></code>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Modal Nhập thông tin Học sinh -->
+    <div id="submit-modal" class="fixed inset-0 bg-slate-900/50 hidden items-center justify-center z-50 p-3 overflow-y-auto">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-[500px] flex flex-col overflow-hidden my-auto">
+            <div class="flex justify-between items-center p-4 border-b border-slate-100 gap-2">
+                <h3 id="submit-modal-title" class="text-lg sm:text-xl font-bold text-slate-800 leading-snug">Nộp bài - Bài 18 - Câu 1</h3>
+                <button id="close-submit-modal" class="text-slate-400 hover:text-slate-600 transition-colors p-1 shrink-0">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            <div class="p-4 sm:p-5 space-y-4">
+                <div class="bg-blue-50 border border-blue-100 rounded-lg p-3 flex items-start space-x-3 text-blue-800 text-sm">
+                    <svg class="w-5 h-5 text-blue-600 shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>
+                    <span id="submit-modal-banner" class="leading-relaxed">Em đang nộp kết quả thực hành cho <b>Bài 18 - Câu 1</b>.</span>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Họ và tên học sinh:</label>
+                    <input type="text" id="student-name" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" placeholder="Ví dụ: Nguyễn Văn A">
+                </div>
+                <div class="flex flex-col sm:flex-row gap-3 sm:gap-4">
+                    <div class="flex-1">
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Lớp:</label>
+                        <input type="text" id="student-class" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" placeholder="Ví dụ: 10A1">
+                    </div>
+                    <div class="flex-1">
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Số thứ tự (STT):</label>
+                        <input type="number" id="student-id" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" placeholder="Ví dụ: 15">
+                    </div>
+                </div>
+            </div>
+            <div class="p-4 border-t border-slate-100 bg-slate-50 flex flex-wrap justify-end gap-2 sm:gap-3">
+                <button id="cancel-submit" class="px-4 sm:px-5 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 hover:bg-slate-50 rounded-lg transition-colors shadow-sm">Hủy</button>
+                <button id="confirm-submit" class="px-4 sm:px-5 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors shadow-sm flex items-center space-x-2">
+                    <svg class="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path></svg>
+                    <span>Nộp & Xem kết quả</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Kết Quả Nộp Bài -->
+    <div id="result-modal" class="fixed inset-0 bg-slate-900/50 hidden items-center justify-center z-50 p-3 overflow-y-auto">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-[450px] flex flex-col overflow-hidden my-auto">
+            <div class="flex justify-between items-center p-4 border-b border-slate-100">
+                <h3 class="text-lg sm:text-xl font-bold text-slate-800">Kết quả nộp bài</h3>
+                <button id="close-result-modal" class="text-slate-400 hover:text-slate-600 transition-colors p-1">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            <div class="p-5 sm:p-6 flex flex-col items-center">
+                <div class="text-yellow-400 mb-3">
+                    <svg class="w-14 h-14 sm:w-16 sm:h-16 drop-shadow-md" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                </div>
+                <h2 id="result-student-info" class="text-xl sm:text-2xl font-bold text-slate-800 text-center mb-1 break-words">...</h2>
+                <p id="result-task-info" class="text-slate-500 mb-4 font-medium text-center">...</p>
+                <div class="bg-green-50 text-green-600 border border-green-200 px-3 sm:px-4 py-1.5 rounded-full flex items-center space-x-2 text-xs sm:text-sm font-semibold mb-5 text-center">
+                    <svg class="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path d="M5.5 13a3.5 3.5 0 01-.369-6.98 4 4 0 117.753-1.977A4.5 4.5 0 1113.5 13H11V9.413l1.293 1.293a1 1 0 001.414-1.414l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13H5.5z"></path><path d="M9 13h2v5a1 1 0 11-2 0v-5z"></path></svg>
+                    <span>Đã lưu điểm lên hệ thống CSDL</span>
+                </div>
+                <div class="w-full space-y-2 mb-5">
+                    <div class="flex justify-between items-center py-2.5 border-b border-slate-100 gap-2">
+                        <span class="text-slate-600 font-medium text-sm">Số tiêu chí hoàn thành:</span>
+                        <span id="result-criteria-count" class="font-bold text-slate-800 text-base sm:text-lg shrink-0">0 / 0</span>
+                    </div>
+                    <div class="flex justify-between items-center py-2.5 border-b border-slate-100 gap-2">
+                        <span class="text-slate-600 font-medium text-sm">Điểm (Thang 10):</span>
+                        <span id="result-score" class="font-bold text-blue-600 text-2xl sm:text-3xl shrink-0">0.0</span>
+                    </div>
+                </div>
+                <p id="result-message" class="text-slate-500 italic text-center text-sm mb-5 leading-relaxed">...</p>
+                <div class="w-full flex flex-col sm:flex-row gap-2.5 sm:gap-3 mb-3">
+                    <button id="btn-download-py" class="flex-1 py-2.5 px-3 border-2 border-orange-200 text-orange-600 hover:bg-orange-50 font-bold rounded-lg transition-colors flex items-center justify-center space-x-2 text-sm">
+                        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+                        <span>Tải Code (.py)</span>
+                    </button>
+                    <button id="btn-download-txt" class="flex-1 py-2.5 px-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-colors flex items-center justify-center space-x-2 text-sm">
+                        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                        <span>Tải Phiếu (.txt)</span>
+                    </button>
+                </div>
+                <button id="btn-close-result" class="w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium rounded-lg transition-colors text-sm">Đóng cửa sổ</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast-box" class="fixed bottom-4 right-4 left-4 sm:left-auto max-w-md z-[60] hidden items-center space-x-2 px-4 py-3 rounded-lg shadow-lg text-sm font-medium text-white transition-all"></div>
+
+    <script>
+        const cleanPythonCode = (code) => code.split('\n').filter(line => !line.trim().startsWith('#')).join('\n');
+
+        let toastTimer = null;
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast-box');
+            const bgClass = type === 'error' ? 'bg-red-600' : (type === 'success' ? 'bg-green-600' : 'bg-slate-800');
+            toast.className = `fixed bottom-5 right-5 z-[60] flex items-center space-x-2 px-4 py-3 rounded-lg shadow-lg text-sm font-medium text-white transition-all ${bgClass}`;
+            toast.innerText = message;
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => {
+                toast.classList.add('hidden');
+                toast.classList.remove('flex');
+            }, 3000);
+        }
+
+        const lessonInfo = {
+            number: "18",
+            shortName: "Bài 18",
+            fullName: "Bài 18. Các lệnh vào ra đơn giản"
+        };
+
+        const questions = [
+            {
+                title: "Câu 1: Nhập họ tên và tuổi từ bàn phím",
+                level: "Nhận biết",
+                desc: "Viết chương trình nhập từ bàn phím <b>họ tên</b> (kiểu xâu kí tự) và <b>tuổi</b> (kiểu số nguyên) của một bạn học sinh, sau đó in lời chào ra màn hình theo đúng mẫu:<div class='font-mono text-[11.5px] bg-slate-100 p-2 mt-1.5 rounded border border-slate-200 leading-snug space-y-1'><div><span class='text-slate-500 font-semibold'>Dữ liệu vào:</span> Minh Anh &nbsp;|&nbsp; 16</div><div><span class='text-blue-700 font-semibold'>Dữ liệu ra :</span> Xin chào Minh Anh, năm nay bạn 16 tuổi!</div></div>",
+                reqs: `<li>Dùng lệnh <code class="text-blue-600 font-mono">input()</code> để nhập họ tên học sinh.</li>
+                       <li>Dùng lệnh <code class="text-blue-600 font-mono">int(input())</code> để chuyển đổi tuổi nhập vào thành số nguyên.</li>
+                       <li>Dùng lệnh <code class="text-blue-600 font-mono">print()</code> để hiển thị lời chào đầy đủ họ tên và số tuổi theo đúng mẫu.</li>`,
+                defaultInput: "Minh Anh\n16",
+                testCases: [
+                    { inputs: ["Minh Anh", "16"] },
+                    { inputs: ["Hoàng Nam", "15"] }
+                ],
+                criteria: [
+                    { text: "Có sử dụng lệnh input() để nhập họ tên", check: (code, outs) => {
+                        const c = cleanPythonCode(code);
+                        return /\binput\s*\(/.test(c);
+                    }},
+                    { text: "Có sử dụng int(input()) để chuyển đổi tuổi sang số nguyên", check: (code, outs) => {
+                        const c = cleanPythonCode(code);
+                        return /\bint\s*\(\s*input\s*\(/.test(c);
+                    }},
+                    { text: "In ra lời chào chính xác với mọi dữ liệu đầu vào", check: (code, outs) => {
+                        if (outs.length < 2) return false;
+                        // Chuẩn hóa khoảng trắng trước dấu câu để chấp nhận cả cách ghép chuỗi (+) lẫn ngăn cách dấu phẩy (,) trong print()
+                        const normalize = (s) => s.trim().replace(/\s+/g, ' ').replace(/\s+([,!])/g, '$1');
+                        return normalize(outs[0]) === "Xin chào Minh Anh, năm nay bạn 16 tuổi!" &&
+                               normalize(outs[1]) === "Xin chào Hoàng Nam, năm nay bạn 15 tuổi!";
+                    }}
+                ],
+                expected: "Dữ liệu vào:\nMinh Anh\n16\n\nDữ liệu ra:\nXin chào Minh Anh, năm nay bạn 16 tuổi!",
+                hintDesc: "Dữ liệu nhập qua <code class='text-blue-600 font-bold'>input()</code> luôn có kiểu xâu kí tự (<code class='text-blue-600 font-bold'>str</code>), nên khi nhập tuổi cần bọc thêm hàm <code class='text-blue-600 font-bold'>int()</code> bên ngoài. Có thể dùng dấu <code class='text-blue-600 font-bold'>+</code> để ghép liền dấu phẩy sau biến tên.",
+                hintCode: 'ten = input("<Lời nhắc nhập họ tên>")\ntuoi = int(input("<Lời nhắc nhập tuổi>"))\nprint("<Lời chào theo đúng mẫu>")'
+            },
+            {
+                title: "Câu 2: Tính tổng ba số tự nhiên",
+                level: "Thông hiểu",
+                desc: "Viết chương trình nhập từ bàn phím ba số tự nhiên <code class='bg-slate-100 px-1 rounded font-mono text-blue-600'>m</code>, <code class='bg-slate-100 px-1 rounded font-mono text-blue-600'>n</code>, <code class='bg-slate-100 px-1 rounded font-mono text-blue-600'>p</code> (mỗi số trên một dòng). Tính và in ra màn hình tổng của ba số đó theo mẫu (ví dụ nhập <code class='bg-slate-100 px-1 rounded font-mono text-blue-600'>10</code>, <code class='bg-slate-100 px-1 rounded font-mono text-blue-600'>25</code>, <code class='bg-slate-100 px-1 rounded font-mono text-blue-600'>15</code>):<span class='font-mono text-[11.5px] bg-slate-100 px-2 py-1 mt-1.5 rounded block leading-snug'>Tổng của ba số đã nhập là: 50</span>",
+                reqs: `<li>Dùng lệnh <code class="text-blue-600 font-mono">int(input())</code> để nhập lần lượt ba số nguyên <code class="text-blue-600 font-mono">m</code>, <code class="text-blue-600 font-mono">n</code>, <code class="text-blue-600 font-mono">p</code>.</li>
+                       <li>Thực hiện phép cộng số học để tính tổng ba số đã nhập (tránh cộng nhầm hai xâu kí tự).</li>
+                       <li>In kết quả ra màn hình đúng theo mẫu quy định.</li>`,
+                defaultInput: "10\n25\n15",
+                testCases: [
+                    { inputs: ["10", "25", "15"] },
+                    { inputs: ["4", "6", "9"] }
+                ],
+                criteria: [
+                    { text: "Dùng đủ 3 lệnh int(input()) để nhập ba số nguyên", check: (code, outs) => {
+                        const c = cleanPythonCode(code);
+                        const matches = c.match(/\bint\s*\(\s*input\s*\(/g) || [];
+                        return matches.length >= 3;
+                    }},
+                    { text: "Có thực hiện phép cộng số học (+) giữa các biến", check: (code, outs) => {
+                        const c = cleanPythonCode(code);
+                        return /\+/.test(c);
+                    }},
+                    { text: "Tính và in đúng kết quả với cả hai bộ dữ liệu kiểm thử", check: (code, outs) => {
+                        if (outs.length < 2) return false;
+                        return /Tổng của ba số đã nhập là:\s*50/.test(outs[0].trim()) &&
+                               /Tổng của ba số đã nhập là:\s*19/.test(outs[1].trim());
+                    }}
+                ],
+                expected: "Tổng của ba số đã nhập là: 50",
+                hintDesc: "Nếu không chuyển đổi bằng <code class='text-blue-600 font-bold'>int()</code> thì phép <code class='text-blue-600 font-bold'>+</code> sẽ ghép các xâu (ví dụ <code class='text-blue-600 font-bold'>\"10\" + \"25\" = \"1025\"</code>) thay vì cộng số học.",
+                hintCode: 'm = int(input("<Lời nhắc 1>"))\nn = int(input("<Lời nhắc 2>"))\np = int(input("<Lời nhắc 3>"))\nprint("<Thông báo theo mẫu>", <tổng 3 biến>)'
+            },
+            {
+                title: "Câu 3: Chu vi và diện tích tam giác (Heron)",
+                level: "Vận dụng",
+                desc: "Viết chương trình nhập độ dài ba cạnh của một tam giác là các số thực <code class='bg-slate-100 px-1 rounded font-mono text-blue-600'>a</code>, <code class='bg-slate-100 px-1 rounded font-mono text-blue-600'>b</code>, <code class='bg-slate-100 px-1 rounded font-mono text-blue-600'>c</code> (mỗi số trên một dòng). Tính chu vi <code class='bg-slate-100 px-1 rounded font-mono text-blue-600'>cv</code> và diện tích <code class='bg-slate-100 px-1 rounded font-mono text-blue-600'>dt</code> theo công thức Heron <code class='bg-slate-100 px-1 rounded font-mono text-blue-600'>dt = (p*(p-a)*(p-b)*(p-c))**0.5</code> với <code class='bg-slate-100 px-1 rounded font-mono text-blue-600'>p = cv/2</code> (ví dụ nhập <code class='bg-slate-100 px-1 rounded font-mono text-blue-600'>3</code>, <code class='bg-slate-100 px-1 rounded font-mono text-blue-600'>4</code>, <code class='bg-slate-100 px-1 rounded font-mono text-blue-600'>5</code>):<span class='font-mono text-[11.5px] bg-slate-100 px-2 py-1 mt-1.5 rounded block leading-snug'>Chu vi tam giác: 12.0\nDiện tích tam giác: 6.0</span>",
+                reqs: `<li>Dùng lệnh <code class="text-blue-600 font-mono">float(input())</code> để nhập ba số thực <code class="text-blue-600 font-mono">a</code>, <code class="text-blue-600 font-mono">b</code>, <code class="text-blue-600 font-mono">c</code>.</li>
+                       <li>Tính chu vi, nửa chu vi <code class="text-blue-600 font-mono">p</code> và diện tích theo công thức Heron.</li>
+                       <li>In chu vi và diện tích ra trên 2 dòng đúng theo mẫu.</li>`,
+                defaultInput: "3\n4\n5",
+                testCases: [
+                    { inputs: ["3", "4", "5"] },
+                    { inputs: ["6", "8", "10"] }
+                ],
+                criteria: [
+                    { text: "Dùng đủ 3 lệnh float(input()) để nhập độ dài ba cạnh", check: (code, outs) => {
+                        const c = cleanPythonCode(code);
+                        const matches = c.match(/\bfloat\s*\(\s*input\s*\(/g) || [];
+                        return matches.length >= 3;
+                    }},
+                    { text: "Có tính nửa chu vi và áp dụng công thức Heron (lũy thừa ** 0.5 hoặc math.sqrt)", check: (code, outs) => {
+                        const c = cleanPythonCode(code);
+                        return (c.includes('**') || c.includes('sqrt')) && c.includes('-');
+                    }},
+                    { text: "Tính và in đúng chu vi tam giác trên dòng 1", check: (code, outs) => {
+                        if (outs.length < 2) return false;
+                        const l1_a = (outs[0].split('\n')[0] || "").trim();
+                        const l1_b = (outs[1].split('\n')[0] || "").trim();
+                        return /Chu vi tam giác:\s*12(\.0)?$/.test(l1_a) &&
+                               /Chu vi tam giác:\s*24(\.0)?$/.test(l1_b);
+                    }},
+                    { text: "Tính và in đúng diện tích tam giác trên dòng 2", check: (code, outs) => {
+                        if (outs.length < 2) return false;
+                        const l2_a = (outs[0].split('\n')[1] || "").trim();
+                        const l2_b = (outs[1].split('\n')[1] || "").trim();
+                        return /Diện tích tam giác:\s*6(\.0)?$/.test(l2_a) &&
+                               /Diện tích tam giác:\s*24(\.0)?$/.test(l2_b);
+                    }}
+                ],
+                expected: "Chu vi tam giác: 12.0\nDiện tích tam giác: 6.0",
+                hintDesc: "Dùng <code class='text-blue-600 font-bold'>float(input())</code> để nhận giá trị số thực. Căn bậc hai của một biểu thức có thể viết gọn dưới dạng lũy thừa <code class='text-blue-600 font-bold'>(...) ** 0.5</code>.",
+                hintCode: 'a = float(input("<Lời nhắc cạnh 1>"))\nb = float(input("<Lời nhắc cạnh 2>"))\nc = float(input("<Lời nhắc cạnh 3>"))\ncv = <tổng 3 cạnh>\np = <nửa chu vi>\ndt = <công thức Heron>\nprint("<Thông báo chu vi>", cv)\nprint("<Thông báo diện tích>", dt)'
+            }
+        ];
+
+        const defaultCodes = [
+            '# Nhập họ tên và tuổi từ bàn phím bên dưới:\n',
+            '# Nhập ba số tự nhiên m, n, p và tính tổng bên dưới:\n',
+            '# Nhập ba cạnh a, b, c và tính chu vi, diện tích tam giác bên dưới:\n'
+        ];
+
+        let currentQuestion = 0;
+        let userCodes = [...defaultCodes];
+        let pyodide = null;
+
+        // Khởi tạo trình soạn thảo CodeMirror
+        const editor = CodeMirror.fromTextArea(document.getElementById("code-editor"), {
+            mode: "python",
+            theme: "dracula",
+            lineNumbers: true,
+            indentUnit: 4,
+            autoCloseBrackets: true,
+            matchBrackets: true
+        });
+
+        editor.on("change", () => {
+            userCodes[currentQuestion] = editor.getValue();
+        });
+
+        // Tải môi trường Python (Pyodide)
+        async function initPyodide() {
+            try {
+                pyodide = await loadPyodide();
+                const badge = document.getElementById('status-badge');
+                badge.className = "flex items-center text-[11px] font-medium text-green-700 bg-green-50 px-2 py-0.5 rounded-full border border-green-200 shrink-0";
+                badge.innerText = "Python đã sẵn sàng";
+            } catch (err) {
+                const badge = document.getElementById('status-badge');
+                badge.className = "flex items-center text-[11px] font-medium text-red-700 bg-red-50 px-2 py-0.5 rounded-full border border-red-200 shrink-0";
+                badge.innerText = "Lỗi tải Python";
+            }
+        }
+        initPyodide();
+
+        // Nạp câu hỏi lên giao diện
+        function loadQuestion(index) {
+            currentQuestion = index;
+            const q = questions[index];
+
+            document.getElementById('lesson-label').innerText = lessonInfo.fullName.toUpperCase();
+            document.getElementById('q-level').innerText = q.level;
+            document.getElementById('q-title').innerText = q.title;
+            document.getElementById('q-desc').innerHTML = q.desc;
+            document.getElementById('q-reqs').innerHTML = q.reqs;
+            document.getElementById('page-indicator').innerText = `Câu ${index + 1} / ${questions.length}`;
+
+            document.getElementById('hint-expected').innerText = q.expected;
+            document.getElementById('hint-text').innerHTML = q.hintDesc;
+            document.getElementById('hint-code').innerText = q.hintCode;
+
+            editor.setValue(userCodes[index]);
+            document.getElementById('stdin-input').value = q.defaultInput || '';
+
+            document.getElementById('terminal-output').innerHTML = '<span class="text-slate-500 italic">Kết quả chạy mã sẽ hiển thị ở đây...</span>';
+            document.getElementById('test-status').innerText = 'Sẵn sàng chạy mã...';
+            document.getElementById('test-status').className = 'text-slate-400';
+
+            document.getElementById('prev-btn').disabled = (index === 0);
+            document.getElementById('next-btn').disabled = (index === questions.length - 1);
+
+            renderCriteria(false);
+            updateScoreDisplay(0);
+        }
+
+        function renderCriteria(isGraded = false, results = []) {
+            const list = document.getElementById('q-criteria');
+            const q = questions[currentQuestion];
+            list.innerHTML = '';
+
+            q.criteria.forEach((crit, idx) => {
+                const li = document.createElement('li');
+                li.className = "flex items-center justify-between gap-2 px-2.5 py-1.5 rounded-md border border-slate-100 bg-slate-50/60";
+                
+                let badgeHtml = `<span class="shrink-0 text-[10.5px] font-medium px-1.5 py-0.5 rounded bg-slate-200/80 text-slate-600">Chờ chấm</span>`;
+                if (isGraded) {
+                    if (results[idx]) {
+                        badgeHtml = `<span class="shrink-0 text-[10.5px] font-semibold px-1.5 py-0.5 rounded bg-green-100 text-green-700 border border-green-200">✓ Đạt</span>`;
+                        li.className = "flex items-center justify-between gap-2 px-2.5 py-1.5 rounded-md border border-green-200 bg-green-50/60";
+                    } else {
+                        badgeHtml = `<span class="shrink-0 text-[10.5px] font-semibold px-1.5 py-0.5 rounded bg-red-100 text-red-700 border border-red-200">✗ Không đạt</span>`;
+                        li.className = "flex items-center justify-between gap-2 px-2.5 py-1.5 rounded-md border border-red-200 bg-red-50/60";
+                    }
+                }
+
+                li.innerHTML = `<span class="leading-snug">${idx + 1}. ${crit.text}</span>${badgeHtml}`;
+                list.appendChild(li);
+            });
+        }
+
+        function updateScoreDisplay(score) {
+            const total = questions[currentQuestion].criteria.length;
+            const scoreCircle = document.getElementById('score-circle');
+            const scoreText = document.getElementById('score-text');
+            scoreText.innerText = `${score}/${total}`;
+
+            if (score === total && total > 0) {
+                scoreCircle.className = "w-10 h-10 rounded-full border-2 border-dashed border-green-500 flex items-center justify-center text-green-600 font-bold text-sm bg-green-50 transition-colors duration-300 shadow-2xs";
+            } else {
+                scoreCircle.className = "w-10 h-10 rounded-full border-2 border-dashed border-red-500 flex items-center justify-center text-red-500 font-bold text-sm bg-white transition-colors duration-300 shadow-2xs";
+            }
+        }
+
+        async function runPythonWithInputs(code, inputLines, echoInput = false) {
+            let stdout = "";
+            pyodide.setStdout({ batched: (msg) => { stdout += msg + "\n"; } });
+
+            pyodide.globals.set("__js_inputs__", pyodide.toPy(inputLines));
+            pyodide.globals.set("__js_echo__", echoInput);
+            await pyodide.runPythonAsync(`
+import builtins
+__input_idx__ = 0
+def __custom_input__(prompt=""):
+    global __input_idx__
+    if __input_idx__ >= len(__js_inputs__):
+        raise EOFError("Thiếu dữ liệu đầu vào! Hãy nhập đủ số dòng ở khung Input.")
+    val = str(__js_inputs__[__input_idx__])
+    __input_idx__ += 1
+    if __js_echo__:
+        print(f"{prompt}{val}")
+    return val
+builtins.input = __custom_input__
+`);
+            await pyodide.runPythonAsync(code);
+            return stdout.trim();
+        }
+
+        async function runPythonCode() {
+            const code = editor.getValue();
+            const outputTerminal = document.getElementById('terminal-output');
+            const testStatus = document.getElementById('test-status');
+
+            if (!pyodide) {
+                outputTerminal.innerText = "Python chưa được tải xong, vui lòng đợi giây lát...";
+                showToast("Python đang tải, vui lòng đợi trong giây lát!", "info");
+                return null;
+            }
+
+            outputTerminal.innerText = "Đang chạy...";
+            testStatus.innerText = "Đang thực thi...";
+            testStatus.className = "text-yellow-400";
+
+            const rawInput = document.getElementById('stdin-input').value;
+            const inputLines = rawInput.length > 0 ? rawInput.split('\n') : [];
+
+            try {
+                const out = await runPythonWithInputs(code, inputLines, true);
+                outputTerminal.innerText = out || "(Chương trình không có đầu ra)";
+                testStatus.innerText = "Thực thi thành công";
+                testStatus.className = "text-green-400";
+                return out;
+            } catch (err) {
+                outputTerminal.innerText = err.message;
+                testStatus.innerText = "Lỗi thực thi";
+                testStatus.className = "text-red-400";
+                return "";
+            }
+        }
+
+        async function evaluateCurrentQuestion(code) {
+            const q = questions[currentQuestion];
+            const testOutputs = [];
+
+            if (pyodide) {
+                for (const tc of q.testCases) {
+                    try {
+                        const out = await runPythonWithInputs(code, tc.inputs, false);
+                        testOutputs.push(out);
+                    } catch (err) {
+                        testOutputs.push("");
+                    }
+                }
+            }
+
+            const results = q.criteria.map(crit => crit.check(code, testOutputs));
+            const passedCount = results.filter(Boolean).length;
+            return { results, passedCount, total: q.criteria.length };
+        }
+
+        async function gradeSubmission() {
+            const code = editor.getValue();
+            const runOut = await runPythonCode();
+            if (runOut === null) return;
+
+            const { results, passedCount, total } = await evaluateCurrentQuestion(code);
+            renderCriteria(true, results);
+            updateScoreDisplay(passedCount);
+
+            const scoreCircle = document.getElementById('score-circle');
+            if (passedCount === total) {
+                scoreCircle.classList.add('animate-bounce-scale');
+                setTimeout(() => scoreCircle.classList.remove('animate-bounce-scale'), 500);
+                confetti({ particleCount: 80, spread: 70, origin: { y: 0.6 } });
+            } else {
+                scoreCircle.classList.add('animate-shake');
+                setTimeout(() => scoreCircle.classList.remove('animate-shake'), 400);
+            }
+        }
+
+        // Sự kiện nút bấm
+        document.getElementById('grade-btn').addEventListener('click', gradeSubmission);
+        document.getElementById('run-btn').addEventListener('click', runPythonCode);
+
+        document.getElementById('submit-btn').addEventListener('click', () => {
+            if (!pyodide) {
+                showToast("Python đang tải, vui lòng đợi xong rồi nộp bài!", "info");
+                return;
+            }
+            document.getElementById('submit-modal-title').innerText = `Nộp bài - ${lessonInfo.shortName} - Câu ${currentQuestion + 1}`;
+            document.getElementById('submit-modal-banner').innerHTML = `Em đang nộp kết quả thực hành cho <b>${lessonInfo.shortName} - Câu ${currentQuestion + 1}</b>.`;
+            document.getElementById('submit-modal').classList.remove('hidden');
+            document.getElementById('submit-modal').classList.add('flex');
+        });
+
+        const closeSubmitModal = () => {
+            document.getElementById('submit-modal').classList.add('hidden');
+            document.getElementById('submit-modal').classList.remove('flex');
+        };
+        document.getElementById('cancel-submit').addEventListener('click', closeSubmitModal);
+        document.getElementById('close-submit-modal').addEventListener('click', closeSubmitModal);
+
+        document.getElementById('confirm-submit').addEventListener('click', async () => {
+            const lop = document.getElementById('student-class').value.trim();
+            const stt = document.getElementById('student-id').value.trim();
+            const name = document.getElementById('student-name').value.trim();
+
+            if (!lop || !stt || !name) {
+                showToast("Vui lòng điền đầy đủ: Họ tên, Lớp và STT!", "error");
+                return;
+            }
+
+            const confirmBtn = document.getElementById('confirm-submit');
+            confirmBtn.innerHTML = `<svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Đang nộp...`;
+            confirmBtn.disabled = true;
+
+            const code = editor.getValue();
+            await runPythonCode();
+            const { results, passedCount, total } = await evaluateCurrentQuestion(code);
+            const q = questions[currentQuestion];
+            const score10 = (passedCount / total) * 10;
+            const qTitle = `Câu ${currentQuestion + 1}`;
+
+            renderCriteria(true, results);
+            updateScoreDisplay(passedCount);
+
+            const formData = new FormData();
+            formData.append('lop', lop);
+            formData.append('stt', stt);
+            formData.append('ho_ten', name);
+            formData.append('ten_bai_cau', `${lessonInfo.shortName} - ${qTitle} (${q.level})`);
+            formData.append('muc_do', q.level);
+            formData.append('so_tieu_chi', `${passedCount}/${total}`);
+            formData.append('diem_10', score10.toFixed(1));
+
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbyXYvpFZ4QoS_G6Bgz4eIw2aAnPTOMzUZU_RmmKl9mS-qWZ8NCHyee7lbKlvW8rGT3vAQ/exec';
+
+            try {
+                await fetch(scriptURL, { method: 'POST', body: formData, mode: 'no-cors' });
+
+                document.getElementById('result-student-info').innerText = `${name} - Lớp ${lop} (STT: ${stt})`;
+                document.getElementById('result-task-info').innerText = `${lessonInfo.shortName} - ${qTitle}`;
+                document.getElementById('result-criteria-count').innerText = `${passedCount} / ${total}`;
+                document.getElementById('result-score').innerText = score10.toFixed(1);
+
+                const msgEl = document.getElementById('result-message');
+                if (passedCount === total) {
+                    msgEl.innerText = `Chúc mừng! Em đã đạt ${passedCount}/${total} tiêu chí một cách xuất sắc.`;
+                    msgEl.className = "text-green-600 italic text-center text-sm mb-6";
+                } else {
+                    msgEl.innerText = `Em đã đạt ${passedCount}/${total} tiêu chí. Hãy cố gắng hoàn thiện các lỗi màu đỏ nhé!`;
+                    msgEl.className = "text-slate-500 italic text-center text-sm mb-6";
+                }
+
+                closeSubmitModal();
+                document.getElementById('result-modal').classList.remove('hidden');
+                document.getElementById('result-modal').classList.add('flex');
+            } catch (error) {
+                showToast("Có lỗi xảy ra khi kết nối mạng. Vui lòng thử lại!", "error");
+            } finally {
+                confirmBtn.innerHTML = `<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path></svg> <span>Nộp & Xem kết quả</span>`;
+                confirmBtn.disabled = false;
+            }
+        });
+
+        const closeResultModal = () => {
+            document.getElementById('result-modal').classList.add('hidden');
+            document.getElementById('result-modal').classList.remove('flex');
+            
+            userCodes[currentQuestion] = defaultCodes[currentQuestion];
+            editor.setValue(userCodes[currentQuestion]);
+            document.getElementById('terminal-output').innerHTML = '<span class="text-slate-500 italic">Kết quả chạy mã sẽ hiển thị ở đây...</span>';
+            document.getElementById('test-status').innerText = 'Sẵn sàng chạy mã...';
+            document.getElementById('test-status').className = 'text-slate-400';
+            renderCriteria(false);
+            updateScoreDisplay(0);
+        };
+        document.getElementById('close-result-modal').addEventListener('click', closeResultModal);
+        document.getElementById('btn-close-result').addEventListener('click', closeResultModal);
+
+        document.getElementById('btn-download-py').addEventListener('click', () => {
+            const name = document.getElementById('student-name').value.trim() || 'HocSinh';
+            const blob = new Blob([editor.getValue()], { type: "text/plain;charset=utf-8" });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `Bai${lessonInfo.number}_${name}_Cau${currentQuestion + 1}.py`;
+            link.click();
+        });
+
+        document.getElementById('btn-download-txt').addEventListener('click', () => {
+            const name = document.getElementById('student-name').value.trim() || 'HocSinh';
+            const txtContent = `KẾT QUẢ THỰC HÀNH TỰ ĐỘNG
+-----------------------------------
+Học sinh : ${name}
+Lớp      : ${document.getElementById('student-class').value}
+STT      : ${document.getElementById('student-id').value}
+Bài làm  : ${lessonInfo.shortName} - Câu ${currentQuestion + 1} (${questions[currentQuestion].level})
+Tiêu chí : ${document.getElementById('result-criteria-count').innerText}
+Điểm số  : ${document.getElementById('result-score').innerText} / 10
+-----------------------------------
+MÃ NGUỒN PYTHON:
+
+${editor.getValue()}
+`;
+            const blob = new Blob([txtContent], { type: "text/plain;charset=utf-8" });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `PhieuKetQua_Bai${lessonInfo.number}_${name}_Cau${currentQuestion + 1}.txt`;
+            link.click();
+        });
+
+        document.getElementById('copy-btn').addEventListener('click', () => {
+            const tempInput = document.createElement('textarea');
+            tempInput.value = editor.getValue();
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+            showToast("Đã sao chép mã nguồn!", "success");
+        });
+
+        document.getElementById('download-btn').addEventListener('click', () => {
+            const blob = new Blob([editor.getValue()], { type: "text/plain;charset=utf-8" });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `bai${lessonInfo.number}_cau${currentQuestion + 1}.py`;
+            link.click();
+        });
+
+        document.getElementById('reset-btn').addEventListener('click', () => {
+            userCodes[currentQuestion] = defaultCodes[currentQuestion];
+            editor.setValue(userCodes[currentQuestion]);
+            renderCriteria(false);
+            updateScoreDisplay(0);
+            showToast("Đã đặt lại mã nguồn mặc định.", "info");
+        });
+
+        document.getElementById('next-btn').addEventListener('click', () => {
+            if (currentQuestion < questions.length - 1) {
+                loadQuestion(currentQuestion + 1);
+            }
+        });
+
+        document.getElementById('prev-btn').addEventListener('click', () => {
+            if (currentQuestion > 0) {
+                loadQuestion(currentQuestion - 1);
+            }
+        });
+
+        const tabTerminalBtn = document.getElementById('tab-terminal-btn');
+        const tabHintBtn = document.getElementById('tab-hint-btn');
+        const tabTerminalContent = document.getElementById('tab-terminal-content');
+        const tabHintContent = document.getElementById('tab-hint-content');
+
+        tabTerminalBtn.addEventListener('click', () => {
+            tabTerminalBtn.className = "px-3 py-0.5 bg-white shadow-sm rounded-full text-slate-800 font-medium transition-all";
+            tabHintBtn.className = "px-3 py-0.5 text-slate-500 hover:text-slate-800 font-medium transition-all rounded-full";
+            tabTerminalContent.classList.remove('hidden');
+            tabTerminalContent.classList.add('flex');
+            tabHintContent.classList.remove('flex');
+            tabHintContent.classList.add('hidden');
+        });
+
+        tabHintBtn.addEventListener('click', () => {
+            tabHintBtn.className = "px-3 py-0.5 bg-white shadow-sm rounded-full text-slate-800 font-medium transition-all";
+            tabTerminalBtn.className = "px-3 py-0.5 text-slate-500 hover:text-slate-800 font-medium transition-all rounded-full";
+            tabHintContent.classList.remove('hidden');
+            tabHintContent.classList.add('flex');
+            tabTerminalContent.classList.remove('flex');
+            tabTerminalContent.classList.add('hidden');
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                e.preventDefault();
+                gradeSubmission();
+            }
+        });
+
+        // Kéo giãn độ rộng 3 cột (chuột & cảm ứng)
+        const dragLeft = document.getElementById('drag-left');
+        const dragRight = document.getElementById('drag-right');
+        const colLeft = document.getElementById('col-left');
+        const colRight = document.getElementById('col-right');
+
+        function initResizer(resizer, col, isLeft) {
+            let startX = 0, startW = 0;
+
+            const onMove = (clientX) => {
+                const dx = clientX - startX;
+                const otherCol = isLeft ? colRight : colLeft;
+                const otherW = otherCol.getBoundingClientRect().width;
+                const minEditorW = 240;
+                const minSideW = isLeft ? 260 : 240;
+                const maxW = Math.max(minSideW, window.innerWidth - otherW - minEditorW - 36);
+                const newW = Math.max(minSideW, Math.min(maxW, startW + (isLeft ? dx : -dx)));
+                col.style.width = `${newW}px`;
+                if (typeof editor !== 'undefined') editor.refresh();
+            };
+
+            const startDrag = (clientX) => {
+                startX = clientX;
+                startW = col.getBoundingClientRect().width;
+                document.body.style.cursor = 'col-resize';
+                document.body.style.userSelect = 'none';
+                resizer.firstElementChild.classList.add('bg-blue-500');
+            };
+
+            const stopDrag = () => {
+                document.body.style.cursor = '';
+                document.body.style.userSelect = '';
+                resizer.firstElementChild.classList.remove('bg-blue-500');
+            };
+
+            resizer.addEventListener('mousedown', (e) => {
+                e.preventDefault();
+                startDrag(e.clientX);
+                const mouseMove = (ev) => onMove(ev.clientX);
+                const mouseUp = () => {
+                    stopDrag();
+                    document.removeEventListener('mousemove', mouseMove);
+                };
+                document.addEventListener('mousemove', mouseMove);
+                document.addEventListener('mouseup', mouseUp, { once: true });
+            });
+
+            resizer.addEventListener('touchstart', (e) => {
+                if (!e.touches.length) return;
+                startDrag(e.touches[0].clientX);
+                const touchMove = (ev) => {
+                    if (ev.touches.length) onMove(ev.touches[0].clientX);
+                };
+                const touchEnd = () => {
+                    stopDrag();
+                    document.removeEventListener('touchmove', touchMove);
+                };
+                document.addEventListener('touchmove', touchMove, { passive: true });
+                document.addEventListener('touchend', touchEnd, { once: true });
+            }, { passive: true });
+
+            resizer.addEventListener('dblclick', () => {
+                col.style.width = '';
+                if (typeof editor !== 'undefined') editor.refresh();
+            });
+        }
+        initResizer(dragLeft, colLeft, true);
+        initResizer(dragRight, colRight, false);
+
+        window.addEventListener('resize', () => {
+            if (window.innerWidth < 1024) {
+                colLeft.style.width = '';
+                colRight.style.width = '';
+            }
+            if (typeof editor !== 'undefined') editor.refresh();
+        });
+
+        loadQuestion(0);
+    </script>
+</body>
+</html>
